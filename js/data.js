@@ -223,6 +223,14 @@ const ZD_CATALOG = [
     variants: [
       { id: 'duolingo-30', label: '30 días', price: 6500 }
     ]
+  },
+  {
+    id: 'youtube',
+    name: 'YouTube Premium',
+    logo: 'assets/logos/youtube.png',
+    variants: [
+      { id: 'youtube-30', label: '30 días', price: 13900 }
+    ]
   }
 ];
 
@@ -249,5 +257,6 @@ const ZD_COMBOS = [
   { id: 'combo-universitario-clasico', name: 'Universitario Clásico', price: 39900, image: 'assets/combos/universitario-clasico.png', includes: ['ChatGPT Plus', 'CapCut', 'Canva 45 días'] },
   { id: 'combo-zero-delay', name: 'ZERO DELAY', price: 47900, image: 'assets/combos/zero-delay.png', includes: ['Netflix 27 días', 'Disney+ Premium Original', 'Crunchyroll Original', 'Prime Video Original', 'Spotify Premium', 'ChatGPT Plus'] },
   { id: 'combo-universitario-premium', name: 'Universitario Premium', price: 58000, image: 'assets/combos/universitario-premium.png', includes: ['ChatGPT Plus', 'CapCut', 'Canva 365 días', 'Gemini PRO'] },
-  { id: 'combo-premium-familiar', name: 'Premium Familiar', price: 69800, image: 'assets/combos/premium-familiar.png', includes: ['Disney+ Completa Original Premium', 'HBO Max Completa Original Platino', 'Prime Video Completa', 'Netflix 33 días'] }
+  { id: 'combo-premium-familiar', name: 'Premium Familiar', price: 69800, image: 'assets/combos/premium-familiar.png', includes: ['Disney+ Completa Original Premium', 'HBO Max Completa Original Platino', 'Prime Video Completa', 'Netflix 33 días'] },
+  { id: 'combo-vieja-escuela', name: 'Vieja Escuela', price: 24800, image: 'assets/combos/vieja-escuela.png', includes: ['YouTube Premium', 'Netflix 27 días', 'Disney+ Pantalla Estándar Original'] }
 ];

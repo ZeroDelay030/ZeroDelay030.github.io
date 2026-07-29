@@ -389,7 +389,8 @@ function zdRenderCatalog() {
 
   if (combosGrid) {
     combosGrid.innerHTML = '';
-    ZD_COMBOS.forEach((combo) => combosGrid.appendChild(zdBuildComboCard(combo)));
+    const sortedCombos = [...ZD_COMBOS].sort((a, b) => a.price - b.price);
+    sortedCombos.forEach((combo) => combosGrid.appendChild(zdBuildComboCard(combo)));
   }
 
   zdUpdateCartBadges();
