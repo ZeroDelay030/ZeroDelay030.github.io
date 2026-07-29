@@ -128,7 +128,25 @@ function initMarquee() {
       // se congele para siempre: seguimos pidiendo el próximo frame igual.
       console.error('zd-marquee frame error:', err);
     }
-    requestAnimationFrame(frame);
+    if (!paused) requestAnimationFrame(frame);
+  }
+
+  let paused = false;
+  if ('IntersectionObserver' in window) {
+    const visibilityObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (paused) {
+            paused = false;
+            lastTime = null;
+            requestAnimationFrame(frame);
+          }
+        } else {
+          paused = true;
+        }
+      });
+    }, { threshold: 0 });
+    visibilityObserver.observe(viewport);
   }
 
   function getClientX(e) {

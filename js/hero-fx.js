@@ -28,7 +28,8 @@
 
   function particleCount() {
     // menos partículas en pantallas pequeñas para mantener buen rendimiento
-    if (width < 600) return 34;
+    if (width < 420) return 18;
+    if (width < 600) return 26;
     if (width < 1000) return 55;
     return 80;
   }
@@ -147,7 +148,28 @@
       bursts = bursts.filter((b) => b.life > 0);
     }
 
-    rafId = requestAnimationFrame(step);
+    if (!paused) {
+      rafId = requestAnimationFrame(step);
+    }
+  }
+
+  let paused = false;
+
+  function initVisibilityPause() {
+    if (!('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (paused) {
+            paused = false;
+            rafId = requestAnimationFrame(step);
+          }
+        } else {
+          paused = true;
+        }
+      });
+    }, { threshold: 0 });
+    observer.observe(hero);
   }
 
   function spawnBurst(x, y) {
@@ -221,6 +243,7 @@
       cancelAnimationFrame(rafId);
     } else {
       step();
+      initVisibilityPause();
     }
   }
 

@@ -1504,6 +1504,7 @@ img { max-width: 100%; display: block; }
   pointer-events: none;
   overflow-y: auto;
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
+  content-visibility: hidden;
 }
 
 .fullscreen-panel.is-open {
@@ -1512,6 +1513,7 @@ img { max-width: 100%; display: block; }
   visibility: visible;
   pointer-events: auto;
   transition: opacity 0.3s ease, transform 0.3s ease;
+  content-visibility: visible;
 }
 
 .panel-header {
