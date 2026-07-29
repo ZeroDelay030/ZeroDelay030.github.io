@@ -6,6 +6,14 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  /* ---------- Intro de carga: breve destello del logo ---------- */
+  const loader = document.getElementById('zdLoader');
+  if (loader) {
+    const hideLoader = () => loader.classList.add('is-hidden');
+    window.addEventListener('load', () => setTimeout(hideLoader, 450));
+    setTimeout(hideLoader, 2000); // respaldo: nunca dejarlo pegado más de 2s
+  }
+
   /* ---------- Menú móvil ---------- */
   const navToggle = document.getElementById('navToggle');
   const mainNav = document.getElementById('mainNav');
@@ -86,6 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
     cartDrawer.setAttribute('aria-hidden', 'true');
   }
 
+  window.zdCloseCart = closeCart;
+  window.zdOpenCart = openCart;
+
   cartOpenBtns.forEach((btn) => btn.addEventListener('click', openCart));
   if (cartClose) cartClose.addEventListener('click', closeCart);
   if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
@@ -106,7 +117,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (gridByPanel[id] && typeof zdPlayGridEntrance === 'function') {
       zdPlayGridEntrance(gridByPanel[id]);
     }
+
+    if (typeof window.zdResetPanelSearch === 'function') {
+      window.zdResetPanelSearch(id);
+    }
   }
+
+  // Exponer para que otros módulos (ej. el carrusel de la home) puedan abrir paneles
+  window.zdOpenPanel = openPanel;
 
   function closePanel(id) {
     const panel = document.getElementById(id);
@@ -133,6 +151,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   closePanelBtns.forEach((btn) => {
     btn.addEventListener('click', () => closePanel(btn.dataset.closePanel));
+  });
+
+  /* ---------- Cambiar rápido entre paneles (Catálogo <-> Combos) ---------- */
+  document.querySelectorAll('[data-switch-panel]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const current = document.querySelector('.fullscreen-panel.is-open');
+      if (current) closePanel(current.id);
+      openPanel(btn.dataset.switchPanel);
+    });
+  });
+
+  /* ---------- Volver al inicio desde cualquier panel ---------- */
+  document.querySelectorAll('[data-go-home]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeAllPanels();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   });
 
   /* ---------- Tecla Escape: cierra carrito y paneles ---------- */

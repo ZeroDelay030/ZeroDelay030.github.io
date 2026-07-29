@@ -17,6 +17,7 @@
   let width = 0;
   let height = 0;
   let particles = [];
+  let bursts = [];
   let mouse = { x: null, y: null, active: false };
   let rafId = null;
 
@@ -128,11 +129,52 @@
       ctx.fill();
     }
 
+    // ráfaga de partículas al hacer click
+    if (bursts.length) {
+      bursts.forEach((b) => {
+        b.x += b.vx;
+        b.y += b.vy;
+        b.vx *= 0.96;
+        b.vy *= 0.96;
+        b.life -= 1;
+
+        const t = Math.max(b.life / b.maxLife, 0);
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r * t, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${b.color}, ${t * 0.9})`;
+        ctx.fill();
+      });
+      bursts = bursts.filter((b) => b.life > 0);
+    }
+
     rafId = requestAnimationFrame(step);
+  }
+
+  function spawnBurst(x, y) {
+    const count = 16;
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + Math.random() * 0.3;
+      const speed = 1.5 + Math.random() * 2.5;
+      bursts.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        r: 2 + Math.random() * 2,
+        life: 40,
+        maxLife: 40,
+        color: Math.random() > 0.5 ? COLOR_A : COLOR_B
+      });
+    }
   }
 
   function handlePointerMove(e) {
     const rect = hero.getBoundingClientRect();
+    const inside = e.clientX >= rect.left && e.clientX <= rect.right &&
+                   e.clientY >= rect.top && e.clientY <= rect.bottom;
+    if (!inside) {
+      mouse.active = false;
+      return;
+    }
     mouse.x = e.clientX - rect.left;
     mouse.y = e.clientY - rect.top;
     mouse.active = true;
@@ -144,8 +186,20 @@
 
   function init() {
     resize();
-    hero.addEventListener('mousemove', handlePointerMove);
-    hero.addEventListener('mouseleave', handlePointerLeave);
+    // Se escucha en toda la ventana (con chequeo de límites) en vez de
+    // solo en el hero, para evitar cualquier caso donde algún elemento
+    // encima bloquee la propagación del evento en un navegador puntual.
+    window.addEventListener('mousemove', handlePointerMove);
+    window.addEventListener('mouseout', (e) => {
+      if (!e.relatedTarget) handlePointerLeave();
+    });
+
+    hero.addEventListener('click', (e) => {
+      // no disparar la ráfaga si el click fue sobre un botón/enlace del hero
+      if (e.target.closest('a, button')) return;
+      const rect = hero.getBoundingClientRect();
+      spawnBurst(e.clientX - rect.left, e.clientY - rect.top);
+    });
     hero.addEventListener('touchmove', (e) => {
       if (e.touches && e.touches[0]) {
         const rect = hero.getBoundingClientRect();

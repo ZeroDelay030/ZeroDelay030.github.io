@@ -11,6 +11,14 @@ function zdFormatCOP(amount) {
   return '$' + amount.toLocaleString('es-CO');
 }
 
+/* ---------- Normaliza texto para búsqueda: minúsculas y sin acentos ---------- */
+function zdNormalize(str) {
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
 function zdGetCart() {
   try {
     const raw = localStorage.getItem(ZD_CART_KEY);
@@ -28,12 +36,24 @@ function zdSaveCart(cart) {
   }
 }
 
+let zdPrevBadgeQty = 0;
+
 function zdUpdateCartBadges() {
   const cart = zdGetCart();
   const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+
   document.querySelectorAll('.cart-badge').forEach((badge) => {
-    badge.textContent = totalQty;
+    if (typeof zdAnimateNumber === 'function') {
+      zdAnimateNumber(badge, zdPrevBadgeQty, totalQty, (n) => Math.round(n).toString());
+    } else {
+      badge.textContent = totalQty;
+    }
   });
+  zdPrevBadgeQty = totalQty;
+
+  if (typeof window.zdUpdateMobileCartBar === 'function') {
+    window.zdUpdateMobileCartBar();
+  }
 }
 
 function zdAddToCart(item) {
@@ -91,6 +111,7 @@ function zdBuildPlatformCard(platform) {
   const card = document.createElement('div');
   card.className = 'catalog-card';
   card.dataset.id = platform.id;
+  card.dataset.searchName = zdNormalize(platform.name);
 
   const face = document.createElement('button');
   face.className = 'catalog-card-face';
@@ -114,19 +135,24 @@ function zdBuildPlatformCard(platform) {
   const variantsList = document.createElement('div');
   variantsList.className = 'variant-list';
 
+  const cheapestPrice = platform.variants.length > 1
+    ? Math.min(...platform.variants.map((v) => v.price))
+    : null;
+
   platform.variants.forEach((variant) => {
     const row = document.createElement('div');
     row.className = 'variant-row';
 
+    const isBestPrice = cheapestPrice !== null && variant.price === cheapestPrice;
+
     const info = document.createElement('div');
     info.className = 'variant-info';
-    info.innerHTML = `<span class="variant-label">${variant.label}</span><span class="variant-price">${zdFormatCOP(variant.price)}</span>`;
+    info.innerHTML = `<span class="variant-label">${variant.label}${isBestPrice ? ' <span class="best-price-badge">Mejor precio</span>' : ''}</span><span class="variant-price">${zdFormatCOP(variant.price)}</span>`;
 
     const addBtn = document.createElement('button');
     addBtn.className = 'variant-add-btn';
-    addBtn.textContent = 'Agregar';
+    addBtn.textContent = 'Agregar al carrito';
     addBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
       zdAddToCart({ id: variant.id, name: `${platform.name} — ${variant.label}`, price: variant.price });
       zdShowAddedToast(addBtn);
     });
@@ -145,10 +171,57 @@ function zdBuildPlatformCard(platform) {
 }
 
 /* ---------- Tarjetas de combo ---------- */
+/* ---------- Emparejar un texto de "incluye" (ej: "Netflix 13 días") con su plataforma y plan real ---------- */
+function zdPlatformKeyword(name) {
+  return zdNormalize(name.replace(/[()]/g, ' ')).split(/\s+/).filter((w) => w.length > 1)[0] || '';
+}
+
+function zdMatchIncludeToVariant(includeText) {
+  const norm = zdNormalize(includeText);
+  let result = null;
+  let bestScore = -1;
+
+  ZD_CATALOG.forEach((platform) => {
+    const platformNorm = zdNormalize(platform.name);
+    const keyword = zdPlatformKeyword(platform.name);
+    // coincide si el texto trae el nombre completo, o al menos la palabra clave principal
+    // (cubre casos como "CapCut" vs "CapCut Pro", o "HBO Max" vs "MAX (HBO)")
+    const nameMatches = norm.includes(platformNorm) || (keyword.length > 2 && norm.includes(keyword));
+    if (!nameMatches) return;
+
+    // buscar el plan cuyo texto coincida mejor con las palabras del "incluye"
+    let platformBestVariant = null;
+    let platformBestScore = 0;
+    platform.variants.forEach((variant) => {
+      const labelWords = zdNormalize(variant.label).split(/\s+/).filter((w) => w.length > 1);
+      const score = labelWords.filter((w) => norm.includes(w)).length;
+      if (score > platformBestScore) {
+        platformBestScore = score;
+        platformBestVariant = variant;
+      }
+    });
+
+    // si no se especifica plan en el texto, usar el plan más económico como referencia conservadora
+    if (!platformBestVariant) {
+      platformBestVariant = platform.variants.reduce((a, b) => (b.price < a.price ? b : a));
+    }
+
+    // preferir la plataforma cuyo nombre coincida de forma más específica (nombre más largo = más precisa)
+    const specificity = platformNorm.length + platformBestScore;
+    if (specificity > bestScore) {
+      bestScore = specificity;
+      result = { platform, variant: platformBestVariant };
+    }
+  });
+
+  return result;
+}
+
 function zdBuildComboCard(combo) {
   const card = document.createElement('div');
   card.className = 'catalog-card catalog-card--combo';
   card.dataset.id = combo.id;
+  card.dataset.searchIncludes = zdNormalize(combo.includes.join(' '));
 
   const face = document.createElement('button');
   face.className = 'catalog-card-face';
@@ -157,6 +230,7 @@ function zdBuildComboCard(combo) {
   if (combo.image) {
     orbit = zdBuildLogoFrame(combo.image, combo.name);
     orbit.querySelector('.logo-frame').classList.add('logo-frame--combo-img');
+    orbit.classList.add('logo-orbit--combo-img');
   } else {
     orbit = document.createElement('div');
     orbit.className = 'logo-orbit';
@@ -167,6 +241,35 @@ function zdBuildComboCard(combo) {
   }
   face.appendChild(orbit);
 
+  // Emparejar cada "incluye" con su plataforma/plan real, para el ahorro y los mini-logos
+  const matches = combo.includes.map((inc) => zdMatchIncludeToVariant(inc)).filter(Boolean);
+  const allMatched = matches.length === combo.includes.length;
+  const individualTotal = matches.reduce((sum, m) => sum + m.variant.price, 0);
+  const savings = allMatched ? individualTotal - combo.price : 0;
+
+  if (matches.length) {
+    const miniLogos = document.createElement('div');
+    miniLogos.className = 'combo-mini-logos';
+    const seen = new Set();
+    matches.forEach((m) => {
+      if (seen.has(m.platform.id)) return;
+      seen.add(m.platform.id);
+      const thumb = document.createElement('div');
+      thumb.className = 'combo-mini-logo';
+      if (m.platform.logo) {
+        const img = document.createElement('img');
+        img.src = m.platform.logo;
+        img.alt = m.platform.name;
+        img.loading = 'lazy';
+        thumb.appendChild(img);
+      } else {
+        thumb.textContent = m.platform.name.charAt(0);
+      }
+      miniLogos.appendChild(thumb);
+    });
+    face.appendChild(miniLogos);
+  }
+
   const nameEl = document.createElement('span');
   nameEl.className = 'catalog-card-name';
   nameEl.textContent = combo.name;
@@ -176,6 +279,13 @@ function zdBuildComboCard(combo) {
   priceEl.className = 'catalog-card-price';
   priceEl.textContent = zdFormatCOP(combo.price);
   face.appendChild(priceEl);
+
+  if (savings > 0) {
+    const savingsBadge = document.createElement('span');
+    savingsBadge.className = 'combo-savings-badge';
+    savingsBadge.textContent = `Ahorras ${zdFormatCOP(savings)}`;
+    face.appendChild(savingsBadge);
+  }
 
   const chevron = document.createElement('span');
   chevron.className = 'catalog-card-chevron';
@@ -197,9 +307,8 @@ function zdBuildComboCard(combo) {
 
   const addBtn = document.createElement('button');
   addBtn.className = 'variant-add-btn variant-add-btn--combo';
-  addBtn.textContent = `Agregar combo — ${zdFormatCOP(combo.price)}`;
+  addBtn.textContent = 'Agregar al carrito';
   addBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
     zdAddToCart({ id: combo.id, name: `Combo ${combo.name}`, price: combo.price });
     zdShowAddedToast(addBtn);
   });
@@ -228,6 +337,31 @@ function zdToggleCard(card, gridSelector) {
     card.style.gridColumn = '1 / -1';
   }
 }
+
+/* ---------- Expandir una tarjeta específica por id (ej. al llegar desde el carrusel) ---------- */
+function zdExpandCardById(gridSelector, id) {
+  const grid = document.querySelector(gridSelector);
+  if (!grid) return;
+
+  const card = grid.querySelector(`.catalog-card[data-id="${id}"]`);
+  if (!card) return;
+
+  grid.querySelectorAll('.catalog-card.is-expanded').forEach((other) => {
+    if (other !== card) {
+      other.classList.remove('is-expanded');
+      other.style.gridColumn = '';
+    }
+  });
+
+  card.classList.add('is-expanded');
+  card.style.gridColumn = '1 / -1';
+
+  requestAnimationFrame(() => {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+}
+
+window.zdExpandCardById = zdExpandCardById;
 
 /* ---------- Entrada animada y escalonada de las tarjetas ---------- */
 function zdPlayGridEntrance(gridSelector) {
@@ -259,6 +393,75 @@ function zdRenderCatalog() {
   }
 
   zdUpdateCartBadges();
+  zdInitPanelSearch();
 }
+
+/* ---------- Búsqueda dentro de los paneles ---------- */
+function zdEnsureEmptyState(grid, message) {
+  let empty = grid.parentElement.querySelector('.catalog-empty-state');
+  if (!empty) {
+    empty = document.createElement('p');
+    empty.className = 'catalog-empty-state';
+    empty.textContent = message;
+    empty.hidden = true;
+    grid.insertAdjacentElement('afterend', empty);
+  }
+  return empty;
+}
+
+function zdFilterGrid(grid, emptyEl, matchFn) {
+  const query = matchFn.query;
+  let visibleCount = 0;
+
+  grid.querySelectorAll('.catalog-card').forEach((card) => {
+    const matches = query === '' || matchFn(card);
+    card.classList.toggle('is-search-hidden', !matches);
+    if (matches) visibleCount += 1;
+  });
+
+  emptyEl.hidden = visibleCount !== 0;
+}
+
+function zdInitPanelSearch() {
+  const catalogGrid = document.getElementById('catalogGrid');
+  const combosGrid = document.getElementById('combosGrid');
+  const catalogInput = document.getElementById('catalogSearchInput');
+  const combosInput = document.getElementById('combosSearchInput');
+
+  if (catalogGrid && catalogInput) {
+    const emptyEl = zdEnsureEmptyState(catalogGrid, 'No encontramos plataformas que coincidan con tu búsqueda.');
+    catalogInput.addEventListener('input', () => {
+      const query = zdNormalize(catalogInput.value.trim());
+      const fn = (card) => card.dataset.searchName.includes(query);
+      fn.query = query;
+      zdFilterGrid(catalogGrid, emptyEl, fn);
+    });
+  }
+
+  if (combosGrid && combosInput) {
+    const emptyEl = zdEnsureEmptyState(combosGrid, 'No encontramos combos que incluyan esa plataforma.');
+    combosInput.addEventListener('input', () => {
+      const query = zdNormalize(combosInput.value.trim());
+      const fn = (card) => card.dataset.searchIncludes.includes(query);
+      fn.query = query;
+      zdFilterGrid(combosGrid, emptyEl, fn);
+    });
+  }
+}
+
+/* ---------- Reiniciar la búsqueda cada vez que se abre un panel ---------- */
+function zdResetPanelSearch(panelId) {
+  const inputIdByPanel = { panelCatalogo: 'catalogSearchInput', panelCombos: 'combosSearchInput' };
+  const inputId = inputIdByPanel[panelId];
+  if (!inputId) return;
+
+  const input = document.getElementById(inputId);
+  if (!input) return;
+
+  input.value = '';
+  input.dispatchEvent(new Event('input'));
+}
+
+window.zdResetPanelSearch = zdResetPanelSearch;
 
 document.addEventListener('DOMContentLoaded', zdRenderCatalog);

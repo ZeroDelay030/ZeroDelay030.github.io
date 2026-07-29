@@ -39,10 +39,33 @@
     items.forEach((el) => observer.observe(el));
   }
 
-  /* ---------- C) Barra de progreso + D) Header reactivo ---------- */
+  /* ---------- G) Los separadores de velocidad se "dibujan" al aparecer ---------- */
+  function initSpeedDividers() {
+    const dividers = document.querySelectorAll('.speed-divider');
+    if (!dividers.length) return;
+
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+      dividers.forEach((el) => el.classList.add('is-drawn'));
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-drawn');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+
+    dividers.forEach((el) => observer.observe(el));
+  }
+
+  /* ---------- C) Barra de progreso + D) Header reactivo + E) Botón subir arriba ---------- */
   function initScrollProgressAndHeader() {
     const progressBar = document.getElementById('scrollProgress');
     const header = document.getElementById('siteHeader');
+    const backToTop = document.getElementById('backToTopBtn');
     let ticking = false;
 
     function update() {
@@ -52,6 +75,7 @@
 
       if (progressBar) progressBar.style.width = `${pct}%`;
       if (header) header.classList.toggle('is-scrolled', scrollTop > 30);
+      if (backToTop) backToTop.classList.toggle('is-visible', scrollTop > 600);
 
       ticking = false;
     }
@@ -62,6 +86,12 @@
         ticking = true;
       }
     }, { passive: true });
+
+    if (backToTop) {
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
 
     update();
   }
@@ -112,6 +142,28 @@
 
   /* ---------- G) Micro-animaciones de feedback ---------- */
 
+  // Ráfaga de partículas de celebración (ej. al finalizar por WhatsApp)
+  function zdConfettiBurst(x, y) {
+    if (prefersReducedMotion) return;
+    const colors = ['#B000FF', '#00D9FF', '#FF2E9F', '#F1F0F7'];
+    const count = 18;
+
+    for (let i = 0; i < count; i++) {
+      const piece = document.createElement('span');
+      piece.className = 'zd-confetti';
+      const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
+      const distance = 60 + Math.random() * 70;
+      piece.style.setProperty('--zd-dx', `${Math.cos(angle) * distance}px`);
+      piece.style.setProperty('--zd-dy', `${Math.sin(angle) * distance}px`);
+      piece.style.left = `${x}px`;
+      piece.style.top = `${y}px`;
+      piece.style.background = colors[i % colors.length];
+      document.body.appendChild(piece);
+      piece.addEventListener('animationend', () => piece.remove());
+    }
+  }
+  window.zdConfettiBurst = zdConfettiBurst;
+
   // Rebote del ícono del carrito cada vez que se agrega un producto
   function bumpCartIcon() {
     document.querySelectorAll('.cart-btn').forEach((btn) => {
@@ -156,11 +208,26 @@
     });
   }
 
+  /* ---------- B) Aparición suave de imágenes al cargar ---------- */
+  function initImageFade() {
+    // se ejecuta un poco después para dar tiempo a que catalog.js/marquee.js
+    // ya hayan insertado sus imágenes dinámicas en el DOM
+    document.querySelectorAll('img').forEach((img) => {
+      if (img.complete && img.naturalWidth > 0) {
+        return; // ya estaba en caché, no hace falta animar
+      }
+      img.classList.add('zd-img-fade');
+      img.addEventListener('load', () => img.classList.add('zd-img-loaded'), { once: true });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     initScrollReveal();
+    initSpeedDividers();
     initScrollProgressAndHeader();
     initTilt();
     initCartBump();
     initRipple();
+    setTimeout(initImageFade, 50);
   });
 })();

@@ -7,10 +7,50 @@
 // ============================================================
 
 const ZD_WHATSAPP_NUMBER = '573106422020';
+const ZD_PREFERS_REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let zdPrevTotal = 0;
 
 function zdCartTotal(cart) {
   return cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 }
+
+/* ---------- D) Animación de conteo para números (total, badges) ---------- */
+function zdAnimateNumber(el, from, to, formatFn) {
+  if (!el) return;
+  if (ZD_PREFERS_REDUCED_MOTION || from === to) {
+    el.textContent = formatFn(to);
+    return;
+  }
+  const duration = 400;
+  const start = performance.now();
+
+  function tick(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = formatFn(from + (to - from) * eased);
+    if (t < 1) requestAnimationFrame(tick);
+    else el.textContent = formatFn(to);
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ---------- C) Barra de carrito flotante en móvil ---------- */
+function zdUpdateMobileCartBar() {
+  const bar = document.getElementById('mobileCartBar');
+  const countEl = document.getElementById('mobileCartCount');
+  const totalEl = document.getElementById('mobileCartTotal');
+  if (!bar || !countEl || !totalEl) return;
+
+  const cart = zdGetCart();
+  const qty = cart.reduce((sum, item) => sum + item.qty, 0);
+  const total = zdCartTotal(cart);
+
+  countEl.textContent = qty;
+  totalEl.textContent = zdFormatCOP(total);
+  bar.classList.toggle('has-items', qty > 0);
+}
+window.zdUpdateMobileCartBar = zdUpdateMobileCartBar;
+
 
 function zdChangeQty(id, delta) {
   let cart = zdGetCart();
@@ -76,6 +116,8 @@ function zdRenderCartDrawer() {
     body.innerHTML = `<p class="cart-empty">Tu carrito está vacío. Explora el catálogo o los combos para agregar productos. ${ZD_EMOJI_CART}</p>`;
     footer.innerHTML = '';
     footer.classList.remove('is-active');
+    zdPrevTotal = 0;
+    zdUpdateMobileCartBar();
     return;
   }
 
@@ -97,15 +139,35 @@ function zdRenderCartDrawer() {
     `).join('')}</div>`;
 
   const total = zdCartTotal(cart);
+  const nonComboCount = cart.filter((item) => !item.name.startsWith('Combo ')).length;
+  const showNudge = nonComboCount >= 2;
 
   footer.innerHTML = `
+    ${showNudge ? `
+      <div class="cart-nudge">
+        <span>💡 ¿Sabías que combinando productos puedes ahorrar?</span>
+        <button class="cart-nudge-btn" id="cartNudgeBtn">Ver combos</button>
+      </div>
+    ` : ''}
     <div class="cart-total-row">
       <span>Total</span>
-      <span class="cart-total-value">${zdFormatCOP(total)}</span>
+      <span class="cart-total-value" id="cartTotalValue">${zdFormatCOP(zdPrevTotal)}</span>
     </div>
     <button class="btn btn--primary cart-whatsapp-btn" id="cartWhatsappBtn">Finalizar por WhatsApp</button>
     <button class="cart-clear-btn" id="cartClearBtn">Vaciar carrito</button>
   `;
+
+  zdAnimateNumber(document.getElementById('cartTotalValue'), zdPrevTotal, total, zdFormatCOP);
+  zdPrevTotal = total;
+  zdUpdateMobileCartBar();
+
+  const nudgeBtn = document.getElementById('cartNudgeBtn');
+  if (nudgeBtn) {
+    nudgeBtn.addEventListener('click', () => {
+      if (typeof window.zdCloseCart === 'function') window.zdCloseCart();
+      if (typeof window.zdOpenPanel === 'function') window.zdOpenPanel('panelCombos');
+    });
+  }
 
   body.querySelectorAll('[data-action="increase"]').forEach((btn) =>
     btn.addEventListener('click', () => zdChangeQty(btn.dataset.id, 1))
@@ -122,7 +184,11 @@ function zdRenderCartDrawer() {
 
   const waBtn = document.getElementById('cartWhatsappBtn');
   if (waBtn) {
-    waBtn.addEventListener('click', () => {
+    waBtn.addEventListener('click', (e) => {
+      if (typeof window.zdConfettiBurst === 'function') {
+        const rect = waBtn.getBoundingClientRect();
+        window.zdConfettiBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      }
       const message = zdBuildWhatsAppMessage(zdGetCart());
       const url = `https://wa.me/${ZD_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
       window.open(url, '_blank', 'noopener');

@@ -97,14 +97,13 @@ body.reveal-ready [data-reveal].is-in-view {
    MICRO-ANIMACIONES DE FEEDBACK
 ===================================================== */
 @keyframes cartBump {
-  0% { transform: scale(1); }
-  35% { transform: scale(1.22) rotate(-6deg); }
-  60% { transform: scale(0.95) rotate(3deg); }
-  100% { transform: scale(1) rotate(0); }
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 255, 255, 0); border-color: var(--border-soft); }
+  35% { transform: scale(1.22); box-shadow: 0 0 26px 8px rgba(255, 255, 255, 0.75); border-color: #ffffff; }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 255, 255, 0); border-color: var(--border-soft); }
 }
 
 .cart-btn.is-bumped {
-  animation: cartBump 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: cartBump 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .zd-ripple-host {
@@ -135,6 +134,12 @@ html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+
+  /* Estas dos son señales de feedback funcional (confirman una acción
+     del usuario), no solo decoración — deben seguir siendo visibles
+     aunque el sistema tenga activada la preferencia de reducir movimiento. */
+  .cart-btn.is-bumped { animation-duration: 0.75s !important; }
+  .zd-ripple { animation-duration: 0.6s !important; }
 }
 
 body {
@@ -401,11 +406,62 @@ img { max-width: 100%; display: block; }
   margin: 0 auto 40px;
 }
 
+#nosotros,
+#faq {
+  scroll-margin-top: 90px;
+}
+
 .hero-actions {
   display: flex;
   gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.hero-interests {
+  margin-top: 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero-interests-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.hero-interests-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.hero-interest-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-soft);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.15s ease, background 0.2s ease;
+}
+
+.hero-interest-btn:hover {
+  border-color: var(--cyan);
+  transform: translateY(-2px);
+  background: rgba(0, 217, 255, 0.08);
+}
+
+@media (max-width: 640px) {
+  .hero-interests { margin-top: 26px; }
+  .hero-interest-btn { font-size: 0.78rem; padding: 8px 13px; }
 }
 
 .btn {
@@ -474,9 +530,210 @@ img { max-width: 100%; display: block; }
 }
 
 /* =====================================================
-   SIGNATURE ELEMENT — speed divider
-   (referencia visual al streak del logo ZD)
+   CARRUSEL INFINITO (marquee) — plataformas + combos
+   Dos filas en direcciones opuestas, flujo constante ("efecto fuente")
 ===================================================== */
+.marquee-section {
+  position: relative;
+  padding: 64px 0 70px;
+  background: linear-gradient(180deg, var(--bg-panel), var(--bg-panel-alt) 60%, var(--bg-panel));
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+  overflow: hidden;
+}
+
+.marquee-heading {
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+  color: var(--text-primary);
+  margin: 0 0 36px;
+  letter-spacing: 0.02em;
+}
+
+.marquee-heading::after {
+  content: '';
+  display: block;
+  width: 70px;
+  height: 3px;
+  margin: 14px auto 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--purple), var(--cyan));
+}
+
+.marquee-row {
+  position: relative;
+}
+
+.marquee-section::before,
+.marquee-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 140px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.marquee-section::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--bg-panel-alt), transparent);
+}
+
+.marquee-section::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--bg-panel-alt), transparent);
+}
+
+.marquee-viewport {
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.marquee-viewport:active { cursor: grabbing; }
+
+.marquee-track {
+  display: flex;
+  gap: 26px;
+  width: max-content;
+  will-change: transform;
+}
+
+.marquee-track.is-dragging .marquee-card {
+  transition: none;
+}
+
+.marquee-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 26px 22px 22px;
+  background: linear-gradient(150deg, var(--bg-panel-alt), #191927);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  flex-shrink: 0;
+  width: 240px;
+  cursor: pointer;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.marquee-card:hover {
+  border-color: var(--purple);
+  box-shadow: 0 16px 40px rgba(176, 0, 255, 0.28), 0 0 0 1px rgba(0, 217, 255, 0.15) inset;
+  transform: translateY(-5px) scale(1.02);
+}
+
+/* Logos mucho más grandes y dominantes en el carrusel */
+.marquee-card .logo-orbit {
+  width: 176px;
+  height: 176px;
+}
+
+.marquee-card .logo-frame {
+  width: 164px;
+  height: 164px;
+  border-radius: 22px;
+}
+
+.marquee-card .logo-orbit--combo-img {
+  width: 220px;
+  height: 122px;
+}
+
+.marquee-card .logo-orbit--combo-img::before {
+  border-radius: 20px;
+}
+
+.marquee-card .logo-frame--combo-img {
+  width: 208px;
+  height: 112px;
+  border-radius: 16px;
+}
+
+.marquee-card .logo-frame--text span {
+  font-size: 0.85rem;
+}
+
+/* Efecto exclusivo del carrusel: un destello de luz que recorre
+   el logo periódicamente (distinto al resplandor del catálogo) */
+.marquee-card .logo-frame {
+  position: relative;
+  overflow: hidden;
+}
+
+.marquee-card .logo-frame::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 60%;
+  height: 220%;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.75) 50%, rgba(0, 217, 255, 0.4) 58%, transparent 75%);
+  transform: translateX(-160%) rotate(0deg);
+  animation: marqueeShine 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.marquee-card:nth-child(3n+2) .logo-frame::after { animation-delay: 0.6s; }
+.marquee-card:nth-child(3n) .logo-frame::after { animation-delay: 1.2s; }
+
+@keyframes marqueeShine {
+  0% { transform: translateX(-160%); }
+  35% { transform: translateX(260%); }
+  100% { transform: translateX(260%); }
+}
+
+.marquee-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.marquee-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.marquee-price {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--cyan);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .marquee-section { padding: 46px 0 50px; }
+  .marquee-section::before,
+  .marquee-section::after { width: 50px; }
+  .marquee-track { gap: 16px; }
+  .marquee-card { width: 190px; padding: 20px 16px 18px; gap: 14px; }
+  .marquee-card .logo-orbit { width: 132px; height: 132px; }
+  .marquee-card .logo-frame { width: 122px; height: 122px; border-radius: 18px; }
+  .marquee-card .logo-orbit--combo-img { width: 160px; height: 90px; }
+  .marquee-card .logo-frame--combo-img { width: 150px; height: 82px; border-radius: 14px; }
+  .marquee-name { font-size: 0.88rem; }
+  .marquee-price { font-size: 0.78rem; }
+}
+
+@media (max-width: 640px) {
+  .marquee-section::before,
+  .marquee-section::after { width: 40px; }
+  .marquee-card { padding: 10px 18px 10px 10px; gap: 10px; }
+  .marquee-logo { width: 42px; height: 42px; }
+  .marquee-logo--rect { width: 64px; height: 36px; }
+  .marquee-name { font-size: 0.82rem; }
+}
 .speed-divider {
   position: relative;
   height: 64px;
@@ -488,6 +745,8 @@ img { max-width: 100%; display: block; }
   height: 2px;
   border-radius: 2px;
   opacity: 0.7;
+  transform: scaleX(0);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .speed-line--1 {
@@ -495,6 +754,7 @@ img { max-width: 100%; display: block; }
   top: 20px;
   left: -10%;
   background: linear-gradient(90deg, transparent, var(--purple), transparent);
+  transform-origin: left center;
 }
 
 .speed-line--2 {
@@ -502,6 +762,8 @@ img { max-width: 100%; display: block; }
   top: 34px;
   left: -30%;
   background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  transform-origin: left center;
+  transition-delay: 0.1s;
 }
 
 .speed-line--3 {
@@ -509,6 +771,12 @@ img { max-width: 100%; display: block; }
   top: 46px;
   left: -50%;
   background: linear-gradient(90deg, transparent, var(--silver), transparent);
+  transform-origin: left center;
+  transition-delay: 0.2s;
+}
+
+.speed-divider.is-drawn .speed-line {
+  transform: scaleX(1);
 }
 
 /* =====================================================
@@ -658,8 +926,8 @@ img { max-width: 100%; display: block; }
 
 .logo-orbit {
   position: relative;
-  width: 92px;
-  height: 92px;
+  width: 97px;
+  height: 97px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -670,8 +938,20 @@ img { max-width: 100%; display: block; }
 .logo-orbit::before {
   content: '';
   position: absolute;
+  inset: -10%;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(176, 0, 255, 0.55), rgba(0, 217, 255, 0.28) 55%, transparent 75%);
+  filter: blur(10px);
+  opacity: 0.55;
+  animation: logoGlowPulse 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.logo-orbit::after {
+  content: '';
+  position: absolute;
   inset: 0;
-  border-radius: 22px;
+  border-radius: 34px;
   padding: 2px;
   background: conic-gradient(from 0deg, var(--purple), var(--cyan), var(--magenta), var(--purple));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -679,11 +959,24 @@ img { max-width: 100%; display: block; }
   mask-composite: exclude;
   opacity: 0.5;
   animation: ringSpin 7s linear infinite;
+  pointer-events: none;
 }
 
 .catalog-card:hover .logo-orbit::before {
+  opacity: 0.9;
+  animation-duration: 1.5s;
+}
+
+.catalog-card:hover .logo-orbit::after {
   opacity: 0.95;
   animation-duration: 2.8s;
+}
+
+/* El carrusel tiene su propio efecto (destello de luz), no usa ni el
+   resplandor ni el anillo giratorio del catálogo/combos */
+.marquee-card .logo-orbit::before,
+.marquee-card .logo-orbit::after {
+  display: none;
 }
 
 /* variedad: que no todos los logos floten sincronizados */
@@ -691,9 +984,18 @@ img { max-width: 100%; display: block; }
 .catalog-grid .catalog-card:nth-child(3n+2) .logo-orbit { animation-delay: -1.2s; }
 .catalog-grid .catalog-card:nth-child(3n) .logo-orbit { animation-delay: -2.4s; }
 
+.marquee-track .marquee-card:nth-child(3n+1) .logo-orbit { animation-delay: 0s; }
+.marquee-track .marquee-card:nth-child(3n+2) .logo-orbit { animation-delay: -1.2s; }
+.marquee-track .marquee-card:nth-child(3n) .logo-orbit { animation-delay: -2.4s; }
+
 @keyframes logoFloat {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
+}
+
+@keyframes logoGlowPulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.92); }
+  50% { opacity: 0.8; transform: scale(1.06); }
 }
 
 @keyframes ringSpin {
@@ -745,6 +1047,27 @@ img { max-width: 100%; display: block; }
 }
 
 .logo-frame--combo span { font-size: 1.6rem; color: var(--cyan); }
+
+/* Combos con imagen real: forma rectangular en vez de cuadrada,
+   acorde a la proporción de los banners (≈ 1.83:1) */
+.logo-orbit--combo-img {
+  width: 136px;
+  height: 76px;
+}
+
+.logo-orbit--combo-img::before {
+  border-radius: 16px;
+}
+
+.logo-orbit--combo-img::after {
+  border-radius: 28px;
+}
+
+.logo-frame--combo-img {
+  width: 128px;
+  height: 70px;
+  border-radius: 12px;
+}
 
 .catalog-card-name {
   font-family: var(--font-display);
@@ -1237,6 +1560,105 @@ img { max-width: 100%; display: block; }
   padding-bottom: 90px;
 }
 
+/* =====================================================
+   BUSCADOR DENTRO DE LOS PANELES (Catálogo / Combos)
+===================================================== */
+.panel-search-wrap {
+  position: relative;
+  max-width: 420px;
+  margin: 0 0 32px;
+}
+
+.panel-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.panel-search-input {
+  width: 100%;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 12px 18px 12px 46px;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.panel-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.panel-search-input:focus {
+  outline: none;
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(176, 0, 255, 0.18);
+}
+
+.catalog-card.is-search-hidden {
+  display: none;
+}
+
+.catalog-empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px 20px;
+  font-size: 0.92rem;
+}
+
+/* =====================================================
+   NAVEGACIÓN RÁPIDA DENTRO DE LOS PANELES
+   (cambiar de Catálogo <-> Combos, o volver al inicio)
+===================================================== */
+.panel-quicknav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: -10px 0 32px;
+}
+
+.panel-quicknav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(100deg, rgba(176, 0, 255, 0.16), rgba(0, 217, 255, 0.1));
+  border: 1px solid rgba(176, 0, 255, 0.35);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.15s ease, background 0.2s ease;
+}
+
+.panel-quicknav-btn:hover {
+  border-color: var(--purple);
+  transform: translateY(-2px);
+  background: linear-gradient(100deg, rgba(176, 0, 255, 0.28), rgba(0, 217, 255, 0.16));
+}
+
+.panel-quicknav-btn--ghost {
+  background: transparent;
+  border-color: var(--border-soft);
+  color: var(--text-muted);
+}
+
+.panel-quicknav-btn--ghost:hover {
+  border-color: var(--cyan);
+  color: var(--text-primary);
+  background: rgba(0, 217, 255, 0.08);
+}
+
 .cart-badge--panel { /* mismo estilo que el badge normal, alias por claridad */ }
 
 /* =====================================================
@@ -1491,4 +1913,307 @@ img { max-width: 100%; display: block; }
 
   .nav-toggle { display: flex; }
   .hero { min-height: auto; padding: 110px 20px 70px; }
+}
+
+/* =====================================================
+   INTRO DE CARGA
+===================================================== */
+.zd-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--bg-void);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.zd-loader-logo {
+  width: 84px;
+  height: 84px;
+  border-radius: 20px;
+  object-fit: contain;
+  animation: zdLoaderPulse 1s ease-in-out infinite;
+}
+
+.zd-loader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@keyframes zdLoaderPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.75; }
+}
+
+/* =====================================================
+   CURSOR PERSONALIZADO (solo desktop con mouse real)
+===================================================== */
+body.zd-custom-cursor,
+body.zd-custom-cursor a,
+body.zd-custom-cursor button {
+  cursor: none;
+}
+
+.zd-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.zd-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(176, 0, 255, 0.55);
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.2s ease, width 0.15s ease, height 0.15s ease, border-color 0.15s ease;
+}
+
+.zd-cursor-ring.is-clicking {
+  width: 26px;
+  height: 26px;
+  border-color: var(--cyan);
+}
+
+/* =====================================================
+   AVISO "ARMA UN COMBO" DENTRO DEL CARRITO
+===================================================== */
+.cart-nudge {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: linear-gradient(100deg, rgba(176, 0, 255, 0.14), rgba(0, 217, 255, 0.1));
+  border: 1px solid rgba(176, 0, 255, 0.3);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+}
+
+.cart-nudge-btn {
+  align-self: flex-start;
+  background: none;
+  border: 1px solid rgba(176, 0, 255, 0.5);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.cart-nudge-btn:hover {
+  border-color: var(--cyan);
+  background: rgba(0, 217, 255, 0.1);
+}
+
+/* =====================================================
+   B) RÁFAGA DE CONFETI (celebración al finalizar por WhatsApp)
+===================================================== */
+.zd-confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 600;
+  animation: zdConfettiFly 0.75s cubic-bezier(0.25, 0.8, 0.35, 1) forwards;
+}
+
+@keyframes zdConfettiFly {
+  0% { transform: translate(-50%, -50%) rotate(0deg); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--zd-dx)), calc(-50% + var(--zd-dy))) rotate(280deg); opacity: 0; }
+}
+
+/* =====================================================
+   C) INSIGNIA "AHORRAS $X" EN COMBOS
+===================================================== */
+.combo-savings-badge {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(23, 201, 100, 0.15);
+  border: 1px solid rgba(23, 201, 100, 0.4);
+  color: #3ddc84;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+/* =====================================================
+   D) MINI-LOGOS DE PLATAFORMAS INCLUIDAS EN EL COMBO
+===================================================== */
+.combo-mini-logos {
+  display: flex;
+  justify-content: center;
+  margin-top: -4px;
+}
+
+.combo-mini-logo {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: #fff;
+  border: 2px solid var(--bg-panel);
+  overflow: hidden;
+  margin-left: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--bg-void);
+}
+
+.combo-mini-logo:first-child { margin-left: 0; }
+
+.combo-mini-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* =====================================================
+   F) INSIGNIA "MEJOR PRECIO"
+===================================================== */
+.best-price-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(176, 0, 255, 0.16);
+  border: 1px solid rgba(176, 0, 255, 0.4);
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+/* =====================================================
+   H) BRILLO EN LOS ÍCONOS DE REDES SOCIALES DEL FOOTER
+===================================================== */
+.footer-social-link:hover .social-icon {
+  filter: drop-shadow(0 0 6px var(--cyan));
+  animation: zdSocialPulse 0.6s ease;
+}
+
+@keyframes zdSocialPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+}
+
+/* =====================================================
+   B) APARICIÓN SUAVE DE IMÁGENES AL CARGAR
+===================================================== */
+.zd-img-fade {
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.zd-img-fade.zd-img-loaded {
+  opacity: 1;
+}
+
+/* =====================================================
+   E) BOTÓN FLOTANTE "SUBIR ARRIBA"
+===================================================== */
+.back-to-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 150;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.2s ease;
+}
+
+.back-to-top svg { width: 20px; height: 20px; }
+
+.back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.back-to-top:hover {
+  border-color: var(--purple);
+  box-shadow: 0 6px 20px rgba(176, 0, 255, 0.25);
+}
+
+/* =====================================================
+   C) BARRA DE CARRITO EN MÓVIL
+===================================================== */
+.mobile-cart-bar {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 150;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: linear-gradient(100deg, var(--purple), var(--purple-soft));
+  border: none;
+  border-radius: 999px;
+  padding: 14px 20px;
+  color: #fff;
+  font-family: var(--font-body);
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(176, 0, 255, 0.4);
+  transform: translateY(120%);
+  transition: transform 0.3s ease;
+}
+
+.mobile-cart-bar.is-visible {
+  transform: translateY(0);
+}
+
+.mobile-cart-bar-info {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.mobile-cart-bar-cta {
+  font-size: 0.85rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .mobile-cart-bar.has-items { display: flex; }
+  .back-to-top { right: 16px; bottom: 16px; width: 42px; height: 42px; }
 }

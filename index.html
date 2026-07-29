@@ -5,12 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZERO DELAY — Plataformas digitales sin demoras</title>
 <meta name="description" content="Netflix, Disney+, HBO Max, ChatGPT Plus y más. Suscripciones digitales rápidas, confiables y al mejor precio.">
+
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="ZERO DELAY — Streaming, IA y productividad al mejor precio">
+<meta property="og:description" content="Netflix, Disney+, HBO Max, ChatGPT Plus, Spotify y más de 20 plataformas. Entrega inmediata y combos con descuento.">
+<meta property="og:image" content="https://zerodelay030.github.io/assets/logo-zd.jpg">
+<meta property="og:url" content="https://zerodelay030.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ZERO DELAY — Streaming, IA y productividad al mejor precio">
+<meta name="twitter:description" content="Netflix, Disney+, HBO Max, ChatGPT Plus, Spotify y más de 20 plataformas. Entrega inmediata y combos con descuento.">
+<meta name="twitter:image" content="https://zerodelay030.github.io/assets/logo-zd.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+
+<div id="zdLoader" class="zd-loader" aria-hidden="true">
+  <img src="assets/logo-zd.jpg" alt="" class="zd-loader-logo">
+</div>
 
 <div class="scroll-progress" id="scrollProgress"></div>
 
@@ -70,11 +88,32 @@
       <a href="#" class="btn btn--primary" data-open-panel="panelCatalogo">Ver catálogo</a>
       <a href="#" class="btn btn--ghost" data-open-panel="panelCombos">Ver combos</a>
     </div>
+
+    <div class="hero-interests">
+      <span class="hero-interests-label">¿Qué buscas hoy?</span>
+      <div class="hero-interests-row">
+        <button class="hero-interest-btn" data-open-panel="panelCatalogo">🎬 Streaming</button>
+        <button class="hero-interest-btn" data-open-panel="panelCatalogo">🤖 Inteligencia Artificial</button>
+        <button class="hero-interest-btn" data-open-panel="panelCatalogo">💼 Productividad</button>
+        <button class="hero-interest-btn" data-open-panel="panelCombos">🎁 Combos</button>
+      </div>
+    </div>
   </div>
 
 
   <div class="scroll-cue" aria-hidden="true">
     <span></span>
+  </div>
+</section>
+
+<!-- ============ CARRUSEL INFINITO DE PRODUCTOS ============ -->
+<section class="marquee-section" aria-label="Productos y combos destacados">
+  <p class="marquee-heading">Productos destacados</p>
+
+  <div class="marquee-row">
+    <div class="marquee-viewport" id="marqueeViewport1">
+      <div class="marquee-track" id="marqueeTrack1"></div>
+    </div>
   </div>
 </section>
 
@@ -349,6 +388,23 @@
     <h2 class="section-title">Elige tu plataforma</h2>
     <p class="section-lead">Explora nuestras plataformas disponibles. Cada una con distintos planes y duraciones.</p>
 
+    <div class="panel-search-wrap">
+      <svg class="panel-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <input type="text" id="catalogSearchInput" class="panel-search-input" placeholder="Buscar plataforma... (ej: Netflix, ChatGPT)" autocomplete="off">
+    </div>
+
+    <div class="panel-quicknav">
+      <button class="panel-quicknav-btn" data-switch-panel="panelCombos">
+        Ver combos con descuento <span aria-hidden="true">→</span>
+      </button>
+      <button class="panel-quicknav-btn panel-quicknav-btn--ghost" data-go-home>
+        <span aria-hidden="true">↑</span> Ir al inicio
+      </button>
+    </div>
+
     <div class="catalog-grid" id="catalogGrid">
       <!-- Placeholder: en el Paso 2 esto se llenará dinámicamente con cada plataforma -->
       <div class="catalog-card catalog-card--placeholder">
@@ -381,6 +437,23 @@
     <h2 class="section-title">Paquetes con descuento</h2>
     <p class="section-lead">Combina plataformas y ahorra frente al precio individual.</p>
 
+    <div class="panel-search-wrap">
+      <svg class="panel-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <input type="text" id="combosSearchInput" class="panel-search-input" placeholder="Buscar combos que incluyan... (ej: Netflix)" autocomplete="off">
+    </div>
+
+    <div class="panel-quicknav">
+      <button class="panel-quicknav-btn" data-switch-panel="panelCatalogo">
+        Ver plataformas <span aria-hidden="true">→</span>
+      </button>
+      <button class="panel-quicknav-btn panel-quicknav-btn--ghost" data-go-home>
+        <span aria-hidden="true">↑</span> Ir al inicio
+      </button>
+    </div>
+
     <div class="catalog-grid" id="combosGrid">
       <div class="catalog-card catalog-card--placeholder">
         <div class="placeholder-shimmer"></div>
@@ -389,6 +462,17 @@
     </div>
   </div>
 </div>
+
+<!-- ============ BOTÓN FLOTANTE "SUBIR ARRIBA" ============ -->
+<button id="backToTopBtn" class="back-to-top" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 19V5M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<!-- ============ BARRA DE CARRITO EN MÓVIL ============ -->
+<button id="mobileCartBar" class="mobile-cart-bar" data-open-cart aria-label="Ver carrito">
+  <span class="mobile-cart-bar-info"><span id="mobileCartCount">0</span> producto(s) — <span id="mobileCartTotal">$0</span></span>
+  <span class="mobile-cart-bar-cta">Ver carrito →</span>
+</button>
 
 <!-- ============ CARRITO (drawer — se activará en el Paso 3) ============ -->
 <div class="cart-overlay" id="cartOverlay"></div>
@@ -404,9 +488,11 @@
 </aside>
 
 <script src="js/hero-fx.js"></script>
+<script src="js/cursor.js"></script>
 <script src="js/data.js"></script>
 <script src="js/catalog.js"></script>
 <script src="js/cart.js"></script>
+<script src="js/marquee.js"></script>
 <script src="js/effects.js"></script>
 <script src="js/main.js"></script>
 </body>
