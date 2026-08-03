@@ -108,6 +108,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function openPanel(id) {
     const panel = document.getElementById(id);
     if (!panel) return;
+
+    if (id === 'panelCatalogo' && typeof window.zdBuildPlatformsGrid === 'function') {
+      window.zdBuildPlatformsGrid();
+    }
+    if (id === 'panelCombos' && typeof window.zdBuildCombosGrid === 'function') {
+      window.zdBuildCombosGrid();
+    }
+
     panel.classList.add('is-open');
     panel.setAttribute('aria-hidden', 'false');
     panel.scrollTop = 0;

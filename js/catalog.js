@@ -378,21 +378,44 @@ function zdPlayGridEntrance(gridSelector) {
 }
 
 /* ---------- Render inicial ---------- */
-function zdRenderCatalog() {
+function zdObserveCardAnimations(grid) {
+  if (!('IntersectionObserver' in window)) return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      entry.target.classList.toggle('is-anim-paused', !entry.isIntersecting);
+    });
+  }, { rootMargin: '150px', threshold: 0 });
+  grid.querySelectorAll('.logo-orbit').forEach((el) => observer.observe(el));
+}
+
+function zdBuildPlatformsGrid() {
   const catalogGrid = document.getElementById('catalogGrid');
+  if (!catalogGrid || catalogGrid.dataset.built === 'true') return;
+  catalogGrid.innerHTML = '';
+  ZD_CATALOG.forEach((platform) => catalogGrid.appendChild(zdBuildPlatformCard(platform)));
+  catalogGrid.dataset.built = 'true';
+  zdUpdateCartBadges();
+  zdObserveCardAnimations(catalogGrid);
+}
+
+function zdBuildCombosGrid() {
   const combosGrid = document.getElementById('combosGrid');
+  if (!combosGrid || combosGrid.dataset.built === 'true') return;
+  combosGrid.innerHTML = '';
+  const sortedCombos = [...ZD_COMBOS].sort((a, b) => a.price - b.price);
+  sortedCombos.forEach((combo) => combosGrid.appendChild(zdBuildComboCard(combo)));
+  combosGrid.dataset.built = 'true';
+  zdUpdateCartBadges();
+  zdObserveCardAnimations(combosGrid);
+}
 
-  if (catalogGrid) {
-    catalogGrid.innerHTML = '';
-    ZD_CATALOG.forEach((platform) => catalogGrid.appendChild(zdBuildPlatformCard(platform)));
-  }
+window.zdBuildPlatformsGrid = zdBuildPlatformsGrid;
+window.zdBuildCombosGrid = zdBuildCombosGrid;
 
-  if (combosGrid) {
-    combosGrid.innerHTML = '';
-    const sortedCombos = [...ZD_COMBOS].sort((a, b) => a.price - b.price);
-    sortedCombos.forEach((combo) => combosGrid.appendChild(zdBuildComboCard(combo)));
-  }
-
+function zdRenderCatalog() {
+  // El catálogo y los combos ya NO se construyen aquí de entrada: se
+  // difiere hasta que el cliente abre cada panel por primera vez, para
+  // no cargar ~2000 elementos del DOM que quizás nunca llegue a ver.
   zdUpdateCartBadges();
   zdInitPanelSearch();
 }

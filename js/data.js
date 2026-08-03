@@ -96,8 +96,8 @@ const ZD_CATALOG = [
     name: 'Spotify Premium',
     logo: 'assets/logos/spotify.jpg',
     variants: [
-      { id: 'spotify-1m', label: '1 mes', price: 6900 },
-      { id: 'spotify-2m', label: '2 meses', price: 13500 }
+      { id: 'spotify-1m', label: '1 mes', price: 7900 },
+      { id: 'spotify-2m', label: '2 meses', price: 15500 }
     ]
   },
   {

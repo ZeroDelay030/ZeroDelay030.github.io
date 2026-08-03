@@ -15,6 +15,19 @@ function zdMarqueeMinPrice(variants) {
   return Math.min(...variants.map((v) => v.price));
 }
 
+// Estas plataformas son las más vendidas: siempre aparecen entre las
+// primeras tarjetas del carrusel (mezcladas al azar solo entre ellas).
+const ZD_MARQUEE_PRIORITY_IDS = ['netflix', 'primevideo', 'disney', 'hbomax', 'chatgpt', 'capcut'];
+
+function zdShuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function zdMarqueeBuildItems() {
   const platformItems = (typeof ZD_CATALOG !== 'undefined' ? ZD_CATALOG : []).map((p) => ({
     id: p.id,
@@ -34,13 +47,34 @@ function zdMarqueeBuildItems() {
     priceLabel: zdFormatCOP(c.price)
   }));
 
-  const mixed = [];
-  const maxLen = Math.max(platformItems.length, comboItems.length);
+  // separar las plataformas prioritarias (más vendidas) del resto
+  const priorityItems = [];
+  const restPlatformItems = [];
+  platformItems.forEach((item) => {
+    if (ZD_MARQUEE_PRIORITY_IDS.includes(item.id)) {
+      priorityItems.push(item);
+    } else {
+      restPlatformItems.push(item);
+    }
+  });
+
+  // cada vez que se entra a la página: las prioritarias van primero
+  // (en orden aleatorio entre ellas). Luego, el resto de plataformas y
+  // los combos se aleatorizan cada uno por su lado y se intercalan
+  // parejo, para que las plataformas individuales no queden opacadas
+  // por la mayor cantidad de combos (hay más combos que plataformas).
+  const shuffledPriority = zdShuffle(priorityItems);
+  const shuffledRestPlatforms = zdShuffle(restPlatformItems);
+  const shuffledCombos = zdShuffle(comboItems);
+
+  const interleavedRest = [];
+  const maxLen = Math.max(shuffledRestPlatforms.length, shuffledCombos.length);
   for (let i = 0; i < maxLen; i++) {
-    if (platformItems[i]) mixed.push(platformItems[i]);
-    if (comboItems[i]) mixed.push(comboItems[i]);
+    if (shuffledRestPlatforms[i]) interleavedRest.push(shuffledRestPlatforms[i]);
+    if (shuffledCombos[i]) interleavedRest.push(shuffledCombos[i]);
   }
-  return mixed;
+
+  return shuffledPriority.concat(interleavedRest);
 }
 
 function zdMarqueeCardHTML(item) {
@@ -80,7 +114,7 @@ function initMarquee() {
   if (!items.length) return;
 
   const setHTML = items.map(zdMarqueeCardHTML).join('');
-  track.innerHTML = setHTML + setHTML + setHTML; // 3 copias para poder arrastrar con margen de sobra
+  track.innerHTML = setHTML + setHTML; // 2 copias: suficiente para el loop infinito con menos peso en el DOM
 
   let offset = 0;
   let singleSetWidth = 0;
@@ -93,16 +127,16 @@ function initMarquee() {
   let ready = false;
 
   function measure() {
-    singleSetWidth = track.scrollWidth / 3;
+    singleSetWidth = track.scrollWidth / 2;
     if (!ready) {
-      offset = -singleSetWidth; // arrancar en la copia del medio
+      offset = -singleSetWidth / 2; // arrancar a mitad de camino, con margen a ambos lados
       ready = true;
     }
   }
 
   function wrapOffset() {
     if (singleSetWidth <= 0) return;
-    while (offset <= -singleSetWidth * 2) offset += singleSetWidth;
+    while (offset <= -singleSetWidth) offset += singleSetWidth;
     while (offset > 0) offset -= singleSetWidth;
   }
 

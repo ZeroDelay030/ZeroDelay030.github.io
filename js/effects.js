@@ -103,7 +103,10 @@
     const TILT_SELECTOR = '.quick-card, .catalog-card';
     const MAX_TILT = 7; // grados
 
-    function handleMove(e) {
+    let pendingEvent = null;
+    let ticking = false;
+
+    function processMove(e) {
       const card = e.target.closest(TILT_SELECTOR);
       if (!card) return;
       if (card.classList.contains('is-expanded')) return; // no inclinar cuando está expandida
@@ -118,6 +121,17 @@
       card.style.transform = `perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
       card.style.setProperty('--mx', `${relX * 100}%`);
       card.style.setProperty('--my', `${relY * 100}%`);
+    }
+
+    function handleMove(e) {
+      pendingEvent = e;
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          if (pendingEvent) processMove(pendingEvent);
+          ticking = false;
+        });
+      }
     }
 
     function handleLeave(e) {

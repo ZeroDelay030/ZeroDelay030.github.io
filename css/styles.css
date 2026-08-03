@@ -174,7 +174,7 @@ img { max-width: 100%; display: block; }
   top: 0;
   z-index: 100;
   background: rgba(7, 7, 12, 0.75);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(9px);
   border-bottom: 1px solid var(--border-soft);
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
@@ -457,6 +457,7 @@ img { max-width: 100%; display: block; }
   border-color: var(--cyan);
   transform: translateY(-2px);
   background: rgba(0, 217, 255, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 217, 255, 0.25);
 }
 
 @media (max-width: 640px) {
@@ -924,6 +925,12 @@ img { max-width: 100%; display: block; }
   position: relative;
 }
 
+.logo-orbit.is-anim-paused,
+.logo-orbit.is-anim-paused::before,
+.logo-orbit.is-anim-paused::after {
+  animation-play-state: paused;
+}
+
 .logo-orbit {
   position: relative;
   width: 97px;
@@ -940,8 +947,12 @@ img { max-width: 100%; display: block; }
   position: absolute;
   inset: -10%;
   border-radius: inherit;
-  background: radial-gradient(circle, rgba(176, 0, 255, 0.55), rgba(0, 217, 255, 0.28) 55%, transparent 75%);
-  filter: blur(10px);
+  background: radial-gradient(circle,
+    rgba(176, 0, 255, 0.5) 0%,
+    rgba(176, 0, 255, 0.32) 30%,
+    rgba(0, 217, 255, 0.2) 48%,
+    rgba(0, 217, 255, 0.1) 62%,
+    transparent 78%);
   opacity: 0.55;
   animation: logoGlowPulse 2.8s ease-in-out infinite;
   pointer-events: none;
@@ -1169,7 +1180,7 @@ img { max-width: 100%; display: block; }
   white-space: nowrap;
 }
 
-.variant-add-btn:hover { transform: translateY(-1px); }
+.variant-add-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(176, 0, 255, 0.4); }
 
 .variant-add-btn.is-added {
   background: linear-gradient(100deg, #17c964, #12a350);
@@ -1526,7 +1537,7 @@ img { max-width: 100%; display: block; }
   gap: 16px;
   padding: 16px 24px;
   background: rgba(7, 7, 12, 0.85);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(9px);
   border-bottom: 1px solid var(--border-soft);
 }
 
@@ -1647,6 +1658,7 @@ img { max-width: 100%; display: block; }
   border-color: var(--purple);
   transform: translateY(-2px);
   background: linear-gradient(100deg, rgba(176, 0, 255, 0.28), rgba(0, 217, 255, 0.16));
+  box-shadow: 0 6px 18px rgba(176, 0, 255, 0.3);
 }
 
 .panel-quicknav-btn--ghost {
@@ -1896,7 +1908,7 @@ img { max-width: 100%; display: block; }
     flex-direction: column;
     gap: 0;
     background: rgba(16, 16, 24, 0.98);
-    backdrop-filter: blur(14px);
+    backdrop-filter: blur(9px);
     border-bottom: 1px solid var(--border-soft);
     padding: 6px 24px 14px;
     box-shadow: 0 16px 30px rgba(0,0,0,0.35);
@@ -1948,49 +1960,6 @@ img { max-width: 100%; display: block; }
 @keyframes zdLoaderPulse {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.08); opacity: 0.75; }
-}
-
-/* =====================================================
-   CURSOR PERSONALIZADO (solo desktop con mouse real)
-===================================================== */
-body.zd-custom-cursor,
-body.zd-custom-cursor a,
-body.zd-custom-cursor button {
-  cursor: none;
-}
-
-.zd-cursor-dot {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--cyan);
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.zd-cursor-ring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(176, 0, 255, 0.55);
-  pointer-events: none;
-  z-index: 9998;
-  opacity: 0;
-  transition: opacity 0.2s ease, width 0.15s ease, height 0.15s ease, border-color 0.15s ease;
-}
-
-.zd-cursor-ring.is-clicking {
-  width: 26px;
-  height: 26px;
-  border-color: var(--cyan);
 }
 
 /* =====================================================
