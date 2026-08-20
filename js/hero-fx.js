@@ -281,19 +281,26 @@
 
   // posiciones posibles alrededor del título (más de las que se usan a la vez,
   // así también varía cuáles se ocupan cada vez que se entra a la página)
-  const SLOTS = [
-    { top: '14%', left: '7%', size: 52 },
-    { top: '66%', left: '11%', size: 44 },
-    { top: '20%', right: '8%', size: 52 },
-    { top: '70%', right: '12%', size: 46 },
-    { top: '44%', right: '3%', size: 40 },
-    { top: '5%', left: '30%', size: 38 },
-    { top: '87%', right: '28%', size: 40 },
-    { top: '38%', left: '2%', size: 36 },
-    { top: '6%', right: '24%', size: 36 },
-    { top: '80%', left: '25%', size: 38 },
-    { top: '55%', left: '18%', size: 34 },
-    { top: '30%', right: '20%', size: 34 }
+  const DESKTOP_SLOTS = [
+    { top: '13%', left: '6%', size: 78 },
+    { top: '65%', left: '10%', size: 66 },
+    { top: '18%', right: '7%', size: 80 },
+    { top: '68%', right: '11%', size: 70 },
+    { top: '42%', right: '2%', size: 60 },
+    { top: '4%', left: '28%', size: 56 },
+    { top: '86%', right: '26%', size: 60 },
+    { top: '36%', left: '1%', size: 54 },
+    { top: '5%', right: '22%', size: 54 },
+    { top: '79%', left: '23%', size: 58 },
+    { top: '53%', left: '16%', size: 52 },
+    { top: '28%', right: '18%', size: 52 }
+  ];
+
+  const MOBILE_SLOTS = [
+    { top: '3%', left: '4%', size: 46 },
+    { top: '3%', right: '4%', size: 46 },
+    { top: '95%', left: '6%', size: 42 },
+    { top: '95%', right: '6%', size: 42 }
   ];
 
   function zdShuffleArr(arr) {
@@ -313,7 +320,9 @@
     const wrap = document.getElementById('heroFloatingLogos');
     if (!wrap) return;
 
-    const count = Math.min(8, LOGO_POOL.length, SLOTS.length);
+    const isMobile = window.innerWidth < 640;
+    const SLOTS = isMobile ? MOBILE_SLOTS : DESKTOP_SLOTS;
+    const count = Math.min(isMobile ? 4 : 8, LOGO_POOL.length, SLOTS.length);
     const logos = zdShuffleArr(LOGO_POOL).slice(0, count);
     const slots = zdShuffleArr(SLOTS).slice(0, count);
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -337,8 +346,9 @@
       if (!prefersReducedMotion) {
         // movimiento orgánico: cada logo deriva en una dirección/tamaño/
         // duración distinta, y con retraso propio para desincronizar
-        img.style.setProperty('--float-x', `${rand(-16, 16).toFixed(1)}px`);
-        img.style.setProperty('--float-y', `${rand(-24, -14).toFixed(1)}px`);
+        const driftScale = isMobile ? 0.6 : 1;
+        img.style.setProperty('--float-x', `${(rand(-16, 16) * driftScale).toFixed(1)}px`);
+        img.style.setProperty('--float-y', `${(rand(-24, -14) * driftScale).toFixed(1)}px`);
         img.style.setProperty('--float-rot', `${rand(-9, 9).toFixed(1)}deg`);
         img.style.animationDuration = `${rand(5, 8.5).toFixed(2)}s`;
         img.style.animationDelay = `-${rand(0, 8).toFixed(2)}s`;

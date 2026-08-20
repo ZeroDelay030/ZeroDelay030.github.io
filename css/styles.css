@@ -690,14 +690,6 @@ img { max-width: 100%; display: block; }
   .hero-float-logo { animation: none; }
 }
 
-@media (max-width: 900px) {
-  .hero-float-logo:nth-child(n+5) { display: none; }
-}
-
-@media (max-width: 640px) {
-  .hero-floating-logos { display: none; }
-}
-
 /* =====================================================
    B) CÓMO FUNCIONA (3 pasos)
 ===================================================== */
