@@ -324,7 +324,9 @@ function zdRenderCustomComboSummary() {
   if (shareBtn) shareBtn.hidden = count < 2;
 
   if (floatBar) {
-    floatBar.classList.toggle('is-visible', true);
+    const panelEl = document.getElementById('panelCustomCombo');
+    const panelIsOpen = panelEl && panelEl.classList.contains('is-open');
+    floatBar.classList.toggle('is-visible', panelIsOpen);
     const floatCount = floatBar.querySelector('#customComboFloatCount');
     const floatTotal = floatBar.querySelector('#customComboFloatTotal');
     if (floatCount) floatCount.textContent = count;
@@ -485,3 +487,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.zdBuildCustomComboPicker = zdBuildCustomComboPicker;
 window.zdInitCustomComboSearch = zdInitCustomComboSearch;
+window.zdRenderCustomComboSummary = zdRenderCustomComboSummary;

@@ -128,6 +128,10 @@ document.addEventListener('DOMContentLoaded', () => {
     panel.scrollTop = 0;
     document.body.style.overflow = 'hidden';
 
+    if (id === 'panelCustomCombo' && typeof window.zdRenderCustomComboSummary === 'function') {
+      window.zdRenderCustomComboSummary();
+    }
+
     const gridByPanel = { panelCatalogo: '#catalogGrid', panelCombos: '#combosGrid', panelCustomCombo: '#customComboPicker' };
     if (gridByPanel[id] && typeof zdPlayGridEntrance === 'function') {
       zdPlayGridEntrance(gridByPanel[id]);
@@ -147,6 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
     panel.classList.remove('is-open');
     panel.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    if (id === 'panelCustomCombo' && typeof window.zdRenderCustomComboSummary === 'function') {
+      window.zdRenderCustomComboSummary();
+    }
   }
 
   function closeAllPanels() {
@@ -155,6 +162,9 @@ document.addEventListener('DOMContentLoaded', () => {
       panel.setAttribute('aria-hidden', 'true');
     });
     document.body.style.overflow = '';
+    if (typeof window.zdRenderCustomComboSummary === 'function') {
+      window.zdRenderCustomComboSummary();
+    }
   }
 
   openPanelBtns.forEach((btn) => {

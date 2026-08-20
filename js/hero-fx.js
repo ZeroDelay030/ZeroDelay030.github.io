@@ -297,10 +297,9 @@
   ];
 
   const MOBILE_SLOTS = [
-    { top: '3%', left: '4%', size: 46 },
-    { top: '3%', right: '4%', size: 46 },
-    { top: '95%', left: '6%', size: 42 },
-    { top: '95%', right: '6%', size: 42 }
+    { top: '8%', left: '6%', size: 44 },
+    { top: '8%', right: '6%', size: 44 },
+    { top: '48%', right: '4%', size: 40 }
   ];
 
   function zdShuffleArr(arr) {
@@ -322,7 +321,7 @@
 
     const isMobile = window.innerWidth < 640;
     const SLOTS = isMobile ? MOBILE_SLOTS : DESKTOP_SLOTS;
-    const count = Math.min(isMobile ? 4 : 8, LOGO_POOL.length, SLOTS.length);
+    const count = Math.min(isMobile ? 3 : 8, LOGO_POOL.length, SLOTS.length);
     const logos = zdShuffleArr(LOGO_POOL).slice(0, count);
     const slots = zdShuffleArr(SLOTS).slice(0, count);
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

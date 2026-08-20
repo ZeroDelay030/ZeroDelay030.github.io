@@ -1877,7 +1877,14 @@ img { max-width: 100%; display: block; }
   font-size: 0.95rem;
   letter-spacing: 0.06em;
   color: var(--text-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  transition: opacity 0.2s ease;
 }
+
+.panel-brand:hover { opacity: 0.75; }
 
 .panel-body {
   padding-top: 48px;
