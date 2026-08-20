@@ -85,7 +85,7 @@ function zdMarqueeCardHTML(item) {
 
   const orbitClass = item.rect ? 'logo-orbit logo-orbit--combo-img' : 'logo-orbit';
   const logoInner = hasLogo
-    ? `<img src="${item.logo}" alt="${item.name}" loading="lazy">`
+    ? `<img src="${item.logo}" alt="${item.name}" loading="lazy" decoding="async">`
     : `<span>${item.name}</span>`;
 
   return `

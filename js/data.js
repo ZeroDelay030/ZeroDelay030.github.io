@@ -260,3 +260,30 @@ const ZD_COMBOS = [
   { id: 'combo-premium-familiar', name: 'Premium Familiar', price: 69800, image: 'assets/combos/premium-familiar.png', includes: ['Disney+ Completa Original Premium', 'HBO Max Completa Original Platino', 'Prime Video Completa', 'Netflix 33 días'] },
   { id: 'combo-vieja-escuela', name: 'Vieja Escuela', price: 24800, image: 'assets/combos/vieja-escuela.png', includes: ['YouTube Premium', 'Netflix 27 días', 'Disney+ Pantalla Estándar Original'] }
 ];
+
+/* ============================================================
+   ARMA TU COMBO A TU GUSTO — reglas de descuento
+   - 2 a 3 planes seleccionados: 10% de descuento por plan
+   - 4 planes o más: 15% de descuento por plan
+   - Algunos planes puntuales tienen un precio mínimo garantizado
+     (para que el descuento nunca genere pérdida en esos casos)
+   ============================================================ */
+const ZD_CUSTOM_COMBO_PRICE_FLOORS = {
+  'netflix-27': 9100,
+  'disney-completa-premium': 32000,
+  'spotify-2m': 15000,
+  'magistv-pantalla': 4300
+};
+
+function zdCustomComboDiscountPercent(count) {
+  if (count >= 4) return 0.15;
+  if (count >= 2) return 0.10;
+  return 0;
+}
+
+function zdCustomComboItemPrice(variantId, normalPrice, count) {
+  const percent = zdCustomComboDiscountPercent(count);
+  const computed = Math.round(normalPrice * (1 - percent));
+  const floor = ZD_CUSTOM_COMBO_PRICE_FLOORS[variantId];
+  return floor ? Math.max(computed, floor) : computed;
+}

@@ -9,7 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Intro de carga: breve destello del logo ---------- */
   const loader = document.getElementById('zdLoader');
   if (loader) {
-    const hideLoader = () => loader.classList.add('is-hidden');
+    const hideLoader = () => {
+      loader.classList.add('is-hidden');
+      setTimeout(() => loader.remove(), 650); // se quita del DOM del todo tras la transición
+    };
     window.addEventListener('load', () => setTimeout(hideLoader, 450));
     setTimeout(hideLoader, 2000); // respaldo: nunca dejarlo pegado más de 2s
   }
@@ -115,13 +118,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (id === 'panelCombos' && typeof window.zdBuildCombosGrid === 'function') {
       window.zdBuildCombosGrid();
     }
+    if (id === 'panelCustomCombo') {
+      if (typeof window.zdBuildCustomComboPicker === 'function') window.zdBuildCustomComboPicker();
+      if (typeof window.zdInitCustomComboSearch === 'function') window.zdInitCustomComboSearch();
+    }
 
     panel.classList.add('is-open');
     panel.setAttribute('aria-hidden', 'false');
     panel.scrollTop = 0;
     document.body.style.overflow = 'hidden';
 
-    const gridByPanel = { panelCatalogo: '#catalogGrid', panelCombos: '#combosGrid' };
+    const gridByPanel = { panelCatalogo: '#catalogGrid', panelCombos: '#combosGrid', panelCustomCombo: '#customComboPicker' };
     if (gridByPanel[id] && typeof zdPlayGridEntrance === 'function') {
       zdPlayGridEntrance(gridByPanel[id]);
     }

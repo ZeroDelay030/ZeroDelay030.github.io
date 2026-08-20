@@ -66,7 +66,17 @@
     const progressBar = document.getElementById('scrollProgress');
     const header = document.getElementById('siteHeader');
     const backToTop = document.getElementById('backToTopBtn');
+    const heroBg = document.querySelector('.hero-bg');
+    const heroFloatingLogos = document.querySelector('.hero-floating-logos');
+    const hero = document.querySelector('.hero');
     let ticking = false;
+
+    let heroHeight = hero ? hero.offsetHeight : 0;
+    if (hero) {
+      window.addEventListener('resize', () => {
+        heroHeight = hero.offsetHeight;
+      });
+    }
 
     function update() {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -76,6 +86,16 @@
       if (progressBar) progressBar.style.width = `${pct}%`;
       if (header) header.classList.toggle('is-scrolled', scrollTop > 30);
       if (backToTop) backToTop.classList.toggle('is-visible', scrollTop > 600);
+
+      // F) profundidad (parallax): el fondo del hero se mueve más lento
+      // que el contenido mientras el hero sigue en pantalla
+      if (hero && heroBg && !prefersReducedMotion) {
+        if (scrollTop < heroHeight) {
+          const offset = scrollTop * 0.35;
+          heroBg.style.transform = `translateY(${offset}px)`;
+          if (heroFloatingLogos) heroFloatingLogos.style.transform = `translateY(${offset * 0.6}px)`;
+        }
+      }
 
       ticking = false;
     }
@@ -186,6 +206,7 @@
       btn.classList.add('is-bumped');
     });
   }
+  window.zdBumpCartIcon = bumpCartIcon;
 
   function initCartBump() {
     document.addEventListener('click', (e) => {

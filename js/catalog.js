@@ -62,7 +62,11 @@ function zdAddToCart(item) {
   if (existing) {
     existing.qty += 1;
   } else {
-    cart.push({ id: item.id, name: item.name, price: item.price, qty: 1 });
+    const entry = { id: item.id, name: item.name, price: item.price, qty: 1 };
+    if (item.detail) entry.detail = item.detail;
+    if (item.breakdown) entry.breakdown = item.breakdown;
+    if (item.discountPercent !== undefined) entry.discountPercent = item.discountPercent;
+    cart.push(entry);
   }
   zdSaveCart(cart);
   zdUpdateCartBadges();
@@ -94,6 +98,7 @@ function zdBuildLogoFrame(logoPath, name) {
     img.src = logoPath;
     img.alt = name;
     img.loading = 'lazy';
+    img.decoding = 'async';
     frame.appendChild(img);
   } else {
     frame.classList.add('logo-frame--text');
@@ -107,6 +112,8 @@ function zdBuildLogoFrame(logoPath, name) {
 }
 
 /* ---------- Tarjetas de plataforma (catálogo) ---------- */
+const ZD_NEW_ITEM_IDS = new Set(['youtube', 'combo-vieja-escuela']);
+
 function zdBuildPlatformCard(platform) {
   const card = document.createElement('div');
   card.className = 'catalog-card';
@@ -116,6 +123,13 @@ function zdBuildPlatformCard(platform) {
   const face = document.createElement('button');
   face.className = 'catalog-card-face';
   face.appendChild(zdBuildLogoFrame(platform.logo, platform.name));
+
+  if (ZD_NEW_ITEM_IDS.has(platform.id)) {
+    const newBadge = document.createElement('span');
+    newBadge.className = 'catalog-new-badge';
+    newBadge.textContent = '🆕 Nuevo';
+    face.appendChild(newBadge);
+  }
 
   const nameEl = document.createElement('span');
   nameEl.className = 'catalog-card-name';
@@ -128,6 +142,16 @@ function zdBuildPlatformCard(platform) {
   face.appendChild(chevron);
 
   card.appendChild(face);
+
+  const crossBadge = document.createElement('button');
+  crossBadge.className = 'catalog-cross-badge';
+  crossBadge.type = 'button';
+  crossBadge.textContent = '💡 Combínala y ahorra';
+  crossBadge.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (typeof window.zdOpenPanel === 'function') window.zdOpenPanel('panelCustomCombo');
+  });
+  card.appendChild(crossBadge);
 
   const variantsWrap = document.createElement('div');
   variantsWrap.className = 'catalog-card-variants';
@@ -241,6 +265,13 @@ function zdBuildComboCard(combo) {
   }
   face.appendChild(orbit);
 
+  if (ZD_NEW_ITEM_IDS.has(combo.id)) {
+    const newBadge = document.createElement('span');
+    newBadge.className = 'catalog-new-badge';
+    newBadge.textContent = '🆕 Nuevo';
+    face.appendChild(newBadge);
+  }
+
   // Emparejar cada "incluye" con su plataforma/plan real, para el ahorro y los mini-logos
   const matches = combo.includes.map((inc) => zdMatchIncludeToVariant(inc)).filter(Boolean);
   const allMatched = matches.length === combo.includes.length;
@@ -261,6 +292,7 @@ function zdBuildComboCard(combo) {
         img.src = m.platform.logo;
         img.alt = m.platform.name;
         img.loading = 'lazy';
+    img.decoding = 'async';
         thumb.appendChild(img);
       } else {
         thumb.textContent = m.platform.name.charAt(0);
@@ -475,7 +507,7 @@ function zdInitPanelSearch() {
 
 /* ---------- Reiniciar la búsqueda cada vez que se abre un panel ---------- */
 function zdResetPanelSearch(panelId) {
-  const inputIdByPanel = { panelCatalogo: 'catalogSearchInput', panelCombos: 'combosSearchInput' };
+  const inputIdByPanel = { panelCatalogo: 'catalogSearchInput', panelCombos: 'combosSearchInput', panelCustomCombo: 'customComboSearchInput' };
   const inputId = inputIdByPanel[panelId];
   if (!inputId) return;
 

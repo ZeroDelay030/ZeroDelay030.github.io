@@ -88,7 +88,22 @@ const ZD_EMOJI_CART = '\u{1F6D2}'; // carrito de compras (uso solo en la interfa
 function zdBuildWhatsAppMessage(cart) {
   const lines = cart.map((item) => {
     const qtyText = item.qty > 1 ? ` x${item.qty}` : '';
-    return `• ${item.name}${qtyText} — ${zdFormatCOP(item.price)}`;
+
+    if (item.breakdown && item.breakdown.length) {
+      const itemLines = item.breakdown.map((b) => `• ${b.name} — ${zdFormatCOP(b.price)}`).join('\n');
+      return [
+        `Mi combo personalizado ZERO DELAY${qtyText}:`,
+        itemLines,
+        `Descuento: ${item.discountPercent}%`,
+        `Total: ${zdFormatCOP(item.price)}`
+      ].join('\n');
+    }
+
+    let line = `• ${item.name}${qtyText} — ${zdFormatCOP(item.price)}`;
+    if (item.detail) {
+      line += `\n   (${item.detail})`;
+    }
+    return line;
   });
   const total = zdFormatCOP(zdCartTotal(cart));
 
@@ -127,6 +142,7 @@ function zdRenderCartDrawer() {
       <div class="cart-item">
         <div class="cart-item-info">
           <span class="cart-item-name">${item.name}</span>
+          ${item.detail ? `<span class="cart-item-detail">${item.detail}</span>` : ''}
           <span class="cart-item-unit">${zdFormatCOP(item.price)} c/u</span>
         </div>
         <div class="cart-item-controls">
