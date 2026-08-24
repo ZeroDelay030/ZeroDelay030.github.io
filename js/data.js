@@ -80,7 +80,8 @@ const ZD_CATALOG = [
     logo: 'assets/logos/canva.jpg',
     variants: [
       { id: 'canva-45', label: '45 días', price: 5000 },
-      { id: 'canva-365', label: '365 días', price: 15000 }
+      { id: 'canva-365', label: '365 días', price: 15000 },
+      { id: 'canva-correo-30', label: 'Al correo personal 30 días', price: 6500 }
     ]
   },
   {
@@ -96,8 +97,9 @@ const ZD_CATALOG = [
     name: 'Spotify Premium',
     logo: 'assets/logos/spotify.jpg',
     variants: [
-      { id: 'spotify-1m', label: '1 mes', price: 7900 },
-      { id: 'spotify-2m', label: '2 meses', price: 15500 }
+      { id: 'spotify-1m', label: '1 mes', price: 9000 },
+      { id: 'spotify-2m', label: '2 meses', price: 17000 },
+      { id: 'spotify-3m', label: '3 meses', price: 25000 }
     ]
   },
   {
@@ -241,21 +243,21 @@ const ZD_COMBOS = [
   { id: 'combo-anime', name: 'Anime', price: 12900, image: 'assets/combos/anime.png', includes: ['Crunchyroll Genérica', 'Prime Video Genérica', 'Netflix 13 días'] },
   { id: 'combo-series', name: 'Series', price: 12500, image: 'assets/combos/series.png', includes: ['Netflix 27 días', 'Prime Video Genérica'] },
   { id: 'combo-personal', name: 'Personal', price: 13900, image: 'assets/combos/personal.png', includes: ['Netflix 27 días', 'Disney+ Estándar Genérica'] },
-  { id: 'combo-music-chill', name: 'Music & Chill', price: 14500, image: 'assets/combos/music-chill.png', includes: ['Netflix 13 días', 'Prime Video', 'Spotify Premium'] },
+  { id: 'combo-music-chill', name: 'Music & Chill', price: 15600, image: 'assets/combos/music-chill.png', includes: ['Netflix 13 días', 'Prime Video', 'Spotify Premium'] },
   { id: 'combo-tv-completa', name: 'TV Completa', price: 15000, image: 'assets/combos/tv-completa.png', includes: ['Magis TV', 'IPTV Gold', 'Tele Latino'] },
   { id: 'combo-clasico-personal', name: 'Clásico Personal', price: 16900, image: 'assets/combos/clasico-personal.png', includes: ['Netflix 27 días', 'Disney+ Estándar Genérica', 'Prime Video Pantalla Genérica'] },
   { id: 'combo-anime-plus-ultra', name: 'Anime Plus Ultra', price: 21900, image: 'assets/combos/anime-plus-ultra.png', includes: ['Crunchyroll Original', 'Netflix 27 días', 'Prime Video Original', 'HBO Max Platino Original'] },
-  { id: 'combo-clasico-personal-pro', name: 'Clásico Personal Pro', price: 25000, image: 'assets/combos/clasico-personal-pro.png', includes: ['Netflix 27 días', 'Disney+ Premium Original', 'Prime Video Original', 'Spotify Premium'] },
+  { id: 'combo-clasico-personal-pro', name: 'Clásico Personal Pro', price: 26100, image: 'assets/combos/clasico-personal-pro.png', includes: ['Netflix 27 días', 'Disney+ Premium Original', 'Prime Video Original', 'Spotify Premium'] },
   { id: 'combo-ia', name: 'IA', price: 25000, image: 'assets/combos/ia.png', includes: ['ChatGPT Plus', 'Gemini PRO'] },
   { id: 'combo-tv-completa-premium', name: 'TV Completa Premium', price: 26000, image: 'assets/combos/tv-completa-premium.png', includes: ['Magis TV', 'IPTV Gold', 'Tele Latino', 'Plex', 'Flujo TV'] },
   { id: 'combo-estudio-inteligente', name: 'Estudio Inteligente', price: 26000, image: 'assets/combos/estudio-inteligente.png', includes: ['ChatGPT Plus', 'Duolingo Pro', 'Canva 45 días'] },
   { id: 'combo-cinefilo-premium', name: 'Cinéfilo Premium', price: 28900, image: 'assets/combos/cinefilo-premium.png', includes: ['Netflix 33 días', 'Apple TV+', 'Universal+', 'HBO Max Platino Original'] },
   { id: 'combo-creador-contenido', name: 'Creador de Contenido', price: 30000, image: 'assets/combos/creador-contenido.png', includes: ['CapCut Pro', 'Canva 365 días'] },
   { id: 'combo-entretenimiento-familiar', name: 'Entretenimiento Familiar', price: 31900, image: 'assets/combos/entretenimiento-familiar.png', includes: ['Disney+ Completa Standard Original', 'HBO Max Completa Genérica', 'Apple TV+ Completa'] },
-  { id: 'combo-premium-personal', name: 'Premium Personal', price: 32000, image: 'assets/combos/premium-personal.png', includes: ['Netflix 33 días', 'Disney+ Premium Original', 'HBO Max Platino Original', 'Prime Video Original', 'Spotify Premium'] },
+  { id: 'combo-premium-personal', name: 'Premium Personal', price: 33100, image: 'assets/combos/premium-personal.png', includes: ['Netflix 33 días', 'Disney+ Premium Original', 'HBO Max Platino Original', 'Prime Video Original', 'Spotify Premium'] },
   { id: 'combo-fan-deporte', name: 'Fan del Deporte', price: 33800, image: 'assets/combos/fan-deporte.png', includes: ['DirecTV GO', 'Paramount+ Original', 'Disney+ Premium Original'] },
   { id: 'combo-universitario-clasico', name: 'Universitario Clásico', price: 39900, image: 'assets/combos/universitario-clasico.png', includes: ['ChatGPT Plus', 'CapCut', 'Canva 45 días'] },
-  { id: 'combo-zero-delay', name: 'ZERO DELAY', price: 47900, image: 'assets/combos/zero-delay.png', includes: ['Netflix 27 días', 'Disney+ Premium Original', 'Crunchyroll Original', 'Prime Video Original', 'Spotify Premium', 'ChatGPT Plus'] },
+  { id: 'combo-zero-delay', name: 'ZERO DELAY', price: 49000, image: 'assets/combos/zero-delay.png', includes: ['Netflix 27 días', 'Disney+ Premium Original', 'Crunchyroll Original', 'Prime Video Original', 'Spotify Premium', 'ChatGPT Plus'] },
   { id: 'combo-universitario-premium', name: 'Universitario Premium', price: 58000, image: 'assets/combos/universitario-premium.png', includes: ['ChatGPT Plus', 'CapCut', 'Canva 365 días', 'Gemini PRO'] },
   { id: 'combo-premium-familiar', name: 'Premium Familiar', price: 69800, image: 'assets/combos/premium-familiar.png', includes: ['Disney+ Completa Original Premium', 'HBO Max Completa Original Platino', 'Prime Video Completa', 'Netflix 33 días'] },
   { id: 'combo-vieja-escuela', name: 'Vieja Escuela', price: 24800, image: 'assets/combos/vieja-escuela.png', includes: ['YouTube Premium', 'Netflix 27 días', 'Disney+ Pantalla Estándar Original'] }
