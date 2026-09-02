@@ -21,6 +21,14 @@
   let mouse = { x: null, y: null, active: false };
   let rafId = null;
 
+  const LINK_BUCKETS = 5;
+  const MOUSE_BUCKETS = 3;
+  const linkBuckets = Array.from({ length: LINK_BUCKETS }, () => []);
+  const mouseBuckets = Array.from({ length: MOUSE_BUCKETS }, () => []);
+  let cachedGlow = null;
+  let cachedGlowX = null;
+  let cachedGlowY = null;
+
   const COLOR_A = '176, 0, 255';   // púrpura
   const COLOR_B = '0, 217, 255';   // cian
   const LINK_DIST = 130;
@@ -28,10 +36,11 @@
 
   function particleCount() {
     // menos partículas en pantallas pequeñas para mantener buen rendimiento
-    if (width < 420) return 14;
-    if (width < 600) return 20;
-    if (width < 1000) return 40;
-    return 58;
+    // (bajado un poco más porque ahora corre junto al canvas de la aurora)
+    if (width < 420) return 10;
+    if (width < 600) return 15;
+    if (width < 1000) return 28;
+    return 40;
   }
 
   function resize() {
@@ -88,44 +97,84 @@
       ctx.fill();
     });
 
-    // líneas entre partículas cercanas
+    // líneas entre partículas cercanas — agrupadas por "cubetas" de
+    // opacidad similar y dibujadas con un solo trazo por cubeta, en
+    // vez de una llamada a stroke() por cada línea (con muchas
+    // partículas eso podía ser cientos de stroke() por cuadro, el
+    // costo real detrás de la lentitud)
+    for (let k = 0; k < LINK_BUCKETS; k++) linkBuckets[k].length = 0;
+
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
         const a = particles[i];
         const b = particles[j];
         const dist = Math.hypot(a.x - b.x, a.y - b.y);
         if (dist < LINK_DIST) {
-          const opacity = (1 - dist / LINK_DIST) * 0.35;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = `rgba(${COLOR_B}, ${opacity})`;
-          ctx.lineWidth = 1;
-          ctx.stroke();
+          const t = 1 - dist / LINK_DIST;
+          const bucket = Math.min(LINK_BUCKETS - 1, Math.floor(t * LINK_BUCKETS));
+          linkBuckets[bucket].push(a.x, a.y, b.x, b.y);
         }
       }
     }
 
-    // líneas y destello hacia el cursor
+    ctx.lineWidth = 1;
+    for (let k = 0; k < LINK_BUCKETS; k++) {
+      const segs = linkBuckets[k];
+      if (!segs.length) continue;
+      const alpha = ((k + 1) / LINK_BUCKETS) * 0.35;
+      ctx.beginPath();
+      for (let s = 0; s < segs.length; s += 4) {
+        ctx.moveTo(segs[s], segs[s + 1]);
+        ctx.lineTo(segs[s + 2], segs[s + 3]);
+      }
+      ctx.strokeStyle = `rgba(${COLOR_B}, ${alpha})`;
+      ctx.stroke();
+    }
+
+    // líneas y destello hacia el cursor (mismo criterio: un trazo por
+    // cubeta de opacidad, no uno por partícula)
     if (mouse.active) {
+      for (let k = 0; k < MOUSE_BUCKETS; k++) mouseBuckets[k].length = 0;
+
       particles.forEach((p) => {
         const dist = Math.hypot(mouse.x - p.x, mouse.y - p.y);
         if (dist < MOUSE_LINK_DIST) {
-          const opacity = (1 - dist / MOUSE_LINK_DIST) * 0.5;
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(mouse.x, mouse.y);
-          ctx.strokeStyle = `rgba(${COLOR_A}, ${opacity})`;
-          ctx.lineWidth = 1;
-          ctx.stroke();
+          const t = 1 - dist / MOUSE_LINK_DIST;
+          const bucket = Math.min(MOUSE_BUCKETS - 1, Math.floor(t * MOUSE_BUCKETS));
+          mouseBuckets[bucket].push(p.x, p.y);
         }
       });
 
-      const glow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 60);
-      glow.addColorStop(0, `rgba(${COLOR_A}, 0.35)`);
-      glow.addColorStop(1, `rgba(${COLOR_A}, 0)`);
+      for (let k = 0; k < MOUSE_BUCKETS; k++) {
+        const pts = mouseBuckets[k];
+        if (!pts.length) continue;
+        const alpha = ((k + 1) / MOUSE_BUCKETS) * 0.5;
+        ctx.beginPath();
+        for (let s = 0; s < pts.length; s += 2) {
+          ctx.moveTo(pts[s], pts[s + 1]);
+          ctx.lineTo(mouse.x, mouse.y);
+        }
+        ctx.strokeStyle = `rgba(${COLOR_A}, ${alpha})`;
+        ctx.stroke();
+      }
+
+      // el gradiente del destello se recalcula solo si el cursor se
+      // movió lo suficiente desde el cuadro anterior (crear un
+      // gradiente nuevo cada cuadro, aunque el mouse esté quieto, es
+      // un gasto innecesario)
+      if (
+        !cachedGlow ||
+        Math.abs(mouse.x - cachedGlowX) > 2 ||
+        Math.abs(mouse.y - cachedGlowY) > 2
+      ) {
+        cachedGlow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 60);
+        cachedGlow.addColorStop(0, `rgba(${COLOR_A}, 0.35)`);
+        cachedGlow.addColorStop(1, `rgba(${COLOR_A}, 0)`);
+        cachedGlowX = mouse.x;
+        cachedGlowY = mouse.y;
+      }
       ctx.beginPath();
-      ctx.fillStyle = glow;
+      ctx.fillStyle = cachedGlow;
       ctx.arc(mouse.x, mouse.y, 60, 0, Math.PI * 2);
       ctx.fill();
     }
@@ -154,22 +203,36 @@
   }
 
   let paused = false;
+  let onScreen = true;
+  let obstructedByPanel = false;
 
   function initVisibilityPause() {
-    if (!('IntersectionObserver' in window)) return;
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          if (paused) {
-            paused = false;
-            rafId = requestAnimationFrame(step);
-          }
-        } else {
-          paused = true;
-        }
-      });
-    }, { threshold: 0 });
-    observer.observe(hero);
+    // igual que en aurora.js: se pausa si el hero sale de pantalla al
+    // hacer scroll, o si queda tapado por completo por un panel abierto
+    function applyPauseState() {
+      const shouldPause = !onScreen || obstructedByPanel;
+      if (shouldPause) {
+        paused = true;
+      } else if (paused) {
+        paused = false;
+        rafId = requestAnimationFrame(step);
+      }
+    }
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          onScreen = entry.isIntersecting;
+          applyPauseState();
+        });
+      }, { threshold: 0 });
+      observer.observe(hero);
+    }
+
+    window.addEventListener('zd:panel-visibility', (e) => {
+      obstructedByPanel = e.detail.open;
+      applyPauseState();
+    });
   }
 
   function spawnBurst(x, y) {
@@ -248,131 +311,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', init);
-})();
-
-// ============================================================
-// Logos flotantes del hero: en cada carga se eligen al azar
-// cuáles aparecen y en qué posición, con un movimiento orgánico
-// (deriva + rotación leve, no solo subir/bajar) y desincronizado
-// entre sí para que se vea vivo, no repetitivo ni estático.
-// ============================================================
-(function () {
-  // marcas reconocibles (se excluyen las más regionales/menos conocidas)
-  const LOGO_POOL = [
-    { id: 'netflix', name: 'Netflix', logo: 'assets/logos/netflix.png' },
-    { id: 'disney', name: 'Disney+', logo: 'assets/logos/disney.jpg' },
-    { id: 'chatgpt', name: 'ChatGPT Plus', logo: 'assets/logos/chatgpt.jpeg' },
-    { id: 'hbomax', name: 'MAX (HBO)', logo: 'assets/logos/hbomax.jpg' },
-    { id: 'spotify', name: 'Spotify Premium', logo: 'assets/logos/spotify.jpg' },
-    { id: 'primevideo', name: 'Prime Video', logo: 'assets/logos/primevideo.jpg' },
-    { id: 'capcut', name: 'CapCut Pro', logo: 'assets/logos/capcut.png' },
-    { id: 'gemini', name: 'Gemini PRO', logo: 'assets/logos/gemini.jpg' },
-    { id: 'canva', name: 'Canva Pro', logo: 'assets/logos/canva.jpg' },
-    { id: 'appletv', name: 'Apple TV+', logo: 'assets/logos/appletv.png' },
-    { id: 'office365', name: 'Microsoft Office 365', logo: 'assets/logos/office365.png' },
-    { id: 'paramount', name: 'Paramount+', logo: 'assets/logos/paramount.png' },
-    { id: 'crunchyroll', name: 'Crunchyroll', logo: 'assets/logos/crunchyroll.jpg' },
-    { id: 'youtube', name: 'YouTube Premium', logo: 'assets/logos/youtube.png' },
-    { id: 'universal', name: 'Universal+', logo: 'assets/logos/universal.jpg' },
-    { id: 'plex', name: 'Plex Premium', logo: 'assets/logos/plex.jpg' },
-    { id: 'vix', name: 'ViX+', logo: 'assets/logos/vix.jpg' },
-    { id: 'duolingo', name: 'Duolingo Pro', logo: 'assets/logos/duolingo.jpg' }
-  ];
-
-  // posiciones posibles alrededor del título (más de las que se usan a la vez,
-  // así también varía cuáles se ocupan cada vez que se entra a la página)
-  const DESKTOP_SLOTS = [
-    { top: '13%', left: '6%', size: 78 },
-    { top: '65%', left: '10%', size: 66 },
-    { top: '18%', right: '7%', size: 80 },
-    { top: '68%', right: '11%', size: 70 },
-    { top: '42%', right: '2%', size: 60 },
-    { top: '4%', left: '28%', size: 56 },
-    { top: '86%', right: '26%', size: 60 },
-    { top: '36%', left: '1%', size: 54 },
-    { top: '5%', right: '22%', size: 54 },
-    { top: '79%', left: '23%', size: 58 },
-    { top: '53%', left: '16%', size: 52 },
-    { top: '28%', right: '18%', size: 52 }
-  ];
-
-  const MOBILE_SLOTS = [
-    { top: '8%', left: '6%', size: 44 },
-    { top: '8%', right: '6%', size: 44 },
-    { top: '48%', right: '4%', size: 40 }
-  ];
-
-  function zdShuffleArr(arr) {
-    const a = arr.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
-  function rand(min, max) {
-    return Math.random() * (max - min) + min;
-  }
-
-  function buildHeroFloatingLogos() {
-    const wrap = document.getElementById('heroFloatingLogos');
-    if (!wrap) return;
-
-    const isMobile = window.innerWidth < 640;
-    const SLOTS = isMobile ? MOBILE_SLOTS : DESKTOP_SLOTS;
-    const count = Math.min(isMobile ? 3 : 8, LOGO_POOL.length, SLOTS.length);
-    const logos = zdShuffleArr(LOGO_POOL).slice(0, count);
-    const slots = zdShuffleArr(SLOTS).slice(0, count);
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    logos.forEach((platform, i) => {
-      const slot = slots[i];
-      const img = document.createElement('img');
-      img.src = platform.logo;
-      img.alt = '';
-      img.loading = 'lazy';
-      img.decoding = 'async';
-      img.className = 'hero-float-logo';
-      img.dataset.platform = platform.name;
-
-      img.style.top = slot.top;
-      if (slot.left) img.style.left = slot.left;
-      if (slot.right) img.style.right = slot.right;
-      img.style.width = `${slot.size}px`;
-      img.style.height = `${slot.size}px`;
-
-      if (!prefersReducedMotion) {
-        // movimiento orgánico: cada logo deriva en una dirección/tamaño/
-        // duración distinta, y con retraso propio para desincronizar
-        const driftScale = isMobile ? 0.6 : 1;
-        img.style.setProperty('--float-x', `${(rand(-16, 16) * driftScale).toFixed(1)}px`);
-        img.style.setProperty('--float-y', `${(rand(-24, -14) * driftScale).toFixed(1)}px`);
-        img.style.setProperty('--float-rot', `${rand(-9, 9).toFixed(1)}deg`);
-        img.style.animationDuration = `${rand(5, 8.5).toFixed(2)}s`;
-        img.style.animationDelay = `-${rand(0, 8).toFixed(2)}s`;
-      }
-
-      wrap.appendChild(img);
-    });
-
-    // click: abre el catálogo con esa plataforma ya buscada
-    wrap.querySelectorAll('.hero-float-logo').forEach((logo) => {
-      logo.addEventListener('click', () => {
-        const platformName = logo.dataset.platform;
-        if (typeof window.zdOpenPanel === 'function') window.zdOpenPanel('panelCatalogo');
-        setTimeout(() => {
-          const input = document.getElementById('catalogSearchInput');
-          if (input && platformName) {
-            input.value = platformName;
-            input.dispatchEvent(new Event('input'));
-          }
-        }, 380);
-      });
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', buildHeroFloatingLogos);
 })();
 
 // ============================================================

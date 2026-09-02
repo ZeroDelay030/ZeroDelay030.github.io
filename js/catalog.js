@@ -56,13 +56,14 @@ function zdUpdateCartBadges() {
   }
 }
 
-function zdAddToCart(item) {
+function zdAddToCart(item, qty) {
+  qty = qty || 1;
   const cart = zdGetCart();
   const existing = cart.find((i) => i.id === item.id);
   if (existing) {
-    existing.qty += 1;
+    existing.qty += qty;
   } else {
-    const entry = { id: item.id, name: item.name, price: item.price, qty: 1 };
+    const entry = { id: item.id, name: item.name, price: item.price, qty };
     if (item.detail) entry.detail = item.detail;
     if (item.breakdown) entry.breakdown = item.breakdown;
     if (item.discountPercent !== undefined) entry.discountPercent = item.discountPercent;
@@ -114,7 +115,8 @@ function zdBuildLogoFrame(logoPath, name) {
 /* ---------- Tarjetas de plataforma (catálogo) ---------- */
 const ZD_NEW_ITEM_IDS = new Set(['youtube', 'combo-vieja-escuela']);
 
-function zdBuildPlatformCard(platform) {
+function zdBuildPlatformCard(platform, gridSelector) {
+  gridSelector = gridSelector || '#catalogGrid';
   const card = document.createElement('div');
   card.className = 'catalog-card';
   card.dataset.id = platform.id;
@@ -189,7 +191,7 @@ function zdBuildPlatformCard(platform) {
   variantsWrap.appendChild(variantsList);
   card.appendChild(variantsWrap);
 
-  face.addEventListener('click', () => zdToggleCard(card, '#catalogGrid'));
+  face.addEventListener('click', () => zdToggleCard(card, gridSelector));
 
   return card;
 }
@@ -241,7 +243,8 @@ function zdMatchIncludeToVariant(includeText) {
   return result;
 }
 
-function zdBuildComboCard(combo) {
+function zdBuildComboCard(combo, gridSelector) {
+  gridSelector = gridSelector || '#combosGrid';
   const card = document.createElement('div');
   card.className = 'catalog-card catalog-card--combo';
   card.dataset.id = combo.id;
@@ -349,7 +352,7 @@ function zdBuildComboCard(combo) {
   variantsWrap.appendChild(addBtn);
   card.appendChild(variantsWrap);
 
-  face.addEventListener('click', () => zdToggleCard(card, '#combosGrid'));
+  face.addEventListener('click', () => zdToggleCard(card, gridSelector));
 
   return card;
 }
@@ -441,8 +444,86 @@ function zdBuildCombosGrid() {
   zdObserveCardAnimations(combosGrid);
 }
 
+/* ---------- Baraja un array (Fisher-Yates), sin mutar el original ---------- */
+function zdShuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ---------- Catálogo completo (Banner superior → "Catálogo"): mezcla
+   aleatoria de plataformas y combos (más adelante, productos físicos
+   también). Se reconstruye cada vez que se abre, para que el orden
+   cambie en cada visita, como se pidió. ---------- */
+function zdBuildCatalogoTodoGrid() {
+  const grid = document.getElementById('catalogTodoGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  const mixed = zdShuffleArray([
+    ...ZD_CATALOG.map((p) => ({ kind: 'platform', data: p })),
+    ...ZD_COMBOS.map((c) => ({ kind: 'combo', data: c }))
+  ]);
+
+  mixed.forEach((entry) => {
+    const card = entry.kind === 'combo'
+      ? zdBuildComboCard(entry.data, '#catalogTodoGrid')
+      : zdBuildPlatformCard(entry.data, '#catalogTodoGrid');
+    grid.appendChild(card);
+  });
+
+  zdUpdateCartBadges();
+  zdObserveCardAnimations(grid);
+}
+
+/* ---------- Ofertas (botón "🔥 Ofertas" del hero): por ahora son los
+   combos (todos traen descuento por diseño). El día que se marquen
+   variantes individuales en oferta (agregar `onSale: true` a esa
+   variante dentro de ZD_CATALOG en data.js), aparecerán aquí también
+   automáticamente, sin tocar este código. ---------- */
+function zdBuildOfertasGrid() {
+  const grid = document.getElementById('ofertasGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  const comboItems = ZD_COMBOS.map((data) => ({ kind: 'combo', data }));
+  const discountedPlatforms = ZD_CATALOG
+    .filter((p) => p.variants.some((v) => v.onSale === true))
+    .map((data) => ({ kind: 'platform', data }));
+  // productos físicos en oferta (cualquiera con salePrice, sin importar
+  // la categoría) — se agregan automáticamente, sin tocar este código,
+  // cada vez que un producto nuevo trae salePrice en data.js
+  const discountedProducts = (typeof ZD_PRODUCTS !== 'undefined' ? ZD_PRODUCTS : [])
+    .filter((p) => p.salePrice)
+    .map((data) => ({ kind: 'product', data }));
+
+  if (comboItems.length === 0 && discountedPlatforms.length === 0 && discountedProducts.length === 0) {
+    grid.innerHTML = '<div class="catalog-card catalog-card--placeholder"><div class="placeholder-shimmer"></div><p class="placeholder-label">Aún no hay ofertas activas. ¡Vuelve pronto!</p></div>';
+    return;
+  }
+
+  // mezclados entre sí (no por bloques de combos/plataformas/productos),
+  // y en un orden distinto cada vez que se abre el panel
+  const mixed = zdShuffleArray([...comboItems, ...discountedPlatforms, ...discountedProducts]);
+  mixed.forEach((entry) => {
+    let card;
+    if (entry.kind === 'combo') card = zdBuildComboCard(entry.data, '#ofertasGrid');
+    else if (entry.kind === 'platform') card = zdBuildPlatformCard(entry.data, '#ofertasGrid');
+    else if (typeof window.zdBuildProductCard === 'function') card = window.zdBuildProductCard(entry.data);
+    if (card) grid.appendChild(card);
+  });
+
+  zdUpdateCartBadges();
+  zdObserveCardAnimations(grid);
+}
+
 window.zdBuildPlatformsGrid = zdBuildPlatformsGrid;
 window.zdBuildCombosGrid = zdBuildCombosGrid;
+window.zdBuildCatalogoTodoGrid = zdBuildCatalogoTodoGrid;
+window.zdBuildOfertasGrid = zdBuildOfertasGrid;
 
 function zdRenderCatalog() {
   // El catálogo y los combos ya NO se construyen aquí de entrada: se
@@ -507,7 +588,7 @@ function zdInitPanelSearch() {
 
 /* ---------- Reiniciar la búsqueda cada vez que se abre un panel ---------- */
 function zdResetPanelSearch(panelId) {
-  const inputIdByPanel = { panelCatalogo: 'catalogSearchInput', panelCombos: 'combosSearchInput', panelCustomCombo: 'customComboSearchInput' };
+  const inputIdByPanel = { panelCatalogo: 'catalogSearchInput', panelCombos: 'combosSearchInput', panelCustomCombo: 'customComboSearchInput', panelProductos: 'productsSearchInput' };
   const inputId = inputIdByPanel[panelId];
   if (!inputId) return;
 

@@ -6,6 +6,30 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  /* ---------- Modo claro/oscuro (claro es el modo por defecto) ---------- */
+  const themeToggle = document.getElementById('themeToggle');
+  if (themeToggle) {
+    const applyThemeLabel = () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const label = isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
+      themeToggle.setAttribute('aria-label', label);
+      themeToggle.setAttribute('title', label);
+    };
+    applyThemeLabel();
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        try { localStorage.setItem('zd_theme', 'light'); } catch (e) {}
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        try { localStorage.setItem('zd_theme', 'dark'); } catch (e) {}
+      }
+      applyThemeLabel();
+    });
+  }
+
   /* ---------- Intro de carga: breve destello del logo ---------- */
   const loader = document.getElementById('zdLoader');
   if (loader) {
@@ -16,6 +40,76 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('load', () => setTimeout(hideLoader, 450));
     setTimeout(hideLoader, 2000); // respaldo: nunca dejarlo pegado más de 2s
   }
+
+  /* ---------- Menú de categorías: hover en escritorio, toque en móvil
+     (reutilizable — hay una instancia en el header y otra dentro del
+     panel de Productos ZERO DELAY) ---------- */
+  function initCategoriesDropdown(navId, triggerId, opts) {
+    opts = opts || {};
+    const navCategories = document.getElementById(navId);
+    const categoriesTrigger = document.getElementById(triggerId);
+    if (!navCategories || !categoriesTrigger) return;
+
+    const closeCategories = () => {
+      navCategories.classList.remove('is-open');
+      categoriesTrigger.setAttribute('aria-expanded', 'false');
+    };
+    const openCategories = () => {
+      navCategories.classList.add('is-open');
+      categoriesTrigger.setAttribute('aria-expanded', 'true');
+    };
+
+    const hoverCapable = window.matchMedia('(hover: hover)').matches;
+
+    if (hoverCapable) {
+      // en dispositivos con mouse, el hover ya abre/cierra el menú;
+      // el clic con mouse siempre llega justo después de un mouseenter
+      // (así es como funcionan los eventos del mouse), así que si el
+      // clic también hiciera toggle, cerraría el menú apenas se abrió.
+      // El clic con mouse aquí solo evita la navegación; para teclado
+      // (Enter/Espacio, que no dispara mouseenter) sí hace toggle.
+      categoriesTrigger.addEventListener('click', (e) => e.preventDefault());
+      categoriesTrigger.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          navCategories.classList.contains('is-open') ? closeCategories() : openCategories();
+        }
+      });
+
+      let closeTimer = null;
+      navCategories.addEventListener('mouseenter', () => {
+        clearTimeout(closeTimer);
+        openCategories();
+      });
+      navCategories.addEventListener('mouseleave', () => {
+        closeTimer = setTimeout(closeCategories, 150);
+      });
+    } else {
+      // táctil: el toque abre/cierra, sin hover de por medio
+      categoriesTrigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        navCategories.classList.contains('is-open') ? closeCategories() : openCategories();
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!navCategories.contains(e.target)) closeCategories();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeCategories();
+    });
+
+    navCategories.querySelectorAll('.categories-menu-item:not(:disabled)').forEach((item) => {
+      item.addEventListener('click', () => {
+        closeCategories();
+        if (opts.closesMobileNav) closeMobileNav();
+      });
+    });
+  }
+
+  initCategoriesDropdown('navCategories', 'categoriesTrigger', { closesMobileNav: true });
+  initCategoriesDropdown('navCategoriesProducts', 'categoriesTriggerProducts', { closesMobileNav: false });
 
   /* ---------- Menú móvil ---------- */
   const navToggle = document.getElementById('navToggle');
@@ -118,6 +212,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (id === 'panelCombos' && typeof window.zdBuildCombosGrid === 'function') {
       window.zdBuildCombosGrid();
     }
+    // estos dos se reconstruyen SIEMPRE que se abren (no una sola vez),
+    // para que el orden aleatorio del catálogo cambie en cada visita
+    if (id === 'panelCatalogoTodo' && typeof window.zdBuildCatalogoTodoGrid === 'function') {
+      window.zdBuildCatalogoTodoGrid();
+    }
+    if (id === 'panelOfertas' && typeof window.zdBuildOfertasGrid === 'function') {
+      window.zdBuildOfertasGrid();
+    }
+    if (id === 'panelProductos' && typeof window.zdBuildProductsGrid === 'function') {
+      window.zdBuildProductsGrid(true);
+    }
     if (id === 'panelCustomCombo') {
       if (typeof window.zdBuildCustomComboPicker === 'function') window.zdBuildCustomComboPicker();
       if (typeof window.zdInitCustomComboSearch === 'function') window.zdInitCustomComboSearch();
@@ -132,7 +237,14 @@ document.addEventListener('DOMContentLoaded', () => {
       window.zdRenderCustomComboSummary();
     }
 
-    const gridByPanel = { panelCatalogo: '#catalogGrid', panelCombos: '#combosGrid', panelCustomCombo: '#customComboPicker' };
+    const gridByPanel = {
+      panelCatalogo: '#catalogGrid',
+      panelCombos: '#combosGrid',
+      panelCustomCombo: '#customComboPicker',
+      panelCatalogoTodo: '#catalogTodoGrid',
+      panelOfertas: '#ofertasGrid',
+      panelProductos: '#productsGrid'
+    };
     if (gridByPanel[id] && typeof zdPlayGridEntrance === 'function') {
       zdPlayGridEntrance(gridByPanel[id]);
     }
@@ -140,10 +252,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof window.zdResetPanelSearch === 'function') {
       window.zdResetPanelSearch(id);
     }
+
+    zdSyncPanelObstruction();
   }
 
   // Exponer para que otros módulos (ej. el carrusel de la home) puedan abrir paneles
   window.zdOpenPanel = openPanel;
+
+  /* ---------- Pausa las animaciones pesadas del Hero (aurora + red de
+     partículas) mientras hay un panel abierto tapándolo por completo —
+     no tiene sentido gastar CPU/GPU dibujando algo que no se ve.
+     aurora.js y hero-fx.js escuchan este evento. ---------- */
+  function zdSyncPanelObstruction() {
+    const isOpen = document.querySelector('.fullscreen-panel.is-open') !== null;
+    document.body.classList.toggle('has-open-panel', isOpen);
+    window.dispatchEvent(new CustomEvent('zd:panel-visibility', { detail: { open: isOpen } }));
+  }
 
   function closePanel(id) {
     const panel = document.getElementById(id);
@@ -154,6 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (id === 'panelCustomCombo' && typeof window.zdRenderCustomComboSummary === 'function') {
       window.zdRenderCustomComboSummary();
     }
+    zdSyncPanelObstruction();
   }
 
   function closeAllPanels() {
@@ -165,7 +290,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof window.zdRenderCustomComboSummary === 'function') {
       window.zdRenderCustomComboSummary();
     }
+    zdSyncPanelObstruction();
   }
+
+  // se exponen para reutilizarlos desde contenido insertado dinámicamente
+  // después del DOMContentLoaded (ej. la ficha de producto en products.js)
+  window.zdClosePanel = closePanel;
+  window.zdCloseAllPanels = closeAllPanels;
+  window.zdGoHome = function () {
+    closeAllPanels();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  window.zdSwitchPanel = function (fromId, toId) {
+    closePanel(fromId);
+    openPanel(toId);
+  };
 
   openPanelBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {

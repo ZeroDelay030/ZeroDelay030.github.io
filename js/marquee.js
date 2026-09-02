@@ -1,22 +1,29 @@
 // ============================================================
 // ZERO DELAY — marquee.js
-// Una sola fila de carrusel infinito, con plataformas y combos
-// intercalados, en flujo constante e ininterrumpido.
-// Se puede arrastrar con mouse o dedo; hacer click abre el panel
-// correspondiente (Catálogo/Combos).
+// Carruseles infinitos de una sola fila, con flujo constante e
+// ininterrumpido. Se puede arrastrar con mouse o dedo; hacer click
+// abre el panel/ficha correspondiente. Hay dos instancias en la
+// página: "Plataformas destacadas" (plataformas + combos) y
+// "Productos destacados" (productos físicos de todas las categorías).
 //
-// Nota: a diferencia de otras animaciones del sitio, este carrusel
-// NO se detiene por completo con "prefers-reduced-motion" — solo
-// baja la velocidad — porque el movimiento es el propósito central
+// Nota: a diferencia de otras animaciones del sitio, estos carruseles
+// NO se detienen por completo con "prefers-reduced-motion" — solo
+// bajan la velocidad — porque el movimiento es el propósito central
 // de este elemento, no un adorno.
 // ============================================================
+
+/* límite de tarjetas por carrusel: sigue viéndose variado, pero evita
+   que la cantidad de tarjetas (y sus animaciones) crezca sin techo a
+   medida que se agregan más productos/plataformas al catálogo */
+const ZD_MARQUEE_MAX_ITEMS = 24;
 
 function zdMarqueeMinPrice(variants) {
   return Math.min(...variants.map((v) => v.price));
 }
 
 // Estas plataformas son las más vendidas: siempre aparecen entre las
-// primeras tarjetas del carrusel (mezcladas al azar solo entre ellas).
+// primeras tarjetas del carrusel de plataformas (mezcladas al azar
+// solo entre ellas).
 const ZD_MARQUEE_PRIORITY_IDS = ['netflix', 'primevideo', 'disney', 'hbomax', 'chatgpt', 'capcut'];
 
 function zdShuffle(arr) {
@@ -28,7 +35,8 @@ function zdShuffle(arr) {
   return a;
 }
 
-function zdMarqueeBuildItems() {
+/* ---------- Carrusel 1: "Plataformas destacadas" (plataformas + combos) ---------- */
+function zdMarqueeBuildPlatformItems() {
   const platformItems = (typeof ZD_CATALOG !== 'undefined' ? ZD_CATALOG : []).map((p) => ({
     id: p.id,
     panel: 'panelCatalogo',
@@ -74,7 +82,45 @@ function zdMarqueeBuildItems() {
     if (shuffledCombos[i]) interleavedRest.push(shuffledCombos[i]);
   }
 
-  return shuffledPriority.concat(interleavedRest);
+  return shuffledPriority.concat(interleavedRest).slice(0, ZD_MARQUEE_MAX_ITEMS);
+}
+
+function zdMarqueeActivatePlatformCard(card) {
+  const panelId = card.dataset.panel;
+  const itemId = card.dataset.id;
+  if (panelId && typeof window.zdOpenPanel === 'function') {
+    window.zdOpenPanel(panelId);
+  }
+
+  // Esperar a que el panel abra y termine su animación de entrada
+  // antes de expandir la tarjeta correspondiente y llevarla a la vista.
+  if (itemId && typeof window.zdExpandCardById === 'function') {
+    const gridSelector = panelId === 'panelCatalogo' ? '#catalogGrid' : '#combosGrid';
+    setTimeout(() => {
+      window.zdExpandCardById(gridSelector, itemId);
+    }, 420);
+  }
+}
+
+/* ---------- Carrusel 2: "Productos destacados" (productos físicos,
+   todas las categorías salvo streaming — que no aplica aquí) ---------- */
+function zdMarqueeBuildProductItems() {
+  const items = (typeof ZD_PRODUCTS !== 'undefined' ? ZD_PRODUCTS : []).map((p) => ({
+    id: p.id,
+    panel: 'panelProductDetail',
+    name: p.name,
+    logo: p.image,
+    rect: true,
+    priceLabel: zdFormatCOP(p.salePrice || p.price)
+  }));
+  return zdShuffle(items).slice(0, ZD_MARQUEE_MAX_ITEMS);
+}
+
+function zdMarqueeActivateProductCard(card) {
+  const itemId = card.dataset.id;
+  if (itemId && typeof window.zdOpenProductDetail === 'function') {
+    window.zdOpenProductDetail(itemId);
+  }
 }
 
 function zdMarqueeCardHTML(item) {
@@ -101,16 +147,17 @@ function zdMarqueeCardHTML(item) {
   `;
 }
 
-function initMarquee() {
-  const viewport = document.getElementById('marqueeViewport1');
-  const track = document.getElementById('marqueeTrack1');
+/* ---------- Motor genérico: una instancia = un carrusel ---------- */
+function zdInitMarqueeInstance(opts) {
+  const viewport = document.getElementById(opts.viewportId);
+  const track = document.getElementById(opts.trackId);
   if (!viewport || !track) return;
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const BASE_SPEED = 60; // px por segundo
   const REDUCED_SPEED = 14; // más lento, pero nunca detenido del todo
 
-  const items = zdMarqueeBuildItems();
+  const items = opts.buildItems();
   if (!items.length) return;
 
   const setHTML = items.map(zdMarqueeCardHTML).join('');
@@ -166,9 +213,23 @@ function initMarquee() {
   }
 
   let paused = false;
+
+  // las tarjetas del carrusel traen animaciones CSS propias (brillo,
+  // pulso, giro) que corrían siempre, incluso con la sección fuera de
+  // pantalla — eso resultó ser el mayor costo de rendimiento medido en
+  // el sitio, muy por encima del canvas del Hero. Se pausan igual que
+  // ya se hace en el resto del catálogo (clase .is-anim-paused).
+  function setCardAnimationsPaused(isPaused) {
+    track.querySelectorAll('.logo-orbit').forEach((el) => {
+      el.classList.toggle('is-anim-paused', isPaused);
+    });
+  }
+  setCardAnimationsPaused(true); // arrancan pausadas: recién se sabrá si están a la vista tras el primer chequeo del observer
+
   if ('IntersectionObserver' in window) {
     const visibilityObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
+        setCardAnimationsPaused(!entry.isIntersecting);
         if (entry.isIntersecting) {
           if (paused) {
             paused = false;
@@ -221,28 +282,11 @@ function initMarquee() {
   viewport.addEventListener('touchmove', onDragMove, { passive: true });
   viewport.addEventListener('touchend', onDragEnd);
 
-  function activateCard(card) {
-    const panelId = card.dataset.panel;
-    const itemId = card.dataset.id;
-    if (panelId && typeof window.zdOpenPanel === 'function') {
-      window.zdOpenPanel(panelId);
-    }
-
-    // Esperar a que el panel abra y termine su animación de entrada
-    // antes de expandir la tarjeta correspondiente y llevarla a la vista.
-    if (itemId && typeof window.zdExpandCardById === 'function') {
-      const gridSelector = panelId === 'panelCatalogo' ? '#catalogGrid' : '#combosGrid';
-      setTimeout(() => {
-        window.zdExpandCardById(gridSelector, itemId);
-      }, 420);
-    }
-  }
-
   track.addEventListener('click', (e) => {
     if (moved > 6) return; // fue un arrastre, no un click real
     const card = e.target.closest('.marquee-card');
     if (!card) return;
-    activateCard(card);
+    opts.onActivate(card);
   });
 
   // accesibilidad de teclado: Enter o Espacio activan la tarjeta enfocada
@@ -251,7 +295,7 @@ function initMarquee() {
     const card = e.target.closest('.marquee-card');
     if (!card) return;
     e.preventDefault();
-    activateCard(card);
+    opts.onActivate(card);
   });
 
   window.addEventListener('resize', () => {
@@ -262,6 +306,22 @@ function initMarquee() {
   requestAnimationFrame(() => {
     measure();
     requestAnimationFrame(frame);
+  });
+}
+
+function initMarquee() {
+  zdInitMarqueeInstance({
+    viewportId: 'marqueeViewport1',
+    trackId: 'marqueeTrack1',
+    buildItems: zdMarqueeBuildPlatformItems,
+    onActivate: zdMarqueeActivatePlatformCard
+  });
+
+  zdInitMarqueeInstance({
+    viewportId: 'marqueeViewport2',
+    trackId: 'marqueeTrack2',
+    buildItems: zdMarqueeBuildProductItems,
+    onActivate: zdMarqueeActivateProductCard
   });
 }
 

@@ -174,6 +174,37 @@
     });
   }
 
+  /* ---------- F bis) Brillo metálico del lockup de marca en el hero ---------- */
+  function initBrandmarkShine() {
+    if (prefersReducedMotion) return;
+    if (!window.matchMedia('(hover: hover)').matches) return; // solo escritorio/mouse
+
+    const brandmark = document.querySelector('.hero-brandmark');
+    if (!brandmark) return;
+
+    let pendingEvent = null;
+    let ticking = false;
+
+    function apply(e) {
+      const rect = brandmark.getBoundingClientRect();
+      const relX = ((e.clientX - rect.left) / rect.width) * 100;
+      const relY = ((e.clientY - rect.top) / rect.height) * 100;
+      brandmark.style.setProperty('--mx', `${relX}%`);
+      brandmark.style.setProperty('--my', `${relY}%`);
+    }
+
+    brandmark.addEventListener('mousemove', (e) => {
+      pendingEvent = e;
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          if (pendingEvent) apply(pendingEvent);
+          ticking = false;
+        });
+      }
+    });
+  }
+
   /* ---------- G) Micro-animaciones de feedback ---------- */
 
   // Ráfaga de partículas de celebración (ej. al finalizar por WhatsApp)
@@ -261,6 +292,7 @@
     initSpeedDividers();
     initScrollProgressAndHeader();
     initTilt();
+    initBrandmarkShine();
     initCartBump();
     initRipple();
     setTimeout(initImageFade, 50);
