@@ -685,10 +685,112 @@ const ZD_PRODUCTS = [
     stock: 10,
     image: 'assets/products/scandal-men.jpg',
     description: 'Scandal de Jean Paul Gaultier es una fragancia masculina intensa, elegante y con carácter. Su aroma destaca por ser moderno, seductor y duradero, ideal para hombres que quieren dejar presencia sin pasar desapercibidos.\n\nSu frasco azul con corona dorada y su caja roja lo convierten en un perfume perfecto para uso personal o para regalar.'
+  },
+  {
+    id: 'perfume-coco-mademoiselle',
+    name: '1.1 DAMA COCO CHANEL MADEMOISELLE',
+    category: 'perfumeria',
+    categoryLabel: 'Perfumería',
+    ref: '71615',
+    price: 69900,
+    stock: 10,
+    image: 'assets/products/coco-mademoiselle.jpg',
+    description: 'COCO MADEMOISELLE Eau de Parfum Intense. La esencia de una mujer libre y cautivadora.\n\nUn ambarino amaderado de carácter intenso: sensual, profundo, adictivo.'
+  },
+  {
+    id: 'perfume-dior-sauvage',
+    name: '1.1 HOMBRE DIOR SAUVAGE',
+    category: 'perfumeria',
+    categoryLabel: 'Perfumería',
+    ref: '33816',
+    price: 90000,
+    salePrice: 70000,
+    stock: 10,
+    image: 'assets/products/dior-sauvage.jpg',
+    description: 'El frescor potente de Sauvage exhala nuevas facetas sensuales y misteriosas, renovando ampliamente la firma con una composición virtuosa.'
+  },
+  {
+    id: 'perfume-khamrah-lattafa',
+    name: '1.1 UNISEX ARABE KHAMRAH LATTAFA',
+    category: 'perfumeria',
+    categoryLabel: 'Perfumería',
+    ref: '85805',
+    price: 84500,
+    stock: 10,
+    image: 'assets/products/khamrah-lattafa.jpg',
+    description: 'Perfume top árabe.'
+  },
+  {
+    id: 'perfume-dg-the-one',
+    name: '1.1 HOMBRE DOLCE & GABBANA THE ONE',
+    category: 'perfumeria',
+    categoryLabel: 'Perfumería',
+    ref: '49813',
+    price: 80000,
+    stock: 10,
+    image: 'assets/products/dg-the-one.jpg',
+    description: 'La fragancia de hombre Dolce&Gabbana The One Eau de Parfum ofrece una experiencia sensorial más intensa y profunda, específicamente diseñada para los verdaderos amantes del perfume.\n\nEn su preciada fórmula, la naranja tarocco italiana se une a las notas herbáceas de la salvia francesa, para fundirse a continuación con la madera de sándalo australiano, cuyo resultado es una composición que deja una estela inconfundible.'
+  },
+  {
+    id: 'perfume-phantom',
+    name: '1.1 HOMBRE PHANTOM PACO RABANNE',
+    category: 'perfumeria',
+    categoryLabel: 'Perfumería',
+    ref: '36240',
+    price: 70000,
+    stock: 10,
+    image: 'assets/products/phantom.jpg',
+    description: 'Paco Rabanne Phantom, una fragancia masculina moderna con un diseño futurista inconfundible.'
+  },
+  {
+    id: 'perfume-bleu-chanel',
+    name: '1.1 HOMBRE BLEU CHANEL TOILETTE',
+    category: 'perfumeria',
+    categoryLabel: 'Perfumería',
+    ref: '63751',
+    price: 120000,
+    salePrice: 89000,
+    stock: 10,
+    image: 'assets/products/bleu-chanel.jpg',
+    description: 'El elogio a la libertad, que se expresa en un aromático amaderado de estela cautivadora. Una fragancia atemporal en un frasco de un azul profundo y misterioso.\n\nBLEU DE CHANEL se presenta aquí en un eau de parfum, cuyo aroma sutilmente pronunciado revela un espíritu determinado. El eau de parfum ofrece un perfume envolvente y se vaporiza en nubes dentro de la ropa y la piel.'
+  },
+  {
+    id: 'perfume-paradise-garden',
+    name: '1.1 HOMBRE JEAN PAUL PARADISE GARDEN',
+    category: 'perfumeria',
+    categoryLabel: 'Perfumería',
+    ref: '44763',
+    price: 100000,
+    stock: 10,
+    image: 'assets/products/paradise-garden.jpg',
+    description: 'Una fragancia cautivadora que mezcla elementos naturales que te transporta a un exuberante paraíso. Su apertura refrescante de agua de coco invita a sumergirse en un jardín tropical de delicias exóticas.\n\nEn el corazón amaderado, el sándalo aporta una calidez sensual, realzada por las notas especiadas del jengibre. El fondo es una caricia verde y vigorizante de higo, bañada por el sol con la dulzura de la haba tonka, dejando un rastro apasionado y masculino.'
+  },
+  {
+    id: 'perfume-victorinox-classic',
+    name: '1.1 HOMBRE VICTORINOX SWISS ARMY CLASSIC',
+    category: 'perfumeria',
+    categoryLabel: 'Perfumería',
+    ref: '79885',
+    price: 140000,
+    salePrice: 89000,
+    stock: 10,
+    image: 'assets/products/victorinox-classic.jpg',
+    description: 'Swiss Army de Victorinox Swiss Army es una fragancia de la familia olfativa Amaderada Aromática para Hombres.\n\nNotas de salida: notas verdes, yuzu, menta, bergamota y jengibre.\nNotas de corazón: romero, lavanda, hojas de violeta, flor de las nieves (edelweiss) y geranio.\nNotas de fondo: ciprés, almizcle, abeto balsámico, cedro y ámbar.'
+  },
+  {
+    id: 'perfume-valentino-kit',
+    name: '1.1 KIT DE LUJO VALENTINO 50ML',
+    category: 'perfumeria',
+    categoryLabel: 'Perfumería',
+    ref: '42134',
+    price: 115000,
+    stock: 10,
+    image: 'assets/products/valentino-kit.jpg',
+    description: 'Kit de lujo con tres fragancias Valentino de 50 ml cada una:\n\nValentino Uomo.\nValentino Born In Roma.\nValentino Born In Roma Green Stravaganza.'
   }
 ];
 
-// refs ya usadas (para no repetir al agregar productos nuevos): 84213, 93810, 24592, 13278, 52445, 29772, 61750, 95319, 16328, 19494, 80239, 22337, 57931, 86387, 17602, 62950, 59906, 36224, 88569, 33435, 40180, 42562, 27464, 21348, 42918, 60209, 79574, 99693, 80599, 16863, 45084, 21427, 63377, 44937, 24116
+// refs ya usadas (para no repetir al agregar productos nuevos): 84213, 93810, 24592, 13278, 52445, 29772, 61750, 95319, 16328, 19494, 80239, 22337, 57931, 86387, 17602, 62950, 59906, 36224, 88569, 33435, 40180, 42562, 27464, 21348, 42918, 60209, 79574, 99693, 80599, 16863, 45084, 21427, 63377, 44937, 24116, 71615, 33816, 85805, 49813, 36240, 63751, 44763, 79885, 42134
 
 /* ============================================================
    ARMA TU COMBO A TU GUSTO — reglas de descuento
