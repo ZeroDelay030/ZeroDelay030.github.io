@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZERO DELAY — Plataformas digitales sin demoras</title>
+<meta name="description" content="Netflix, Disney+, HBO Max, ChatGPT Plus y más. Suscripciones digitales rápidas, confiables y al mejor precio.">
+
+<!-- aplica el tema guardado ANTES de pintar la página, para que no
+     haya un parpadeo del tema equivocado al cargar -->
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('zd_theme');
+      if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    } catch (e) {}
+  })();
+</script>
+
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="ZERO DELAY — Streaming, IA y productividad al mejor precio">
+<meta property="og:description" content="Netflix, Disney+, HBO Max, ChatGPT Plus, Spotify y más de 20 plataformas. Entrega inmediata y combos con descuento.">
+<meta property="og:image" content="https://zerodelay030.github.io/assets/logo-zd.jpg">
+<meta property="og:url" content="https://zerodelay030.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ZERO DELAY — Streaming, IA y productividad al mejor precio">
+<meta name="twitter:description" content="Netflix, Disney+, HBO Max, ChatGPT Plus, Spotify y más de 20 plataformas. Entrega inmediata y combos con descuento.">
+<meta name="twitter:image" content="https://zerodelay030.github.io/assets/logo-zd.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&family=Manrope:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css?v=20260906c">
+</head>
+<body>
+
+<div id="zdLoader" class="zd-loader" aria-hidden="true">
+  <div class="zd-loader-grid"></div>
+  <div class="zd-loader-orbit">
+    <img src="assets/logo-zd.jpg" alt="" class="zd-loader-logo">
+  </div>
+</div>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a href="#top" class="brand">
+      <img src="assets/logo-zd.jpg" alt="ZERO DELAY" class="brand-logo">
+      <span class="brand-name">ZERO<span class="brand-accent">DELAY</span></span>
+      <span class="brand-verified" title="Negocio verificado">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/></svg>
+      </span>
+    </a>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="#" data-open-panel="panelCatalogoTodo">Catálogo</a>
+
+      <div class="nav-categories" id="navCategories">
+        <button type="button" class="nav-categories-trigger" id="categoriesTrigger" aria-haspopup="true" aria-expanded="false">
+          Categorías <span class="nav-caret" aria-hidden="true">▾</span>
+        </button>
+        <div class="categories-menu" id="categoriesMenu">
+          <button type="button" class="categories-menu-item" data-open-panel="panelCatalogo">
+            <span class="categories-menu-item-name">Streaming</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Belleza</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Camisas 1.1 Fútbol</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Deporte</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Hogar</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Joyería</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Mascotas</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="perfumeria">
+            <span class="categories-menu-item-name">Perfumería</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Relojería Original</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Relojería Réplica</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Tecnología</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Vape</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+        </div>
+      </div>
+
+      <a href="#nosotros">Nosotros</a>
+      <a href="#faq">Preguntas</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Cambiar a modo oscuro" title="Cambiar a modo oscuro">
+        <svg class="theme-toggle-icon theme-toggle-icon--sun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M12 2.5V4.5M12 19.5V21.5M4.5 12H2.5M21.5 12H19.5M5.6 5.6L4.2 4.2M19.8 19.8L18.4 18.4M18.4 5.6L19.8 4.2M4.2 19.8L5.6 18.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <svg class="theme-toggle-icon theme-toggle-icon--moon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="cart-btn" id="cartBtn" data-open-cart aria-label="Abrir carrito">
+        <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 3H5L5.4 5M5.4 5H21L18 14H7L5.4 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="9" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="17" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+        </svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- overlay para cerrar el menú móvil tocando afuera -->
+<div class="nav-overlay" id="navOverlay"></div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-glow hero-glow--purple"></div>
+    <div class="hero-glow hero-glow--cyan"></div>
+    <canvas id="heroAuroraCanvas" class="hero-aurora-canvas" aria-hidden="true"></canvas>
+    <canvas id="heroCanvas" class="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-corner hero-corner--tl" aria-hidden="true"></div>
+    <div class="hero-corner hero-corner--tr" aria-hidden="true"></div>
+  </div>
+
+  <!-- oscurece la zona del contenido para que el texto no compita
+       visualmente con los hilos de la aurora, sin taparla en los bordes -->
+  <div class="hero-content-scrim" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">BIENVENIDO A</p>
+
+    <div class="hero-brandmark" data-reveal>
+      <div class="hero-brandmark-shine" aria-hidden="true"></div>
+      <img src="assets/logo-zd.jpg" alt="" class="hero-brandmark-logo">
+      <span class="hero-brandmark-name">ZERO<span class="brand-accent">DELAY</span></span>
+    </div>
+
+    <p class="hero-tagline"><span class="hero-tagline-white">Velocidad. Confianza.</span> <span class="hero-title--accent">Entretenimiento sin límites.</span></p>
+
+    <div class="hero-actions hero-actions--stacked">
+      <a href="#" class="btn btn--primary btn--hero-main" data-open-panel="panelCatalogoGeneral">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 3H5L5.4 5M5.4 5H21L18 14H7L5.4 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/><circle cx="17" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/></svg>
+        Descubre nuestro catálogo
+      </a>
+      <a href="#" class="btn btn--secondary btn--hero-sub" data-open-panel="panelCatalogo">
+        Catálogo cuentas de streaming <span aria-hidden="true">→</span>
+      </a>
+      <a href="#" class="btn btn--ofertas btn--hero-sub" data-open-panel="panelOfertas">
+        🔥 Ofertas <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div class="hero-trust-bar">
+      <div class="hero-trust-item">
+        <span class="hero-trust-icon">💰</span>
+        <span class="hero-trust-text">Los mejores precios del mercado</span>
+      </div>
+      <span class="hero-trust-divider" aria-hidden="true"></span>
+      <div class="hero-trust-item">
+        <span class="hero-trust-icon">🛡️</span>
+        <span class="hero-trust-text">Compra segura</span>
+      </div>
+      <span class="hero-trust-divider" aria-hidden="true"></span>
+      <div class="hero-trust-item">
+        <span class="hero-trust-icon">🚚</span>
+        <span class="hero-trust-text">Envíos a todo el país</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue" aria-hidden="true">
+    <span></span>
+  </div>
+</section>
+
+<!-- ============ CÓMO FUNCIONA (3 pasos) ============ -->
+<section class="how-it-works" aria-label="Cómo funciona">
+  <div class="section-inner">
+    <div class="how-it-works-row">
+      <div class="how-step" data-reveal>
+        <span class="how-step-icon">🔍</span>
+        <span class="how-step-number">1</span>
+        <span class="how-step-title">Elige tu producto</span>
+        <span class="how-step-desc">O arma tu propio combo con las que quieras</span>
+      </div>
+      <span class="how-step-arrow" aria-hidden="true">→</span>
+      <div class="how-step" data-reveal data-reveal-delay="120">
+        <span class="how-step-icon">🧩</span>
+        <span class="how-step-number">2</span>
+        <span class="how-step-title">Agrégalo al carrito</span>
+        <span class="how-step-desc">Con descuento automático si combinas varias</span>
+      </div>
+      <span class="how-step-arrow" aria-hidden="true">→</span>
+      <div class="how-step" data-reveal data-reveal-delay="240">
+        <span class="how-step-icon">✅</span>
+        <span class="how-step-number">3</span>
+        <span class="how-step-title">Finaliza tu compra</span>
+        <span class="how-step-desc">Confirmamos por WhatsApp y te entregamos de inmediato</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CARRUSEL INFINITO DE PLATAFORMAS Y COMBOS ============ -->
+<section class="marquee-section" aria-label="Plataformas y combos destacados">
+  <p class="marquee-heading">Plataformas destacadas</p>
+
+  <div class="marquee-row">
+    <div class="marquee-viewport" id="marqueeViewport1">
+      <div class="marquee-track" id="marqueeTrack1"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CARRUSEL INFINITO DE PRODUCTOS FÍSICOS ============ -->
+<section class="marquee-section" aria-label="Productos destacados">
+  <p class="marquee-heading">Productos destacados</p>
+
+  <div class="marquee-row">
+    <div class="marquee-viewport" id="marqueeViewport2">
+      <div class="marquee-track" id="marqueeTrack2"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DOX DESIGNS — CREA TU PROPIA PÁGINA WEB ============ -->
+<section class="section dox-promo">
+  <div class="section-inner">
+    <h2 class="dox-promo-title">Crea tu propia página web con nosotros</h2>
+
+    <div class="dox-promo-layout">
+      <div class="dox-promo-brand">
+        <img src="assets/dox/dox-logo.jpg" alt="Dox Designs Software Development" class="dox-promo-logo">
+      </div>
+
+      <div class="dox-promo-content">
+        <p class="dox-promo-slogan">"Diseño y construyo experiencias digitales donde el código y el diseño se encuentran."</p>
+        <p class="dox-promo-desc">Diseño y desarrollo de páginas web, tiendas online y aplicaciones a la medida para negocios en Cali y toda Colombia. Sitios rápidos, seguros y pensados para que tus clientes te encuentren y te escriban.</p>
+
+        <p class="dox-promo-label">Proyectos</p>
+        <div class="dox-promo-projects">
+          <button type="button" class="dox-project-card" data-open-panel="panelDoxDesigns">
+            <img src="assets/dox/calidoso.jpg" alt="Calidoso Web APP" loading="lazy">
+            <span>Calidoso Web APP</span>
+          </button>
+          <button type="button" class="dox-project-card" data-open-panel="panelDoxDesigns">
+            <img src="assets/dox/vitalis.jpg" alt="Vitalis App" loading="lazy">
+            <span>Vitalis App</span>
+          </button>
+          <button type="button" class="dox-project-card" data-open-panel="panelDoxDesigns">
+            <img src="assets/dox/dr-valcarcel.jpg" alt="Dr Valcárcel" loading="lazy">
+            <span>Dr Valcárcel</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- divisor de velocidad (elemento de firma visual) -->
+<div class="speed-divider" aria-hidden="true">
+  <div class="speed-line speed-line--1"></div>
+  <div class="speed-line speed-line--2"></div>
+  <div class="speed-line speed-line--3"></div>
+</div>
+
+<!-- ============ ACCESOS RÁPIDOS ============ -->
+<section class="section quick-access">
+  <div class="section-inner">
+    <p class="section-eyebrow">Explora ZERO DELAY</p>
+    <h2 class="section-title">¿Qué estás buscando hoy?</h2>
+
+    <div class="quick-access-grid">
+      <button class="quick-card quick-card--primary" data-open-panel="panelCatalogo" data-reveal data-reveal-delay="0">
+        <span class="quick-card-icon">▣</span>
+        <span class="quick-card-title">Elige tu plataforma</span>
+        <span class="quick-card-desc">Netflix, Disney+, HBO Max, IA y más — planes y precios individuales.</span>
+      </button>
+
+      <button class="quick-card quick-card--primary" data-open-panel="panelCombos" data-reveal data-reveal-delay="80">
+        <span class="quick-card-icon">◈</span>
+        <span class="quick-card-title">Combos con descuento</span>
+        <span class="quick-card-desc">Paquetes de varias plataformas a un precio reducido.</span>
+      </button>
+
+      <a href="#nosotros" class="quick-card quick-card--secondary" data-reveal data-reveal-delay="160">
+        <span class="quick-card-icon">◐</span>
+        <span class="quick-card-title">Sobre nosotros</span>
+        <span class="quick-card-desc">Conoce quiénes somos y por qué confiar en ZERO DELAY.</span>
+      </a>
+
+      <a href="#faq" class="quick-card quick-card--secondary" data-reveal data-reveal-delay="240">
+        <span class="quick-card-icon">?</span>
+        <span class="quick-card-title">¿Tienes dudas?</span>
+        <span class="quick-card-desc">Resolvemos las preguntas más frecuentes.</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="speed-divider" aria-hidden="true">
+  <div class="speed-line speed-line--1"></div>
+  <div class="speed-line speed-line--2"></div>
+  <div class="speed-line speed-line--3"></div>
+</div>
+
+<!-- ============ SOBRE NOSOTROS ============ -->
+<section class="section section--about" id="nosotros">
+  <div class="section-inner about-layout">
+    <div class="about-text" data-reveal>
+      <p class="section-eyebrow">03 — Nosotros</p>
+      <h2 class="section-title">Acerca de ZERO DELAY</h2>
+
+      <p>Bienvenido a ZERO DELAY, un emprendimiento dedicado a ofrecer suscripciones digitales y plataformas premium con un servicio rápido, organizado y enfocado en la satisfacción de cada cliente.</p>
+
+      <p>Hoy contamos con una comunidad de <strong>más de 400 clientes activos</strong>, quienes han confiado en nosotros para acceder a sus plataformas favoritas de forma sencilla y con atención personalizada.</p>
+
+      <p>Nuestro objetivo no es solo vender una suscripción, sino brindar una experiencia en la que puedas sentirte acompañado antes, durante y después de tu compra. Por eso nos esforzamos en responder con rapidez, resolver cualquier duda y ofrecer el mejor servicio posible.</p>
+
+      <p>En ZERO DELAY encontrarás plataformas de entretenimiento, productividad e inteligencia artificial, además de promociones y combos diseñados para que puedas ahorrar sin renunciar a la calidad del servicio.</p>
+
+      <h3 class="about-subtitle">¿Por qué elegirnos?</h3>
+      <ul class="about-list">
+        <li>Más de 400 clientes activos que respaldan nuestro trabajo.</li>
+        <li>Atención personalizada y respuestas rápidas.</li>
+        <li>Entrega ágil de los productos.</li>
+        <li>Catálogo con una amplia variedad de plataformas.</li>
+        <li>Promociones y combos para obtener un mejor precio.</li>
+        <li>Compromiso con brindar una experiencia confiable y una atención cercana.</li>
+      </ul>
+
+      <p>Cada compra representa un voto de confianza hacia nuestro emprendimiento, y por eso trabajamos todos los días para seguir creciendo y ofreciendo un servicio cada vez mejor.</p>
+
+      <p class="about-thanks">Gracias por confiar en ZERO DELAY. Esperamos poder atenderte muy pronto. 🚀</p>
+    </div>
+
+    <div class="about-visual" data-reveal data-reveal-delay="120">
+      <img src="assets/mascota-about.jpg" alt="Mascota ZERO DELAY" class="about-mascot">
+      <div class="about-stat-card">
+        <span class="about-stat-number">400+</span>
+        <span class="about-stat-label">Clientes activos</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="speed-divider" aria-hidden="true">
+  <div class="speed-line speed-line--1"></div>
+  <div class="speed-line speed-line--2"></div>
+  <div class="speed-line speed-line--3"></div>
+</div>
+
+<!-- ============ FAQ ============ -->
+<section class="section" id="faq">
+  <div class="section-inner faq-layout">
+    <div class="faq-main" data-reveal>
+      <p class="section-eyebrow">04 — Preguntas frecuentes</p>
+      <h2 class="section-title">¿Tienes dudas?</h2>
+
+      <div class="faq-list" id="faqList">
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>¿Cómo funciona el proceso de compra?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Realizar tu compra es muy sencillo. Solo debes escribirnos por WhatsApp, indicar el producto que deseas y realizar el pago. Una vez confirmado, procedemos con la entrega de tu pedido en el menor tiempo posible. Durante todo el proceso recibirás atención personalizada para resolver cualquier duda.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>¿Las cuentas son compartidas o completas/privadas?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Depende del producto que elijas.</p>
+          <p><strong>Pantallas de streaming:</strong> corresponden a un perfil dentro de una cuenta compartida.<br>
+          <strong>Cuentas completas:</strong> son de uso exclusivo para ti, sin compartir con otros usuarios.</p>
+          <p>En cada producto especificamos claramente el tipo de acceso para que siempre sepas qué estás comprando.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>¿Qué diferencia hay entre una cuenta Genérica y una Original?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Las cuentas <strong>Originales</strong> ofrecen una mayor estabilidad y suelen presentar menos cambios durante el período de uso.</p>
+          <p>Las cuentas <strong>Genéricas</strong> son una alternativa más económica que funciona correctamente, aunque pueden requerir ajustes ocasionales.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>¿Cuánto tarda la entrega después de comprar?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Una vez confirmado el pago, la entrega normalmente se realiza en pocos minutos. Nuestro objetivo es que puedas comenzar a disfrutar tu servicio lo antes posible.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>¿Qué pasa si mi cuenta deja de funcionar antes de que termine el tiempo contratado?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Todos nuestros productos cuentan con garantía durante el período contratado. Si se presenta algún inconveniente cubierto por la garantía, nuestro equipo revisará el caso y te brindará una solución para que puedas disfrutar del servicio durante el tiempo correspondiente.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>¿Puedo cambiar la contraseña o el PIN de mi perfil?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>En los productos donde aplica, el PIN del perfil puede personalizarse. Generalmente entregamos el perfil con un PIN personalizado desde el inicio para mayor comodidad.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>¿Los precios son mensuales o corresponden al período indicado?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>El valor publicado corresponde al tiempo de duración especificado en cada producto. No existen cobros automáticos ni renovaciones sin tu autorización.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>¿Qué métodos de pago aceptan?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Aceptamos los siguientes medios de pago: <strong>Nequi</strong>, <strong>Llaves</strong> y <strong>Bre-B</strong>. Si prefieres otro método, puedes consultarnos y verificaremos si está disponible.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>¿Es seguro comprar cuentas de streaming de esta forma?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>La confianza de nuestros clientes es una de nuestras principales prioridades. En ZERO DELAY atendemos a una comunidad de más de 400 clientes activos, ofreciendo atención personalizada antes y después de la compra. Nos caracterizamos por responder rápidamente, brindar soporte cuando es necesario y acompañarte durante todo el proceso.</p>
+          <p>Si tienes alguna inquietud antes de comprar, estaremos encantados de resolverla para que realices tu compra con total tranquilidad.</p>
+        </div>
+      </div>
+
+      </div>
+    </div>
+
+    <div class="faq-visual" data-reveal data-reveal-delay="120">
+      <div class="faq-bubble">¿En qué te puedo ayudar hoy? 💜</div>
+      <img src="assets/mascota-faq.jpg" alt="Mascota ZERO DELAY resolviendo dudas" class="faq-mascot">
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIOS ============ -->
+<section class="testimonials-section" id="testimonios" aria-label="Testimonios de clientes">
+  <div class="section-inner">
+    <p class="section-eyebrow" data-reveal>Testimonios</p>
+    <h2 class="section-title" data-reveal>Lo que dicen nuestros clientes</h2>
+
+    <div class="testimonials-carousel" data-reveal data-reveal-delay="120">
+      <button class="testimonial-nav testimonial-nav--prev" id="testimonialPrev" aria-label="Testimonio anterior">‹</button>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testimonial-quote" id="testimonialQuote"></p>
+        <p class="testimonial-author">Cliente verificado de ZERO DELAY</p>
+      </div>
+
+      <button class="testimonial-nav testimonial-nav--next" id="testimonialNext" aria-label="Siguiente testimonio">›</button>
+    </div>
+
+    <div class="testimonial-dots" id="testimonialDots"></div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="footer-inner" data-reveal>
+    <div class="footer-brand">
+      <img src="assets/logo-zd.jpg" alt="ZERO DELAY" class="footer-logo">
+      <p class="footer-tagline">Suscripciones digitales sin demoras.</p>
+    </div>
+
+    <div class="footer-contact">
+      <p class="footer-heading">Contacto</p>
+      <a href="https://wa.me/573106422020?text=Hola%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20ZERO%20DELAY%20y%20sus%20productos." target="_blank" rel="noopener" class="footer-whatsapp">
+        <svg viewBox="0 0 24 24" fill="currentColor" class="whatsapp-icon"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.3-.4.1-.2 0-.4 0-.5C10.1 9 9.7 8 9.5 7.5c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 2 3 4.7 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.7 1.5 5.3L2 22l4.8-1.5c1.5.8 3.3 1.3 5.2 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.7 0-3.3-.5-4.7-1.3l-.3-.2-3.2 1 1-3.1-.2-.3C3.7 15 3.2 13.5 3.2 12c0-4.8 3.9-8.7 8.8-8.7 4.8 0 8.7 3.9 8.7 8.7s-3.9 8.7-8.7 8.7z"/></svg>
+        +57 310 642 2020
+      </a>
+    </div>
+
+    <nav class="footer-links">
+      <p class="footer-heading">Explorar</p>
+      <a href="#" data-open-panel="panelCatalogo">Catálogo</a>
+      <a href="#" data-open-panel="panelCombos">Combos</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#faq">Preguntas</a>
+    </nav>
+
+    <nav class="footer-social">
+      <p class="footer-heading">Síguenos</p>
+      <a href="https://www.tiktok.com/@zero_delay_0?_r=1&_t=ZS-98LC18ZmGKC" target="_blank" rel="noopener" class="footer-social-link">
+        <svg viewBox="0 0 24 24" fill="currentColor" class="social-icon"><path d="M16.5 2h-3.2v13.6c0 1.53-1.24 2.77-2.77 2.77a2.77 2.77 0 0 1-2.77-2.77 2.77 2.77 0 0 1 2.77-2.77c.24 0 .48.03.7.09v-3.3a6.06 6.06 0 0 0-.7-.04A6.07 6.07 0 0 0 4.7 15.63a6.07 6.07 0 0 0 6.06 6.06 6.07 6.07 0 0 0 6.06-6.06V8.36a8.2 8.2 0 0 0 4.68 1.46V6.6a4.85 4.85 0 0 1-1.02-.1A4.86 4.86 0 0 1 16.5 2z"/></svg>
+        TikTok
+      </a>
+      <a href="https://www.facebook.com/share/1aY3Rmd2TY/" target="_blank" rel="noopener" class="footer-social-link">
+        <svg viewBox="0 0 24 24" fill="currentColor" class="social-icon"><path d="M22 12.06C22 6.53 17.52 2 12 2S2 6.53 2 12.06c0 5 3.66 9.13 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.81 8.44-4.94 8.44-9.94z"/></svg>
+        Facebook
+      </a>
+    </nav>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 ZERO DELAY. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<!-- ============ PANEL: CATÁLOGO GENERAL (selector de categorías) ============ -->
+<div class="fullscreen-panel" id="panelCatalogoGeneral" aria-hidden="true">
+  <div class="panel-header">
+    <button class="panel-back" data-close-panel="panelCatalogoGeneral">
+      <span class="panel-back-arrow">←</span> Volver
+    </button>
+    <button class="panel-brand" data-go-home>ZERO<span class="brand-accent">DELAY</span></button>
+    <button class="cart-btn" data-open-cart aria-label="Abrir carrito">
+      <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3H5L5.4 5M5.4 5H21L18 14H7L5.4 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="9" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="17" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+      <span class="cart-badge cart-badge--panel">0</span>
+    </button>
+  </div>
+
+  <div class="panel-body section-inner">
+    <p class="section-eyebrow">Catálogo</p>
+    <h2 class="section-title">¿Qué quieres descubrir?</h2>
+    <p class="section-lead">Elige una categoría para ver lo que tenemos disponible.</p>
+
+    <div class="category-grid">
+      <button class="category-card" data-switch-panel="panelCatalogo">
+        <span class="category-card-icon">🎬</span>
+        <span class="category-card-title">Cuentas de streaming</span>
+        <span class="category-card-desc">Netflix, Disney+, HBO Max, IA, productividad y más — planes y precios individuales.</span>
+        <span class="category-card-arrow" aria-hidden="true">→</span>
+      </button>
+
+      <button class="category-card" data-switch-panel="panelProductos">
+        <span class="category-card-icon">📦</span>
+        <span class="category-card-title">Productos ZERO DELAY</span>
+        <span class="category-card-desc">Perfumería, tecnología, joyería y más — con envío hasta tu domicilio.</span>
+        <span class="category-card-arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PANEL: PRODUCTOS ZERO DELAY (catálogo de productos físicos) ============ -->
+<div class="fullscreen-panel" id="panelProductos" aria-hidden="true">
+  <div class="panel-header">
+    <button class="panel-back" data-close-panel="panelProductos">
+      <span class="panel-back-arrow">←</span> Volver
+    </button>
+    <button class="panel-brand" data-go-home>ZERO<span class="brand-accent">DELAY</span></button>
+    <button class="cart-btn" data-open-cart aria-label="Abrir carrito">
+      <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3H5L5.4 5M5.4 5H21L18 14H7L5.4 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="9" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="17" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+      <span class="cart-badge cart-badge--panel">0</span>
+    </button>
+  </div>
+
+  <div class="panel-body section-inner">
+    <p class="section-eyebrow">Catálogo</p>
+    <h2 class="section-title" id="productsTitle">📦 Productos ZERO DELAY</h2>
+    <p class="section-lead" id="productsLead">Perfumería, tecnología, joyería y más — con envío hasta tu domicilio.</p>
+
+    <div class="panel-quicknav">
+      <button class="panel-quicknav-btn panel-quicknav-btn--ghost" id="productsShowAllBtn">
+        Ver todas las categorías
+      </button>
+      <button class="panel-quicknav-btn panel-quicknav-btn--ghost" data-go-home>
+        <span aria-hidden="true">↑</span> Ir al inicio
+      </button>
+      <div class="panel-search-wrap panel-search-wrap--inline">
+        <svg class="panel-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="productsSearchInput" class="panel-search-input" placeholder="Buscar producto..." autocomplete="off">
+      </div>
+      <div class="nav-categories nav-categories--panel" id="navCategoriesProducts">
+        <button type="button" class="panel-quicknav-btn" id="categoriesTriggerProducts" aria-haspopup="true" aria-expanded="false">
+          Categorías <span class="nav-caret" aria-hidden="true">▾</span>
+        </button>
+        <div class="categories-menu" id="categoriesMenuProducts">
+          <button type="button" class="categories-menu-item" data-switch-panel="panelCatalogo">
+            <span class="categories-menu-item-name">Streaming</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Belleza</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Camisas 1.1 Fútbol</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Deporte</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Hogar</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Joyería</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Mascotas</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item" data-filter-category="perfumeria">
+            <span class="categories-menu-item-name">Perfumería</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Relojería Original</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Relojería Réplica</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Tecnología</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+            <span class="categories-menu-item-name">Vape</span>
+            <span class="categories-menu-soon">Próximamente</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-grid" id="productsGrid">
+      <div class="catalog-card catalog-card--placeholder">
+        <div class="placeholder-shimmer"></div>
+        <p class="placeholder-label">Cargando productos...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PANEL: FICHA DE PRODUCTO (contenido dinámico) ============ -->
+<div class="fullscreen-panel" id="panelProductDetail" aria-hidden="true">
+  <div class="panel-header">
+    <button class="panel-back" data-close-panel="panelProductDetail">
+      <span class="panel-back-arrow">←</span> Volver
+    </button>
+    <button class="panel-brand" data-go-home>ZERO<span class="brand-accent">DELAY</span></button>
+    <button class="cart-btn" data-open-cart aria-label="Abrir carrito">
+      <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3H5L5.4 5M5.4 5H21L18 14H7L5.4 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="9" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="17" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+      <span class="cart-badge cart-badge--panel">0</span>
+    </button>
+  </div>
+
+  <div class="panel-body section-inner" id="productDetailBody">
+    <!-- se llena dinámicamente vía zdRenderProductDetail() en products.js -->
+  </div>
+</div>
+
+<!-- ============ PANEL: DOX DESIGNS — CREA TU PROPIA PÁGINA WEB ============ -->
+<div class="fullscreen-panel" id="panelDoxDesigns" aria-hidden="true">
+  <div class="panel-header">
+    <button class="panel-back" data-close-panel="panelDoxDesigns">
+      <span class="panel-back-arrow">←</span> Volver
+    </button>
+    <button class="panel-brand" data-go-home>ZERO<span class="brand-accent">DELAY</span></button>
+    <button class="cart-btn" data-open-cart aria-label="Abrir carrito">
+      <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3H5L5.4 5M5.4 5H21L18 14H7L5.4 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="9" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="17" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+      <span class="cart-badge cart-badge--panel">0</span>
+    </button>
+  </div>
+
+  <div class="panel-body section-inner dox-panel-body">
+    <p class="section-eyebrow">Servicio aliado</p>
+    <h1 class="dox-panel-title">Crea tu propia página web</h1>
+
+    <div class="dox-panel-intro">
+      <div class="dox-panel-media">
+        <img src="assets/dox/dox-logo.jpg" alt="Dox Designs Software Development" class="dox-panel-logo">
+        <img src="assets/dox/dox-founder.jpg" alt="Fundador de Dox Designs" class="dox-panel-founder">
+      </div>
+
+      <div class="dox-panel-text">
+        <p class="dox-panel-slogan">"Diseño y construyo experiencias digitales donde el código y el diseño se encuentran."</p>
+        <p class="dox-panel-lead">Diseño y desarrollo de páginas web, tiendas online y aplicaciones a la medida para negocios en Cali y toda Colombia. Sitios rápidos, seguros y pensados para que tus clientes te encuentren y te escriban.</p>
+
+        <ul class="dox-panel-services">
+          <li>Creación de páginas y/o soluciones web completamente personalizadas al gusto del cliente.</li>
+          <li>Cada proyecto se construye con código limpio, escrito y levantado desde cero — nada de plantillas de WordPress.</li>
+          <li>Asesoría y renovación de páginas web ya existentes: identificamos los puntos a reforzar y reestructuramos con los estándares actuales.</li>
+          <li>Fuerte implementación de ciberseguridad en cada proyecto, desde la base.</li>
+          <li>Servicio de SEO profesional, para que tu página aparezca en buscadores y pueda conectarse con Meta Ads o Google Analytics.</li>
+          <li>Como valor agregado, incluyo el dominio (de menor prioridad) y 6 meses de mantenimiento y soporte con la firma del contrato. Pasado ese periodo, si deseas renovar lo hacemos con gusto; si no, el dominio queda para ti, sin responsabilidad de mi parte por lo que suceda después.</li>
+        </ul>
+
+        <a href="https://wa.me/573189819384?text=%C2%A1Hola%21%20%F0%9F%91%8B%20Vengo%20de%20la%20p%C3%A1gina%20de%20ZERO%20DELAY%20y%20me%20interesa%20crear%20mi%20propia%20p%C3%A1gina%20web.%20%C2%BFConversamos%20sobre%20mi%20proyecto%3F" target="_blank" rel="noopener" class="btn-pd btn-pd--whatsapp">
+          Escríbeme por WhatsApp
+          <svg viewBox="0 0 24 24" fill="currentColor" class="pd-whatsapp-icon"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.3-.4.1-.2 0-.4 0-.5C10.1 9 9.7 8 9.5 7.5c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 2 3 4.7 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.7 1.5 5.3L2 22l4.8-1.5c1.5.8 3.3 1.3 5.2 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.7 0-3.3-.5-4.7-1.3l-.3-.2-3.2 1 1-3.1-.2-.3C3.7 15 3.2 13.5 3.2 12c0-4.8 3.9-8.7 8.8-8.7 4.8 0 8.7 3.9 8.7 8.7s-3.9 8.7-8.7 8.7z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="dox-panel-projects-section">
+      <p class="dox-panel-projects-title">Proyectos</p>
+
+      <div class="dox-panel-projects-grid">
+        <div class="dox-project-full-card">
+          <img src="assets/dox/calidoso.jpg" alt="Calidoso Web APP" loading="lazy">
+          <h3>Calidoso Web APP</h3>
+          <p>Página e-commerce para una marca de café.</p>
+          <a href="https://calidoso-test-app.vercel.app/" target="_blank" rel="noopener" class="dox-try-btn">Probar en línea <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="dox-project-full-card">
+          <img src="assets/dox/vitalis.jpg" alt="Vitalis App" loading="lazy">
+          <h3>Vitalis App</h3>
+          <p>Página dedicada a un consultorio médico.</p>
+          <a href="https://vitalis-muestreo-app.vercel.app/" target="_blank" rel="noopener" class="dox-try-btn">Probar en línea <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="dox-project-full-card">
+          <img src="assets/dox/dr-valcarcel.jpg" alt="Dr Valcárcel" loading="lazy">
+          <h3>Dr Valcárcel — Portfolio</h3>
+          <p>Portafolio profesional para un doctor.</p>
+          <a href="https://portfolio-doctor-app.vercel.app/" target="_blank" rel="noopener" class="dox-try-btn">Probar en línea <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="fullscreen-panel" id="panelCatalogo" aria-hidden="true">
+  <div class="panel-header">
+    <button class="panel-back" data-close-panel="panelCatalogo">
+      <span class="panel-back-arrow">←</span> Volver
+    </button>
+    <button class="panel-brand" data-go-home>ZERO<span class="brand-accent">DELAY</span></button>
+    <button class="cart-btn" data-open-cart aria-label="Abrir carrito">
+      <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3H5L5.4 5M5.4 5H21L18 14H7L5.4 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="9" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="17" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+      <span class="cart-badge cart-badge--panel">0</span>
+    </button>
+  </div>
+
+  <div class="panel-body section-inner">
+    <p class="section-eyebrow">Catálogo</p>
+    <h2 class="section-title">Elige tu plataforma</h2>
+    <p class="section-lead">Explora nuestras plataformas disponibles. Cada una con distintos planes y duraciones.</p>
+
+    <div class="panel-search-wrap">
+      <svg class="panel-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <input type="text" id="catalogSearchInput" class="panel-search-input" placeholder="Buscar plataforma... (ej: Netflix, ChatGPT)" autocomplete="off">
+    </div>
+
+    <div class="panel-quicknav">
+      <button class="panel-quicknav-btn" data-switch-panel="panelCombos">
+        Ver combos con descuento <span aria-hidden="true">→</span>
+      </button>
+      <button class="panel-quicknav-btn panel-quicknav-btn--ghost" data-go-home>
+        <span aria-hidden="true">↑</span> Ir al inicio
+      </button>
+    </div>
+
+    <button class="custom-combo-cta" data-open-panel="panelCustomCombo">
+      <span class="custom-combo-cta-icon">✨</span>
+      <span class="custom-combo-cta-text">
+        <span class="custom-combo-cta-title">Arma tu combo a tu gusto</span>
+        <span class="custom-combo-cta-desc">Consigue 10% de descuento combinando 2 plataformas, y hasta 15% combinando 4 o más</span>
+      </span>
+      <span class="custom-combo-cta-arrow" aria-hidden="true">→</span>
+    </button>
+
+    <div class="catalog-grid" id="catalogGrid">
+      <!-- Placeholder: en el Paso 2 esto se llenará dinámicamente con cada plataforma -->
+      <div class="catalog-card catalog-card--placeholder">
+        <div class="placeholder-shimmer"></div>
+        <p class="placeholder-label">Próximamente: tarjetas interactivas por plataforma</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PANEL: COMBOS (pantalla completa) ============ -->
+<div class="fullscreen-panel" id="panelCombos" aria-hidden="true">
+  <div class="panel-header">
+    <button class="panel-back" data-close-panel="panelCombos">
+      <span class="panel-back-arrow">←</span> Volver
+    </button>
+    <button class="panel-brand" data-go-home>ZERO<span class="brand-accent">DELAY</span></button>
+    <button class="cart-btn" data-open-cart aria-label="Abrir carrito">
+      <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3H5L5.4 5M5.4 5H21L18 14H7L5.4 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="9" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="17" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+      <span class="cart-badge cart-badge--panel">0</span>
+    </button>
+  </div>
+
+  <div class="panel-body section-inner">
+    <p class="section-eyebrow">Combos</p>
+    <h2 class="section-title">Paquetes con descuento</h2>
+    <p class="section-lead">Combina plataformas y ahorra frente al precio individual.</p>
+
+    <div class="panel-search-wrap">
+      <svg class="panel-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <input type="text" id="combosSearchInput" class="panel-search-input" placeholder="Buscar combos que incluyan... (ej: Netflix)" autocomplete="off">
+    </div>
+
+    <div class="panel-quicknav">
+      <button class="panel-quicknav-btn" data-switch-panel="panelCatalogo">
+        Ver plataformas <span aria-hidden="true">→</span>
+      </button>
+      <button class="panel-quicknav-btn panel-quicknav-btn--ghost" data-go-home>
+        <span aria-hidden="true">↑</span> Ir al inicio
+      </button>
+    </div>
+
+    <button class="custom-combo-cta" data-open-panel="panelCustomCombo">
+      <span class="custom-combo-cta-icon">✨</span>
+      <span class="custom-combo-cta-text">
+        <span class="custom-combo-cta-title">Arma tu combo a tu gusto</span>
+        <span class="custom-combo-cta-desc">Consigue 10% de descuento combinando 2 plataformas, y hasta 15% combinando 4 o más</span>
+      </span>
+      <span class="custom-combo-cta-arrow" aria-hidden="true">→</span>
+    </button>
+
+    <div class="catalog-grid" id="combosGrid">
+      <div class="catalog-card catalog-card--placeholder">
+        <div class="placeholder-shimmer"></div>
+        <p class="placeholder-label">Próximamente: catálogo de combos</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PANEL: CATÁLOGO COMPLETO (mezcla aleatoria) ============ -->
+<div class="fullscreen-panel" id="panelCatalogoTodo" aria-hidden="true">
+  <div class="panel-header">
+    <button class="panel-back" data-close-panel="panelCatalogoTodo">
+      <span class="panel-back-arrow">←</span> Volver
+    </button>
+    <button class="panel-brand" data-go-home>ZERO<span class="brand-accent">DELAY</span></button>
+    <button class="cart-btn" data-open-cart aria-label="Abrir carrito">
+      <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3H5L5.4 5M5.4 5H21L18 14H7L5.4 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="9" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="17" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+      <span class="cart-badge cart-badge--panel">0</span>
+    </button>
+  </div>
+
+  <div class="panel-body section-inner">
+    <p class="section-eyebrow">Catálogo</p>
+    <h2 class="section-title">Todo lo que tenemos</h2>
+    <p class="section-lead">Una mezcla de plataformas, combos y próximamente productos físicos — en un orden distinto cada vez que entras.</p>
+
+    <div class="panel-quicknav">
+      <button class="panel-quicknav-btn" data-switch-panel="panelOfertas">
+        🔥 Ver ofertas <span aria-hidden="true">→</span>
+      </button>
+      <button class="panel-quicknav-btn panel-quicknav-btn--ghost" data-go-home>
+        <span aria-hidden="true">↑</span> Ir al inicio
+      </button>
+    </div>
+
+    <div class="catalog-grid" id="catalogTodoGrid">
+      <div class="catalog-card catalog-card--placeholder">
+        <div class="placeholder-shimmer"></div>
+        <p class="placeholder-label">Cargando catálogo...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PANEL: OFERTAS ============ -->
+<div class="fullscreen-panel" id="panelOfertas" aria-hidden="true">
+  <div class="panel-header">
+    <button class="panel-back" data-close-panel="panelOfertas">
+      <span class="panel-back-arrow">←</span> Volver
+    </button>
+    <button class="panel-brand" data-go-home>ZERO<span class="brand-accent">DELAY</span></button>
+    <button class="cart-btn" data-open-cart aria-label="Abrir carrito">
+      <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3H5L5.4 5M5.4 5H21L18 14H7L5.4 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="9" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="17" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+      <span class="cart-badge cart-badge--panel">0</span>
+    </button>
+  </div>
+
+  <div class="panel-body section-inner">
+    <p class="section-eyebrow">🔥 Ofertas</p>
+    <h2 class="section-title">Lo mejor, más barato</h2>
+    <p class="section-lead">Combos y productos con descuento, todo en un solo lugar.</p>
+
+    <div class="panel-quicknav">
+      <button class="panel-quicknav-btn" data-switch-panel="panelCatalogoTodo">
+        Ver todo el catálogo <span aria-hidden="true">→</span>
+      </button>
+      <button class="panel-quicknav-btn panel-quicknav-btn--ghost" data-go-home>
+        <span aria-hidden="true">↑</span> Ir al inicio
+      </button>
+    </div>
+
+    <div class="catalog-grid" id="ofertasGrid">
+      <div class="catalog-card catalog-card--placeholder">
+        <div class="placeholder-shimmer"></div>
+        <p class="placeholder-label">Cargando ofertas...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PANEL: ARMA TU COMBO A TU GUSTO (pantalla completa) ============ -->
+<div class="fullscreen-panel" id="panelCustomCombo" aria-hidden="true">
+  <div class="panel-header">
+    <button class="panel-back" data-close-panel="panelCustomCombo">
+      <span class="panel-back-arrow">←</span> Volver
+    </button>
+    <button class="panel-brand" data-go-home>ZERO<span class="brand-accent">DELAY</span></button>
+    <button class="cart-btn" data-open-cart aria-label="Abrir carrito">
+      <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3H5L5.4 5M5.4 5H21L18 14H7L5.4 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="9" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="17" cy="19" r="1.4" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+      <span class="cart-badge cart-badge--panel">0</span>
+    </button>
+  </div>
+
+  <div class="panel-body section-inner">
+    <p class="section-eyebrow">Combo personalizado</p>
+    <h2 class="section-title">Arma tu combo a tu gusto</h2>
+    <p class="section-lead">Elige tus plataformas favoritas y arma tu combo. <strong>Consigue 10% de descuento combinando 2</strong>, y <strong>hasta 15% combinando 4 o más</strong> — mientras más agregues, más ahorras.</p>
+
+    <div class="panel-search-wrap">
+      <svg class="panel-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <input type="text" id="customComboSearchInput" class="panel-search-input" placeholder="Buscar plataforma... (ej: Netflix, ChatGPT)" autocomplete="off">
+    </div>
+
+    <div class="custom-combo-layout">
+      <div class="custom-combo-picker" id="customComboPicker"></div>
+
+      <aside class="custom-combo-summary">
+        <h3 class="custom-combo-summary-title">Tu combo</h3>
+        <div class="custom-combo-selected-list" id="customComboSelectedList">
+          <p class="custom-combo-empty">Aún no has agregado ningún plan. Elige al menos 2 para armar tu combo.</p>
+        </div>
+
+        <div class="custom-combo-suggest-box" id="customComboSuggestBox"></div>
+
+        <p class="custom-combo-progress" id="customComboProgress"></p>
+
+        <div class="custom-combo-totals" id="customComboTotals" hidden>
+          <div class="custom-combo-total-row">
+            <span>Descuento aplicado</span>
+            <span id="customComboDiscountLabel">0%</span>
+          </div>
+          <div class="custom-combo-total-row custom-combo-total-row--savings">
+            <span>Ahorras</span>
+            <span id="customComboSavings">$0</span>
+          </div>
+          <div class="custom-combo-total-row custom-combo-total-row--final">
+            <span>Total</span>
+            <span id="customComboTotal">$0</span>
+          </div>
+        </div>
+
+        <button class="btn btn--primary custom-combo-add-btn" id="customComboAddBtn" disabled>
+          Agrega mínimo 2 planes
+        </button>
+        <button class="cart-clear-btn" id="customComboShareBtn" hidden>Compartir mi combo</button>
+        <button class="cart-clear-btn" id="customComboClearBtn" hidden>Vaciar selección</button>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<button class="custom-combo-float-bar" id="customComboFloatBar">
+  <span><span id="customComboFloatCount">0</span> seleccionados</span>
+  <span id="customComboFloatTotal">$0</span>
+  <span aria-hidden="true">↓ Ver resumen</span>
+</button>
+
+<!-- ============ BOTÓN FLOTANTE "SUBIR ARRIBA" ============ -->
+<button id="backToTopBtn" class="back-to-top" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 19V5M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<!-- ============ BOTÓN FLOTANTE PERMANENTE DE WHATSAPP ============ -->
+<a href="https://wa.me/573106422020?text=Hola%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20ZERO%20DELAY%20y%20sus%20productos." target="_blank" rel="noopener" class="whatsapp-float" aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.3-.4.1-.2 0-.4 0-.5C10.1 9 9.7 8 9.5 7.5c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 2 3 4.7 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.7 1.5 5.3L2 22l4.8-1.5c1.5.8 3.3 1.3 5.2 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.7 0-3.3-.5-4.7-1.3l-.3-.2-3.2 1 1-3.1-.2-.3C3.7 15 3.2 13.5 3.2 12c0-4.8 3.9-8.7 8.8-8.7 4.8 0 8.7 3.9 8.7 8.7s-3.9 8.7-8.7 8.7z"/></svg>
+</a>
+
+<!-- ============ BARRA DE CARRITO EN MÓVIL ============ -->
+<button id="mobileCartBar" class="mobile-cart-bar" data-open-cart aria-label="Ver carrito">
+  <span class="mobile-cart-bar-info"><span id="mobileCartCount">0</span> producto(s) — <span id="mobileCartTotal">$0</span></span>
+  <span class="mobile-cart-bar-cta">Ver carrito →</span>
+</button>
+
+<!-- ============ CARRITO (drawer — se activará en el Paso 3) ============ -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+  <div class="cart-drawer-header">
+    <h3>Tu carrito</h3>
+    <button class="cart-close" id="cartClose" aria-label="Cerrar carrito">&times;</button>
+  </div>
+  <div class="cart-drawer-body" id="cartDrawerBody">
+    <p class="cart-empty">Tu carrito está vacío por ahora. Esta sección se activará en el próximo paso del proyecto.</p>
+  </div>
+  <div class="cart-drawer-footer" id="cartDrawerFooter"></div>
+</aside>
+
+<script src="js/hero-fx.js?v=20260906c" defer></script>
+<script src="js/aurora.js?v=20260906c" defer></script>
+<script src="js/data.js?v=20260906c" defer></script>
+<script src="js/catalog.js?v=20260906c" defer></script>
+<script src="js/cart.js?v=20260906c" defer></script>
+<script src="js/custom-combo.js?v=20260906c" defer></script>
+<script src="js/marquee.js?v=20260906c" defer></script>
+<script src="js/effects.js?v=20260906c" defer></script>
+<script src="js/main.js?v=20260906c" defer></script>
+<script src="js/products.js?v=20260906c" defer></script>
+</body>
+</html>
