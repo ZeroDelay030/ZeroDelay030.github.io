@@ -30,6 +30,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ---------- Alto real del header: ahora que es "fixed" (para poder
+     quedar visible por encima de los paneles de pantalla completa),
+     ya no reserva su espacio solo, así que se mide y se publica como
+     variable CSS para que el hero y los paneles dejen el hueco exacto,
+     sin importar el estado (scrolleado o no) ni el ancho de pantalla. ---------- */
+  const siteHeaderEl = document.getElementById('siteHeader');
+  function zdSyncHeaderHeight() {
+    if (!siteHeaderEl) return;
+    document.documentElement.style.setProperty('--header-h', siteHeaderEl.offsetHeight + 'px');
+  }
+  if (siteHeaderEl) {
+    zdSyncHeaderHeight();
+    window.addEventListener('resize', zdSyncHeaderHeight);
+    if (typeof ResizeObserver === 'function') {
+      new ResizeObserver(zdSyncHeaderHeight).observe(siteHeaderEl);
+    } else {
+      window.addEventListener('scroll', zdSyncHeaderHeight, { passive: true });
+    }
+  }
+
   /* ---------- Intro de carga: breve destello del logo ---------- */
   const loader = document.getElementById('zdLoader');
   if (loader) {
@@ -293,10 +313,28 @@ document.addEventListener('DOMContentLoaded', () => {
     zdSyncPanelObstruction();
   }
 
+  /* ---------- Cierra solo el panel "de encima" (el último abierto) ----------
+     Antes, cada panel tenía su propio botón "Volver" con
+     data-close-panel="<su-propio-id>", así que solo se cerraba a sí mismo
+     (por ejemplo, la ficha de producto se cerraba sin tocar la lista de
+     productos que quedaba debajo). Ahora que el header es único y
+     persistente, un solo botón "Volver" tiene que replicar ese mismo
+     comportamiento sin conocer de antemano qué panel está abierto. Como
+     el orden de apertura coincide con el orden en el DOM (el panel "hijo",
+     como la ficha de producto o "Arma tu combo", siempre está declarado
+     después del panel que lo abre), cerrar el último `.is-open` del DOM
+     reproduce exactamente ese comportamiento. */
+  function closeTopPanel() {
+    const openPanels = document.querySelectorAll('.fullscreen-panel.is-open');
+    if (!openPanels.length) return;
+    closePanel(openPanels[openPanels.length - 1].id);
+  }
+
   // se exponen para reutilizarlos desde contenido insertado dinámicamente
   // después del DOMContentLoaded (ej. la ficha de producto en products.js)
   window.zdClosePanel = closePanel;
   window.zdCloseAllPanels = closeAllPanels;
+  window.zdCloseTopPanel = closeTopPanel;
   window.zdGoHome = function () {
     closeAllPanels();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -309,12 +347,36 @@ document.addEventListener('DOMContentLoaded', () => {
   openPanelBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      // los accesos del header (Catálogo, Categorías, Ofertas del hero, etc.)
+      // son navegación "de nivel superior": si ya había un panel abierto
+      // (incluso apilado, como una ficha de producto), se cierra todo antes
+      // de abrir el destino nuevo, para no dejar paneles viejos apilados
+      // por debajo sin que el usuario los vea.
+      if (btn.closest('#siteHeader')) closeAllPanels();
       openPanel(btn.dataset.openPanel);
     });
   });
 
   closePanelBtns.forEach((btn) => {
     btn.addEventListener('click', () => closePanel(btn.dataset.closePanel));
+  });
+
+  /* ---------- Botón "Volver" del header persistente (solo visible
+     mientras hay un panel abierto — ver body.has-open-panel en CSS) ---------- */
+  const headerBackBtn = document.getElementById('headerBack');
+  if (headerBackBtn) {
+    headerBackBtn.addEventListener('click', () => closeTopPanel());
+  }
+
+  /* ---------- Enlaces del header que son anclas de la página (el logo,
+     "Nosotros", "Preguntas"): si hay un panel abierto, lo cierran antes
+     de dejar que el navegador haga el scroll a la sección, para que el
+     header siga siendo usable como navegación global incluso dentro de
+     un panel de catálogo. ---------- */
+  document.querySelectorAll('#siteHeader a[href^="#"]').forEach((link) => {
+    link.addEventListener('click', () => {
+      if (document.body.classList.contains('has-open-panel')) closeAllPanels();
+    });
   });
 
   /* ---------- Cambiar rápido entre paneles (Catálogo <-> Combos) ---------- */
