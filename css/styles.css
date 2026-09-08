@@ -1560,6 +1560,26 @@ body.has-open-panel .header-back { display: inline-flex; }
   display: flex;
   align-items: center;
   justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.dox-promo-brand:hover,
+.dox-promo-brand:focus-visible {
+  transform: translateY(-3px);
+}
+
+.dox-promo-brand:hover .dox-promo-logo,
+.dox-promo-brand:focus-visible .dox-promo-logo {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(176, 0, 255, 0.18);
+}
+
+.dox-promo-brand:active .dox-promo-logo {
+  transform: scale(0.97);
 }
 
 .dox-promo-logo {
@@ -1567,6 +1587,8 @@ body.has-open-panel .header-back { display: inline-flex; }
   border-radius: var(--radius-md);
   background: #F4F3EE;
   padding: 10px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
 
 .dox-promo-slogan {
@@ -1663,7 +1685,7 @@ body.has-open-panel .header-back { display: inline-flex; }
   flex-direction: column;
   gap: 16px;
   position: sticky;
-  top: 100px;
+  top: calc(var(--header-h) + 20px);
 }
 
 .dox-panel-logo {
@@ -2631,7 +2653,10 @@ body.has-open-panel .header-back { display: inline-flex; }
 
 .about-visual {
   position: sticky;
-  top: 110px;
+  /* antes un valor fijo (110px) calibrado para el header viejo; ahora
+     el header es "fixed" y su alto real puede variar, así que se usa
+     la misma variable que el resto del sitio para no quedar tapado */
+  top: calc(var(--header-h) + 30px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2736,7 +2761,7 @@ body.has-open-panel .header-back { display: inline-flex; }
 
 .faq-visual {
   position: sticky;
-  top: 110px;
+  top: calc(var(--header-h) + 30px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3465,7 +3490,11 @@ body.has-open-panel .header-back { display: inline-flex; }
   .main-nav {
     display: none;
     position: fixed;
-    top: 65px;
+    /* antes 65px fijos; ahora el header es "fixed" y esta barra de
+       navegación móvil (una vez desplegada) es la barra lateral/menú
+       que debe quedar pegada justo debajo — usar su alto real evita
+       que quede tapada o con un hueco según el estado del header */
+    top: var(--header-h);
     left: 0;
     right: 0;
     z-index: 99;
@@ -3479,8 +3508,8 @@ body.has-open-panel .header-back { display: inline-flex; }
     /* el menú completo (enlaces + categorías desplegadas) podía ser más
        alto que la pantalla y no había forma de llegar a lo de abajo —
        ahora el propio menú se desplaza si no cabe entero */
-    max-height: calc(100vh - 65px);
-    max-height: calc(100dvh - 65px);
+    max-height: calc(100vh - var(--header-h));
+    max-height: calc(100dvh - var(--header-h));
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
@@ -3917,7 +3946,7 @@ body.has-open-panel .header-back { display: inline-flex; }
 
 .custom-combo-summary {
   position: sticky;
-  top: 90px;
+  top: calc(var(--header-h) + 14px);
   background: var(--bg-panel);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-lg);

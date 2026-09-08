@@ -2196,10 +2196,181 @@ const ZD_PRODUCTS = [
     stock: 10,
     image: 'assets/products/perfumeria/set-khamrah-x3.jpg',
     description: 'Descubre el enigma olfativo con el SET KHAMRAH X3. Tres fragancias cautivadoras que despertarán tus sentidos y te transportarán a un mundo de lujo. ¿Estás listo para dejar huella? El secreto de tu aroma perfecto te espera.'
+  },
+  {
+    id: 'reloj-casio-dorado-economico',
+    name: 'CASIO ESTILO RELOJ DORADO ECONOMICO',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80001',
+    price: 30000,
+    salePrice: 25000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/casio-dorado-economico.jpg',
+    description: 'Vintage Oro A – Elegancia económica con apariencia similar al original.\n\nUn reloj clásico y accesible que combina estilo y funcionalidad. El Casio Vintage Oro A ofrece una apariencia muy parecida al original, ideal para quienes desean un diseño elegante sin gastar mucho.\n\nGarantía de operatividad x30 días.'
+  },
+  {
+    id: 'reloj-tommy-hilfiger-hc47',
+    name: 'TOMMY HILFIGER HC47',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80002',
+    price: 100000,
+    salePrice: 69000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/tommy-hilfiger-hc47.jpg',
+    description: 'Garantía de operatividad x30 días.\n\nNo resistente al agua.'
+  },
+  {
+    id: 'reloj-rolex-submarine-f11',
+    name: 'ROLEX SUBMARINE F11',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80003',
+    price: 120000,
+    salePrice: 80000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/rolex-submarine-f11.jpg',
+    description: 'Elegancia y sofisticación al alcance de tu muñeca.\n\nDescubre la perfecta combinación entre diseño clásico y lujo con esta réplica de reloj tipo Rolex. Fabricado con materiales de alta calidad, este reloj es ideal para quienes desean un accesorio elegante y distintivo sin comprometer su presupuesto.'
+  },
+  {
+    id: 'reloj-casio-manilla-plastico-aa',
+    name: 'CASIO MANILLA PLASTICO AA',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80004',
+    price: 59000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/casio-manilla-plastico-aa.jpg',
+    description: 'Casio con Manilla de Plástico AA.\n\nDiseñado para resistir las condiciones más exigentes, este reloj Casio con manilla de plástico AA ofrece durabilidad y comodidad en cualquier entorno. Perfecto para quienes buscan un accesorio confiable que acompañe su ritmo diario sin importar el clima.'
+  },
+  {
+    id: 'reloj-digital-economico-amarillo',
+    name: 'RELOJ DIGITAL ECONOMICO AMARILLO',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80005',
+    price: 15000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/reloj-digital-economico-amarillo.jpg',
+    description: 'No es resistente al agua.'
+  },
+  {
+    id: 'reloj-casio-plata-economico',
+    name: 'CASIO ESTILO RELOJ PLATA ECONOMICO',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80006',
+    price: 25000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/casio-plata-economico.jpg',
+    description: 'No resistente al agua.\n\nGarantía al recibir.\n\nLínea económica.'
+  },
+  {
+    id: 'reloj-casio-frq',
+    name: 'RELOJ CASIO FRQ',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80007',
+    price: 65000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/reloj-casio-frq.jpg',
+    description: 'Reloj Casio – Dorado con Esfera Negra.\n\nCaja y correa en acero inoxidable dorado, resistentes y elegantes. Esfera negra minimalista con marcadores dorados de alto contraste. Calendario integrado a las 3 en punto.\n\nMovimiento de cuarzo japonés, precisión y durabilidad garantizadas. Diseño cuadrado estilizado que aporta un look sofisticado y versátil.'
+  },
+  {
+    id: 'reloj-digital-economico-verde',
+    name: 'RELOJ DIGITAL ECONOMICO VERDE',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80008',
+    price: 15000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/reloj-digital-economico-verde.jpg',
+    description: 'No es resistente al agua.'
+  },
+  {
+    id: 'reloj-casio-oro-rosa-economico',
+    name: 'CASIO ESTILO RELOJ ORO ROSA ECONOMICO',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80009',
+    price: 25000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/casio-oro-rosa-economico.jpg',
+    description: 'Clase y elegancia en un solo reloj.'
+  },
+  {
+    id: 'reloj-richard-mille-ch011',
+    name: 'RICHARD MILLE METALICO EDICION ESPECIAL CH011',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80010',
+    price: 140000,
+    salePrice: 90000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/richard-mille-ch011.jpg',
+    description: 'El más vendido del mercado.\n\nCaja incluida.\n\nNo es resistente al agua.'
+  },
+  {
+    id: 'reloj-porta-reloj',
+    name: 'PORTA RELOJ',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80011',
+    price: 4000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/porta-reloj.jpg',
+    description: ''
+  },
+  {
+    id: 'reloj-g-shock-brazil-a1',
+    name: 'G-SHOCK BRAZIL A1',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80012',
+    price: 65000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/g-shock-brazil-a1.jpg',
+    description: 'No resistente al agua.'
+  },
+  {
+    id: 'reloj-oakley-cobra-ch11',
+    name: 'OAKLEY COBRA CH11',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80013',
+    price: 95000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/oakley-cobra-ch11.jpg',
+    description: 'No es resistente al agua.'
+  },
+  {
+    id: 'reloj-casio-negro-economico',
+    name: 'CASIO ESTILO RELOJ NEGRO ECONOMICO',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80014',
+    price: 45000,
+    salePrice: 30000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/casio-negro-economico.jpg',
+    description: 'Garantía al recibir.'
+  },
+  {
+    id: 'reloj-casio-tornasol-474s',
+    name: 'CASIO TORNAZOL HOMBRE 474S',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80015',
+    price: 90000,
+    salePrice: 65000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/casio-tornasol-474s.jpg',
+    description: ''
   }
 ];
 
-// refs ya usadas (para no repetir al agregar productos nuevos): 84213, 93810, 24592, 13278, 52445, 29772, 61750, 95319, 16328, 19494, 80239, 22337, 57931, 86387, 17602, 62950, 59906, 36224, 88569, 33435, 40180, 42562, 27464, 21348, 42918, 60209, 79574, 99693, 80599, 16863, 45084, 21427, 63377, 44937, 24116, 71615, 33816, 85805, 49813, 36240, 63751, 44763, 79885, 42134, 35342, 45985, 31109, 26800, 83560, 23999, 30106, 43478, 63970, 35161, 40059, 68437, 68405, 58312, 85433, 45367, 54059, 80475, 15239, 68417, 97553, 91558, 81733, 46048, 42098, 39256, 28289, 23434, 98696, 81482, 21395, 87397, 65302, 14165, 13905, 22280, 38657, 40495, 76237, 88907, 61064, 88838, 47875, 25839, 24974, 20221, 53666, 23576, 10160, 94316, 85603, 54336, 47639, 86606, 45046, 24045, 92670, 97302, 37484, 93381, 75313, 56422, 64509, 79118, 90694, 38590, 50570, 81281, 53285, 78072, 19787, 37050, 13478, 70001, 70002, 70003, 70004, 70005, 70006, 70007, 70008, 70009, 70010, 70011, 70012, 70013, 70014, 70015, 70016, 70017, 70018, 70019, 70020, 70021, 70022, 70023, 70024, 70025, 70026, 70027, 70028, 70029, 70030, 70031, 70032, 70033, 70034, 70035, 70036, 70037, 70038, 70039, 70040, 70041, 70042, 70043, 70044, 70045, 70046, 70047, 70048, 70049, 70050
+// refs ya usadas (para no repetir al agregar productos nuevos): 84213, 93810, 24592, 13278, 52445, 29772, 61750, 95319, 16328, 19494, 80239, 22337, 57931, 86387, 17602, 62950, 59906, 36224, 88569, 33435, 40180, 42562, 27464, 21348, 42918, 60209, 79574, 99693, 80599, 16863, 45084, 21427, 63377, 44937, 24116, 71615, 33816, 85805, 49813, 36240, 63751, 44763, 79885, 42134, 35342, 45985, 31109, 26800, 83560, 23999, 30106, 43478, 63970, 35161, 40059, 68437, 68405, 58312, 85433, 45367, 54059, 80475, 15239, 68417, 97553, 91558, 81733, 46048, 42098, 39256, 28289, 23434, 98696, 81482, 21395, 87397, 65302, 14165, 13905, 22280, 38657, 40495, 76237, 88907, 61064, 88838, 47875, 25839, 24974, 20221, 53666, 23576, 10160, 94316, 85603, 54336, 47639, 86606, 45046, 24045, 92670, 97302, 37484, 93381, 75313, 56422, 64509, 79118, 90694, 38590, 50570, 81281, 53285, 78072, 19787, 37050, 13478, 70001, 70002, 70003, 70004, 70005, 70006, 70007, 70008, 70009, 70010, 70011, 70012, 70013, 70014, 70015, 70016, 70017, 70018, 70019, 70020, 70021, 70022, 70023, 70024, 70025, 70026, 70027, 70028, 70029, 70030, 70031, 70032, 70033, 70034, 70035, 70036, 70037, 70038, 70039, 70040, 70041, 70042, 70043, 70044, 70045, 70046, 70047, 70048, 70049, 70050, 80001, 80002, 80003, 80004, 80005, 80006, 80007, 80008, 80009, 80010, 80011, 80012, 80013, 80014, 80015
 
 /* ============================================================
    ARMA TU COMBO A TU GUSTO — reglas de descuento
