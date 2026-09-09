@@ -2670,10 +2670,334 @@ const ZD_PRODUCTS = [
       'assets/products/relojeria-original/original-qq-dorado-3.jpg'
     ],
     description: 'Un clásico que combina sencillez, estilo y calidad japonesa: 100% original Q&Q con garantía de fábrica.\n\nEsfera blanca minimalista con marcadores plateados. Caja y correa en acero inoxidable, resistentes y elegantes. Diseño ligero y cómodo para uso diario.\n\nMovimiento japonés de cuarzo, reconocido por su precisión. Resistencia al agua (water resist), ideal para cualquier ocasión.\n\nPerfecto para quienes buscan un reloj sobrio, elegante y duradero a un precio accesible.'
+  },
+  {
+    id: 'reloj-kairos-fa226m-303b',
+    name: 'KAIROS ORIGINAL FA226M-303B HOMBRE',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80041',
+    price: 70000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa226m-303b.jpg',
+    description: 'Reloj 100% original con caja incluida.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-snille-x7',
+    name: 'ORIGINAL SNILLE X7',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80042',
+    price: 90000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/snille-x7.jpg',
+    gallery: [
+      'assets/products/relojeria-original/snille-x7-1.jpg',
+      'assets/products/relojeria-original/snille-x7-2.jpg'
+    ],
+    description: 'Reloj original resistente al agua.\n\nGarantía de 3 meses — conservar todos los artículos para la garantía.\n\nReloj de marca totalmente fina.'
+  },
+  {
+    id: 'reloj-kairos-fa228-900m',
+    name: 'KAIROS ORIGINAL FA228-900M',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80043',
+    price: 139000,
+    salePrice: 10000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa228-900m.jpg',
+    description: 'Garantía de 6 meses de maquinaria.\n\nNueva colección. Reloj resistente al agua.'
+  },
+  {
+    id: 'reloj-dama-kairos-fa036l-800c',
+    name: 'DAMA KAIROS ORIGINAL FA036L-800C',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80044',
+    price: 125000,
+    salePrice: 80000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa036l-800c.jpg',
+    description: 'Reloj 100% original con caja incluida.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-ha590m-904',
+    name: 'RELOJ ORIGINAL KAIROS HA590M-904',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80045',
+    price: 199000,
+    salePrice: 139000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-ha590m-904.jpg',
+    description: 'Reloj 100% original con caja incluida.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-fa039m-900',
+    name: 'KAIROS ORIGINAL FA039M-900 HOMBRE',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80046',
+    price: 85000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa039m-900.jpg',
+    description: 'Reloj 100% original con caja incluida.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-fa034m-003b',
+    name: 'KAIROS ORIGINAL FA034M-003B HOMBRE',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80047',
+    price: 85000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa034m-003b.jpg',
+    description: 'Reloj 100% original con caja incluida.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-mecanico-al8038-303',
+    name: 'KAIROS ORIGINAL MECANICO AL8038-303',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80048',
+    price: 290000,
+    salePrice: 200000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-mecanico-al8038-303.jpg',
+    description: 'Sumergible. 6 meses de garantía de maquinaria.'
+  },
+  {
+    id: 'reloj-kairos-mecanico-al8038-900',
+    name: 'KAIROS ORIGINAL MECANICO AL8038-900',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80049',
+    price: 250000,
+    salePrice: 200000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-mecanico-al8038-900.jpg',
+    description: 'Caja de lujo incluida. 100% original. Resistente al agua.\n\nGarantía de 6 meses en maquinaria.'
+  },
+  {
+    id: 'reloj-kairos-dm3873-6',
+    name: 'KAIROS ORIGINAL DIGITAL HOMBRE DM3873-6',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80050',
+    price: 125000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-dm3873-6.jpg',
+    description: 'Reloj 100% original con caja incluida.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-dm3873-7',
+    name: 'KAIROS ORIGINAL HOMBRE DM3873-7',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80051',
+    price: 125000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-dm3873-7.jpg',
+    description: 'Reloj 100% original con caja incluida.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-fa228-001m',
+    name: 'KAIROS ORIGINAL FA228-001M',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80052',
+    price: 150000,
+    salePrice: 92000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa228-001m.jpg',
+    description: 'Reloj 100% original con caja incluida. Reloj hombre.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-fa081b-900m',
+    name: 'KAIROS ORIGINAL FA081B-900M HOMBRE',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80053',
+    price: 100000,
+    salePrice: 80000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa081b-900m.jpg',
+    description: 'Reloj 100% original con caja incluida. Reloj hombre.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-fa033m-001a',
+    name: 'KAIROS ORIGINAL FA033M-001A',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80054',
+    price: 80000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa033m-001a.jpg',
+    description: 'Reloj 100% original con caja incluida. Reloj hombre.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-fa034m-001b',
+    name: 'KAIROS ORIGINAL FA034M-001B',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80055',
+    price: 80000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa034m-001b.jpg',
+    description: 'Reloj 100% original con caja incluida. Reloj hombre.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-fa227m-001b',
+    name: 'KAIROS ORIGINAL FA227M-001B HOMBRE',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80056',
+    price: 80000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa227m-001b.jpg',
+    description: 'Reloj 100% original con caja incluida. Reloj hombre.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua.'
+  },
+  {
+    id: 'reloj-kairos-fa228m-003b',
+    name: 'KAIROS ORIGINAL FA228M-003B',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80057',
+    price: 80000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa228m-003b.jpg',
+    description: 'Reloj 100% original con caja incluida. Reloj hombre.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua.'
+  },
+  {
+    id: 'reloj-kairos-fa173m-800a',
+    name: 'KAIROS ORIGINAL FA173M-800A',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80058',
+    price: 80000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa173m-800a.jpg',
+    description: 'Reloj 100% original con caja incluida. Reloj hombre.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua.'
+  },
+  {
+    id: 'reloj-atletico-nacional',
+    name: 'RELOJ OFICIAL ATLETICO NACIONAL',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80059',
+    price: 200000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/atletico-nacional.jpg',
+    description: 'Incluye 2 pulsos, caja de lujo del verde.\n\nGarantía 6 meses maquinaria.\n\nResistente al agua. No sumergible.'
+  },
+  {
+    id: 'reloj-america-de-cali-2026',
+    name: 'RELOJ OFICIAL AMERICA DE CALI 2026',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80060',
+    price: 240000,
+    salePrice: 190000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/america-de-cali-2026.jpg',
+    description: 'Reloj 100% original con caja incluida de lujo. Doble pulso.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-fa034m-002b',
+    name: 'ORIGINAL KAIROS FA034M-002B HOMBRE',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80061',
+    price: 80000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa034m-002b.jpg',
+    description: 'Reloj 100% original con caja incluida. Reloj hombre.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua.'
+  },
+  {
+    id: 'reloj-kairos-fa036m-111',
+    name: 'KAIROS ORIGINAL FA036M-111',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80062',
+    price: 80000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa036m-111.jpg',
+    description: 'Resistente al agua (lluvia, ducha, lavado de manos). Pulso en acero. Calendario.'
+  },
+  {
+    id: 'reloj-kairos-dm1851-blanco',
+    name: 'KAIROS ORIGINAL HOMBRE DM1851 BLANCO',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80063',
+    price: 50000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-dm1851-blanco.jpg',
+    description: 'Sumergible 3 MT.\n\nGarantía de 6 meses.\n\nReloj digital. Luz LED en pantalla.'
+  },
+  {
+    id: 'reloj-seleccion-colombia',
+    name: 'OFICIAL SELECCION COLOMBIA KAIROS ORIGINAL',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80064',
+    price: 270000,
+    salePrice: 200000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/seleccion-colombia.jpg',
+    description: 'Reloj 100% original con caja incluida.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-dm1851-negro',
+    name: 'KAIROS ORIGINAL HOMBRE DM1851 NEGRO',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80065',
+    price: 50000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-dm1851-negro.jpg',
+    description: 'Sumergible 3 MT.\n\nGarantía de 6 meses.\n\nReloj digital.'
+  },
+  {
+    id: 'reloj-kairos-fa208m-901',
+    name: 'ORIGINAL KAIROS HOMBRE FA208M-901',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80066',
+    price: 130000,
+    salePrice: 90000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa208m-901.jpg',
+    description: 'Reloj 100% original con caja incluida.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-fa173m-309a',
+    name: 'KAIROS ORIGINAL HOMBRE FA173M-309A',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80067',
+    price: 120000,
+    salePrice: 85000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-fa173m-309a.jpg',
+    description: 'Reloj 100% original con caja incluida.\n\nGarantía de 6 meses en maquinaria.\n\nResistente al agua. No es sumergible.'
+  },
+  {
+    id: 'reloj-kairos-du430493g-3',
+    name: 'MECANICO ORIGINAL KAIROS DU430493G-3',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80068',
+    price: 240000,
+    salePrice: 189000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/kairos-du430493g-3.jpg',
+    description: 'Reloj caballero.\n\n1 año de garantía.\n\nResistente al agua. No sumergible.'
   }
 ];
 
-// refs ya usadas (para no repetir al agregar productos nuevos): 84213, 93810, 24592, 13278, 52445, 29772, 61750, 95319, 16328, 19494, 80239, 22337, 57931, 86387, 17602, 62950, 59906, 36224, 88569, 33435, 40180, 42562, 27464, 21348, 42918, 60209, 79574, 99693, 80599, 16863, 45084, 21427, 63377, 44937, 24116, 71615, 33816, 85805, 49813, 36240, 63751, 44763, 79885, 42134, 35342, 45985, 31109, 26800, 83560, 23999, 30106, 43478, 63970, 35161, 40059, 68437, 68405, 58312, 85433, 45367, 54059, 80475, 15239, 68417, 97553, 91558, 81733, 46048, 42098, 39256, 28289, 23434, 98696, 81482, 21395, 87397, 65302, 14165, 13905, 22280, 38657, 40495, 76237, 88907, 61064, 88838, 47875, 25839, 24974, 20221, 53666, 23576, 10160, 94316, 85603, 54336, 47639, 86606, 45046, 24045, 92670, 97302, 37484, 93381, 75313, 56422, 64509, 79118, 90694, 38590, 50570, 81281, 53285, 78072, 19787, 37050, 13478, 70001, 70002, 70003, 70004, 70005, 70006, 70007, 70008, 70009, 70010, 70011, 70012, 70013, 70014, 70015, 70016, 70017, 70018, 70019, 70020, 70021, 70022, 70023, 70024, 70025, 70026, 70027, 70028, 70029, 70030, 70031, 70032, 70033, 70034, 70035, 70036, 70037, 70038, 70039, 70040, 70041, 70042, 70043, 70044, 70045, 70046, 70047, 70048, 70049, 70050, 80001, 80002, 80003, 80004, 80005, 80006, 80007, 80008, 80009, 80010, 80011, 80012, 80013, 80014, 80015, 80016, 80017, 80018, 80019, 80020, 80021, 80022, 80023, 80024, 80025, 80026, 80027, 80028, 80029, 80030, 80031, 80032, 80033, 80034, 80035, 80036, 80037, 80038, 80039, 80040
+// refs ya usadas (para no repetir al agregar productos nuevos): 84213, 93810, 24592, 13278, 52445, 29772, 61750, 95319, 16328, 19494, 80239, 22337, 57931, 86387, 17602, 62950, 59906, 36224, 88569, 33435, 40180, 42562, 27464, 21348, 42918, 60209, 79574, 99693, 80599, 16863, 45084, 21427, 63377, 44937, 24116, 71615, 33816, 85805, 49813, 36240, 63751, 44763, 79885, 42134, 35342, 45985, 31109, 26800, 83560, 23999, 30106, 43478, 63970, 35161, 40059, 68437, 68405, 58312, 85433, 45367, 54059, 80475, 15239, 68417, 97553, 91558, 81733, 46048, 42098, 39256, 28289, 23434, 98696, 81482, 21395, 87397, 65302, 14165, 13905, 22280, 38657, 40495, 76237, 88907, 61064, 88838, 47875, 25839, 24974, 20221, 53666, 23576, 10160, 94316, 85603, 54336, 47639, 86606, 45046, 24045, 92670, 97302, 37484, 93381, 75313, 56422, 64509, 79118, 90694, 38590, 50570, 81281, 53285, 78072, 19787, 37050, 13478, 70001, 70002, 70003, 70004, 70005, 70006, 70007, 70008, 70009, 70010, 70011, 70012, 70013, 70014, 70015, 70016, 70017, 70018, 70019, 70020, 70021, 70022, 70023, 70024, 70025, 70026, 70027, 70028, 70029, 70030, 70031, 70032, 70033, 70034, 70035, 70036, 70037, 70038, 70039, 70040, 70041, 70042, 70043, 70044, 70045, 70046, 70047, 70048, 70049, 70050, 80001, 80002, 80003, 80004, 80005, 80006, 80007, 80008, 80009, 80010, 80011, 80012, 80013, 80014, 80015, 80016, 80017, 80018, 80019, 80020, 80021, 80022, 80023, 80024, 80025, 80026, 80027, 80028, 80029, 80030, 80031, 80032, 80033, 80034, 80035, 80036, 80037, 80038, 80039, 80040, 80041, 80042, 80043, 80044, 80045, 80046, 80047, 80048, 80049, 80050, 80051, 80052, 80053, 80054, 80055, 80056, 80057, 80058, 80059, 80060, 80061, 80062, 80063, 80064, 80065, 80066, 80067, 80068
 
 /* ============================================================
    ARMA TU COMBO A TU GUSTO — reglas de descuento

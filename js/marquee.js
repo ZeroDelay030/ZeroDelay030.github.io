@@ -123,6 +123,26 @@ function zdMarqueeActivateProductCard(card) {
   }
 }
 
+/* ---------- Carrusel 3: "No te pierdas estas increíbles ofertas"
+   (cualquier producto físico con precio de oferta — nunca plataformas
+   ni combos, esos no tienen `salePrice`) ---------- */
+function zdMarqueeBuildOffersItems() {
+  const items = (typeof ZD_PRODUCTS !== 'undefined' ? ZD_PRODUCTS : [])
+    .filter((p) => p.salePrice)
+    .map((p) => {
+      const pct = Math.round((1 - p.salePrice / p.price) * 100);
+      return {
+        id: p.id,
+        panel: 'panelProductDetail',
+        name: p.name,
+        logo: p.image,
+        rect: true,
+        priceLabel: `-${pct}% ${zdFormatCOP(p.salePrice)}`
+      };
+    });
+  return zdShuffle(items).slice(0, ZD_MARQUEE_MAX_ITEMS);
+}
+
 function zdMarqueeCardHTML(item) {
   const hasLogo = Boolean(item.logo);
   const frameClasses = ['logo-frame'];
@@ -321,6 +341,13 @@ function initMarquee() {
     viewportId: 'marqueeViewport2',
     trackId: 'marqueeTrack2',
     buildItems: zdMarqueeBuildProductItems,
+    onActivate: zdMarqueeActivateProductCard
+  });
+
+  zdInitMarqueeInstance({
+    viewportId: 'marqueeViewport3',
+    trackId: 'marqueeTrack3',
+    buildItems: zdMarqueeBuildOffersItems,
     onActivate: zdMarqueeActivateProductCard
   });
 }

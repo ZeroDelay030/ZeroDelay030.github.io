@@ -2162,7 +2162,11 @@ body.has-open-panel .header-back { display: inline-flex; }
   height: 38px;
   border-radius: 50%;
   border: none;
-  background: rgba(var(--void-rgb-invert), 0.55);
+  /* siempre oscuro, sin importar el tema del sitio: el carrusel va
+     sobre fotos de producto con fondo claro (.pd-media es blanco fijo),
+     así que un fondo que se invertía en modo oscuro (--void-rgb-invert)
+     terminaba quedando blanco sobre blanco — invisible */
+  background: rgba(20, 18, 30, 0.55);
   color: #fff;
   font-size: 1.3rem;
   line-height: 1;
@@ -2173,7 +2177,7 @@ body.has-open-panel .header-back { display: inline-flex; }
   transition: background 0.2s ease;
 }
 
-.pd-carousel-arrow:hover { background: rgba(var(--void-rgb-invert), 0.75); }
+.pd-carousel-arrow:hover { background: rgba(20, 18, 30, 0.75); }
 .pd-carousel-arrow--prev { left: 12px; }
 .pd-carousel-arrow--next { right: 12px; }
 
@@ -2191,7 +2195,7 @@ body.has-open-panel .header-back { display: inline-flex; }
   height: 8px;
   border-radius: 50%;
   border: none;
-  background: rgba(var(--void-rgb-invert), 0.3);
+  background: rgba(20, 18, 30, 0.3);
   cursor: pointer;
   padding: 0;
   transition: background 0.2s ease, transform 0.2s ease;
