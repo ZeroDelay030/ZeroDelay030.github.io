@@ -125,6 +125,69 @@ function zdFilterProductsGrid(categorySlug) {
 }
 window.zdFilterProductsGrid = zdFilterProductsGrid;
 
+/* ---------- Carrusel de imágenes de la ficha (solo cuando hay más de
+   una imagen) — flechas, puntos y deslizar con el dedo/mouse ---------- */
+function zdInitProductCarousel(slideCount) {
+  const track = document.getElementById('pdCarouselTrack');
+  if (!track || slideCount <= 1) return;
+
+  const prevBtn = document.getElementById('pdCarouselPrev');
+  const nextBtn = document.getElementById('pdCarouselNext');
+  const dots = Array.from(document.querySelectorAll('.pd-carousel-dot'));
+  let index = 0;
+
+  function goTo(i) {
+    index = (i + slideCount) % slideCount;
+    track.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach((dot, di) => dot.classList.toggle('is-active', di === index));
+  }
+
+  prevBtn.addEventListener('click', () => goTo(index - 1));
+  nextBtn.addEventListener('click', () => goTo(index + 1));
+  dots.forEach((dot) => dot.addEventListener('click', () => goTo(Number(dot.dataset.index))));
+
+  // deslizar con el dedo (táctil) o arrastrando con el mouse
+  let startX = 0;
+  let dragging = false;
+  const carousel = document.getElementById('pdCarousel');
+
+  function dragStart(x) { dragging = true; startX = x; track.style.transition = 'none'; }
+  function dragMove(x) {
+    if (!dragging) return;
+    const delta = x - startX;
+    track.style.transform = `translateX(calc(-${index * 100}% + ${delta}px))`;
+  }
+  function dragEnd(x) {
+    if (!dragging) return;
+    dragging = false;
+    track.style.transition = '';
+    const delta = x - startX;
+    if (delta > 50) goTo(index - 1);
+    else if (delta < -50) goTo(index + 1);
+    else goTo(index);
+  }
+
+  carousel.addEventListener('touchstart', (e) => dragStart(e.touches[0].clientX), { passive: true });
+  carousel.addEventListener('touchmove', (e) => dragMove(e.touches[0].clientX), { passive: true });
+  carousel.addEventListener('touchend', (e) => dragEnd(e.changedTouches[0].clientX));
+
+  // el mouse solo se escucha en window MIENTRAS se arrastra (y se
+  // desconecta apenas se suelta) — evita acumular listeners en window
+  // cada vez que se abre la ficha de un producto con carrusel
+  function onMouseMove(e) { dragMove(e.clientX); }
+  function onMouseUp(e) {
+    dragEnd(e.clientX);
+    window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseup', onMouseUp);
+  }
+  carousel.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    dragStart(e.clientX);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  });
+}
+
 /* ---------- Ficha de producto (contenido dinámico) ---------- */
 function zdRenderProductDetail(productId) {
   const product = ZD_PRODUCTS.find((p) => p.id === productId);
@@ -143,6 +206,23 @@ function zdRenderProductDetail(productId) {
        <span class="pd-price-sale">${zdFormatCOP(product.salePrice)}</span>`
     : `<span class="pd-price-sale">${zdFormatCOP(product.price)}</span>`;
 
+  // Carrusel: solo se arma si el producto trae imágenes extra en
+  // `gallery` (además de `image`, la principal). El listado siempre
+  // muestra únicamente `image`; el carrusel es exclusivo de esta ficha.
+  const slides = [product.image, ...(product.gallery || [])];
+  const mediaHtml = slides.length > 1
+    ? `<div class="pd-carousel" id="pdCarousel">
+         <div class="pd-carousel-track" id="pdCarouselTrack">
+           ${slides.map((src) => `<img src="${src}" alt="${product.name}" loading="lazy">`).join('')}
+         </div>
+         <button type="button" class="pd-carousel-arrow pd-carousel-arrow--prev" id="pdCarouselPrev" aria-label="Imagen anterior">‹</button>
+         <button type="button" class="pd-carousel-arrow pd-carousel-arrow--next" id="pdCarouselNext" aria-label="Imagen siguiente">›</button>
+         <div class="pd-carousel-dots" id="pdCarouselDots">
+           ${slides.map((_, i) => `<button type="button" class="pd-carousel-dot${i === 0 ? ' is-active' : ''}" data-index="${i}" aria-label="Ver imagen ${i + 1}"></button>`).join('')}
+         </div>
+       </div>`
+    : `<img src="${product.image}" alt="${product.name}">`;
+
   body.innerHTML = `
     <p class="pd-breadcrumb">
       <a href="#" data-go-home>Inicio</a> /
@@ -151,7 +231,7 @@ function zdRenderProductDetail(productId) {
     </p>
     <div class="pd-layout">
       <div class="pd-media">
-        <img src="${product.image}" alt="${product.name}">
+        ${mediaHtml}
       </div>
       <div class="pd-info">
         <h1 class="pd-name">${product.name}</h1>
@@ -210,6 +290,7 @@ function zdRenderProductDetail(productId) {
   });
 
   updateWhatsappHref();
+  zdInitProductCarousel(slides.length);
 
   // re-conecta los data-go-home / data-switch-panel recién insertados,
   // ya que el listener global solo se registró al cargar la página

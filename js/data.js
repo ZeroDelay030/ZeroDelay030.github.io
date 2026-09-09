@@ -2367,10 +2367,313 @@ const ZD_PRODUCTS = [
     stock: 10,
     image: 'assets/products/relojeria-replica/casio-tornasol-474s.jpg',
     description: ''
+  },
+  {
+    id: 'reloj-patek-philippe-geneve-ch0005',
+    name: 'PATEK PHILIPPE GENEVE CH0005',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80016',
+    price: 120000,
+    salePrice: 94900,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/patek-philippe-geneve-ch0005.jpg',
+    description: 'Garantía de operatividad 30 días.\n\nNo resistente al agua.'
+  },
+  {
+    id: 'reloj-hublot-ch444471',
+    name: 'HUBLOT CH444471',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80017',
+    price: 75000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/hublot-ch444471.jpg',
+    description: 'Garantía de operatividad 30 días.\n\nNo resistente al agua.'
+  },
+  {
+    id: 'reloj-invicta-bolt-ch111547',
+    name: 'INVICTA BOLT CH111547',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80018',
+    price: 99000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/invicta-bolt-ch111547.jpg',
+    description: 'Garantía de operatividad 30 días.\n\nNo resistente al agua.'
+  },
+  {
+    id: 'reloj-patek-philippe-geneve-ch00447',
+    name: 'PATEK PHILIPPE GENEVE CH00447',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80019',
+    price: 140000,
+    salePrice: 90000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/patek-philippe-geneve-ch00447.jpg',
+    description: 'Garantía de operatividad 30 días.\n\nNo resistente al agua.'
+  },
+  {
+    id: 'reloj-dama-casio-ch3334',
+    name: 'DAMA CASIO CH3334',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80020',
+    price: 130000,
+    salePrice: 90000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/dama-casio-ch3334.jpg',
+    description: 'Reloj para dama.\n\nNo resiste al agua.\n\nGarantía de operatividad.'
+  },
+  {
+    id: 'reloj-patek-philippe-ch5477',
+    name: 'PATEK PHILIPPE CH5477',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80021',
+    price: 90000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/patek-philippe-ch5477.jpg',
+    description: 'Garantía 1 mes de operatividad.\n\nNo resiste al agua.'
+  },
+  {
+    id: 'reloj-patek-philippe-ch477',
+    name: 'PATEK PHILIPPE CH477',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80022',
+    price: 90000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/patek-philippe-ch477.jpg',
+    description: 'Garantía 1 mes de operatividad.\n\nNo resiste al agua.'
+  },
+  {
+    id: 'reloj-casio-hombre-547',
+    name: 'CASIO HOMBRE 547',
+    category: 'relojeria-replica',
+    categoryLabel: 'Relojería Réplica',
+    ref: '80023',
+    price: 90000,
+    salePrice: 70000,
+    stock: 10,
+    image: 'assets/products/relojeria-replica/casio-hombre-547.jpg',
+    description: 'No resistente al agua.'
+  },
+  {
+    id: 'vape-snoop-dogg-death',
+    name: 'SNOOP DOGG VAPE DEATH',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80024',
+    price: 25000,
+    stock: 10,
+    image: 'assets/products/vape/snoop-dogg-vape-death.jpg',
+    description: '5.000 puffs.'
+  },
+  {
+    id: 'vape-ease',
+    name: 'EASE',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80025',
+    price: 26000,
+    stock: 10,
+    image: 'assets/products/vape/ease.jpg',
+    description: 'Recargable. Nicotina 5%. Práctico.'
+  },
+  {
+    id: 'vape-nicky-jam',
+    name: 'NICKY JAM VAPE',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80026',
+    price: 45000,
+    salePrice: 30000,
+    stock: 10,
+    image: 'assets/products/vape/nicky-jam-vape.jpg',
+    description: '10.000 puffs.\n\nCargador cable tipo C incluido.'
+  },
+  {
+    id: 'vape-chillax',
+    name: 'CHILLAX',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80027',
+    price: 40000,
+    salePrice: 30000,
+    stock: 10,
+    image: 'assets/products/vape/chillax.jpg',
+    description: '15.000 puffs.'
+  },
+  {
+    id: 'vape-chris-brown',
+    name: 'CHRIS BROWN VAPE',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80028',
+    price: 50000,
+    salePrice: 35000,
+    stock: 10,
+    image: 'assets/products/vape/chris-brown-vape.jpg',
+    description: '15.000 puffs.'
+  },
+  {
+    id: 'vape-beco',
+    name: 'BECO',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80029',
+    price: 36000,
+    stock: 10,
+    image: 'assets/products/vape/beco.jpg',
+    description: '15.000 puffs.'
+  },
+  {
+    id: 'vape-beyond',
+    name: 'BEYOND',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80030',
+    price: 55000,
+    salePrice: 35000,
+    stock: 10,
+    image: 'assets/products/vape/beyond.jpg',
+    description: '12.000 puffs.\n\nImportado de Inglaterra.'
+  },
+  {
+    id: 'vape-ijoy',
+    name: 'IJOY',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80031',
+    price: 27000,
+    stock: 10,
+    image: 'assets/products/vape/ijoy.jpg',
+    description: '10.000 usos.'
+  },
+  {
+    id: 'vape-vera',
+    name: 'VERA',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80032',
+    price: 30000,
+    stock: 10,
+    image: 'assets/products/vape/vera.jpg',
+    description: '22.000 puffs.\n\nDiferentes sabores.'
+  },
+  {
+    id: 'vape-lost-mary',
+    name: 'LOST MARY',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80033',
+    price: 22000,
+    stock: 10,
+    image: 'assets/products/vape/lost-mary.jpg',
+    description: '5.000 puffs.'
+  },
+  {
+    id: 'vape-rab-beats',
+    name: 'RAB BEATS VAPE',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80034',
+    price: 40000,
+    salePrice: 30000,
+    stock: 10,
+    image: 'assets/products/vape/rab-beats-vape.jpg',
+    description: '10.000 puffs.'
+  },
+  {
+    id: 'vape-bugatti',
+    name: 'BUGATTI VAPE',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80035',
+    price: 50000,
+    salePrice: 37000,
+    stock: 10,
+    image: 'assets/products/vape/bugatti-vape.jpg',
+    description: '17.000 puffs.'
+  },
+  {
+    id: 'vape-pog-king',
+    name: 'POG KING VAPE',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80036',
+    price: 40000,
+    salePrice: 31000,
+    stock: 10,
+    image: 'assets/products/vape/pog-king-vape.jpg',
+    description: '13.000 puffs.'
+  },
+  {
+    id: 'vape-tyson',
+    name: 'TYSON VAPE',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80037',
+    price: 35000,
+    salePrice: 20000,
+    stock: 10,
+    image: 'assets/products/vape/tyson-vape.jpg',
+    description: '7.000 puffs.'
+  },
+  {
+    id: 'vape-north',
+    name: 'NORTH',
+    category: 'vape',
+    categoryLabel: 'Vape',
+    ref: '80038',
+    price: 40000,
+    salePrice: 26900,
+    stock: 10,
+    image: 'assets/products/vape/north.jpg',
+    description: '¡Descubre el sabor audaz de NORTH Strawberry Banana! Con 12.000 caladas y un 5% de nicotina, esta explosión de sabor te llevará a un viaje inolvidable. ¿Estás listo para vivir la experiencia NORTH?'
+  },
+  {
+    id: 'reloj-smart-watch-s3-pro',
+    name: 'SMART WATCH S3 PRO',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80039',
+    price: 250000,
+    salePrice: 180000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/smart-watch-s3-pro.jpg',
+    gallery: [
+      'assets/products/relojeria-original/smart-watch-s3-pro-1.jpg',
+      'assets/products/relojeria-original/smart-watch-s3-pro-2.jpg',
+      'assets/products/relojeria-original/smart-watch-s3-pro-3.jpg',
+      'assets/products/relojeria-original/smart-watch-s3-pro-4.jpg',
+      'assets/products/relojeria-original/smart-watch-s3-pro-5.jpg',
+      'assets/products/relojeria-original/smart-watch-s3-pro-6.jpg'
+    ],
+    description: 'Smartwatch G-Tide S3 Pro – Tecnología y estilo en tu muñeca.\n\nEl G-Tide S3 Pro es un reloj inteligente diseñado para quienes buscan funcionalidad, elegancia y alto rendimiento.\n\nPantalla AMOLED HD de 2.01", con colores vivos y negros intensos. Resistencia IP68, resistente al agua hasta 50 metros, adecuado para actividades acuáticas. Conectividad Bluetooth para llamadas y sincronización con smartphones — realiza y recibe llamadas desde tu muñeca.\n\nMonitoreo de salud completo: frecuencia cardíaca, oxígeno en sangre, sueño y ciclo femenino. Múltiples modos deportivos para registrar diferentes actividades físicas. Batería de larga duración, con hasta 7 días de uso continuo con todas las funciones activadas.\n\nNotificaciones en tiempo real (WhatsApp, SMS, redes sociales). Compatible con iOS y Android. Diseño elegante y moderno, con correa de silicona y cuerpo de aleación.'
+  },
+  {
+    id: 'reloj-original-qq-dorado',
+    name: 'ORIGINAL Q&Q DORADO',
+    category: 'relojeria-original',
+    categoryLabel: 'Relojería Original',
+    ref: '80040',
+    price: 180000,
+    salePrice: 120000,
+    stock: 10,
+    image: 'assets/products/relojeria-original/original-qq-dorado.jpg',
+    gallery: [
+      'assets/products/relojeria-original/original-qq-dorado-1.jpg',
+      'assets/products/relojeria-original/original-qq-dorado-2.jpg',
+      'assets/products/relojeria-original/original-qq-dorado-3.jpg'
+    ],
+    description: 'Un clásico que combina sencillez, estilo y calidad japonesa: 100% original Q&Q con garantía de fábrica.\n\nEsfera blanca minimalista con marcadores plateados. Caja y correa en acero inoxidable, resistentes y elegantes. Diseño ligero y cómodo para uso diario.\n\nMovimiento japonés de cuarzo, reconocido por su precisión. Resistencia al agua (water resist), ideal para cualquier ocasión.\n\nPerfecto para quienes buscan un reloj sobrio, elegante y duradero a un precio accesible.'
   }
 ];
 
-// refs ya usadas (para no repetir al agregar productos nuevos): 84213, 93810, 24592, 13278, 52445, 29772, 61750, 95319, 16328, 19494, 80239, 22337, 57931, 86387, 17602, 62950, 59906, 36224, 88569, 33435, 40180, 42562, 27464, 21348, 42918, 60209, 79574, 99693, 80599, 16863, 45084, 21427, 63377, 44937, 24116, 71615, 33816, 85805, 49813, 36240, 63751, 44763, 79885, 42134, 35342, 45985, 31109, 26800, 83560, 23999, 30106, 43478, 63970, 35161, 40059, 68437, 68405, 58312, 85433, 45367, 54059, 80475, 15239, 68417, 97553, 91558, 81733, 46048, 42098, 39256, 28289, 23434, 98696, 81482, 21395, 87397, 65302, 14165, 13905, 22280, 38657, 40495, 76237, 88907, 61064, 88838, 47875, 25839, 24974, 20221, 53666, 23576, 10160, 94316, 85603, 54336, 47639, 86606, 45046, 24045, 92670, 97302, 37484, 93381, 75313, 56422, 64509, 79118, 90694, 38590, 50570, 81281, 53285, 78072, 19787, 37050, 13478, 70001, 70002, 70003, 70004, 70005, 70006, 70007, 70008, 70009, 70010, 70011, 70012, 70013, 70014, 70015, 70016, 70017, 70018, 70019, 70020, 70021, 70022, 70023, 70024, 70025, 70026, 70027, 70028, 70029, 70030, 70031, 70032, 70033, 70034, 70035, 70036, 70037, 70038, 70039, 70040, 70041, 70042, 70043, 70044, 70045, 70046, 70047, 70048, 70049, 70050, 80001, 80002, 80003, 80004, 80005, 80006, 80007, 80008, 80009, 80010, 80011, 80012, 80013, 80014, 80015
+// refs ya usadas (para no repetir al agregar productos nuevos): 84213, 93810, 24592, 13278, 52445, 29772, 61750, 95319, 16328, 19494, 80239, 22337, 57931, 86387, 17602, 62950, 59906, 36224, 88569, 33435, 40180, 42562, 27464, 21348, 42918, 60209, 79574, 99693, 80599, 16863, 45084, 21427, 63377, 44937, 24116, 71615, 33816, 85805, 49813, 36240, 63751, 44763, 79885, 42134, 35342, 45985, 31109, 26800, 83560, 23999, 30106, 43478, 63970, 35161, 40059, 68437, 68405, 58312, 85433, 45367, 54059, 80475, 15239, 68417, 97553, 91558, 81733, 46048, 42098, 39256, 28289, 23434, 98696, 81482, 21395, 87397, 65302, 14165, 13905, 22280, 38657, 40495, 76237, 88907, 61064, 88838, 47875, 25839, 24974, 20221, 53666, 23576, 10160, 94316, 85603, 54336, 47639, 86606, 45046, 24045, 92670, 97302, 37484, 93381, 75313, 56422, 64509, 79118, 90694, 38590, 50570, 81281, 53285, 78072, 19787, 37050, 13478, 70001, 70002, 70003, 70004, 70005, 70006, 70007, 70008, 70009, 70010, 70011, 70012, 70013, 70014, 70015, 70016, 70017, 70018, 70019, 70020, 70021, 70022, 70023, 70024, 70025, 70026, 70027, 70028, 70029, 70030, 70031, 70032, 70033, 70034, 70035, 70036, 70037, 70038, 70039, 70040, 70041, 70042, 70043, 70044, 70045, 70046, 70047, 70048, 70049, 70050, 80001, 80002, 80003, 80004, 80005, 80006, 80007, 80008, 80009, 80010, 80011, 80012, 80013, 80014, 80015, 80016, 80017, 80018, 80019, 80020, 80021, 80022, 80023, 80024, 80025, 80026, 80027, 80028, 80029, 80030, 80031, 80032, 80033, 80034, 80035, 80036, 80037, 80038, 80039, 80040
 
 /* ============================================================
    ARMA TU COMBO A TU GUSTO — reglas de descuento
