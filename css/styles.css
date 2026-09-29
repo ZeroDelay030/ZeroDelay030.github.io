@@ -456,7 +456,7 @@ body.has-open-panel .header-back { display: inline-flex; }
   transform: translateY(0);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 960px) {
   .nav-categories--panel .categories-menu,
   .nav-categories--panel.is-open .categories-menu {
     right: auto;
@@ -504,7 +504,7 @@ body.has-open-panel .header-back { display: inline-flex; }
   flex-shrink: 0;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 960px) {
   .nav-categories { width: 100%; }
 
   .nav-categories-trigger {
@@ -1997,7 +1997,7 @@ body.has-open-panel .header-back { display: inline-flex; }
 ===================================================== */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
   gap: 20px;
 }
 
@@ -2089,8 +2089,15 @@ body.has-open-panel .header-back { display: inline-flex; }
 
 .product-card-add-btn { margin-top: auto; }
 
+/* nombres largos o precios con descuento nunca deben ensanchar la
+   tarjeta más allá de su columna (se salían de la pantalla en móviles) */
+.product-card { min-width: 0; }
+.product-card-name { overflow-wrap: anywhere; }
+.product-card-price-row { flex-wrap: wrap; column-gap: 8px; row-gap: 0; }
+.product-card-add-btn { white-space: normal; max-width: 100%; }
+
 @media (max-width: 640px) {
-  .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .product-card { padding: 10px 10px 12px; }
 }
 
@@ -2670,6 +2677,10 @@ body.has-open-panel .header-back { display: inline-flex; }
   display: flex;
   flex-direction: column;
   gap: 2px;
+  /* deja que el texto del plan se parta en varias líneas en vez de
+     empujar el botón "Agregar al carrito" fuera de la tarjeta */
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .variant-label {
@@ -3591,7 +3602,7 @@ body.has-open-panel .header-back { display: inline-flex; }
   .footer-inner { grid-template-columns: 1fr; gap: 32px; }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 960px) {
   .nav-overlay {
     position: fixed;
     inset: 0;
@@ -3650,6 +3661,12 @@ body.has-open-panel .header-back { display: inline-flex; }
   .main-nav a::after { display: none; }
 
   .nav-toggle { display: flex; }
+}
+
+/* el menú de navegación pasa a ☰ desde 960px (antes 720px): entre
+   ~720 y 960px el logo, los 4 enlaces y los botones no cabían en una
+   fila y el header se salía de la pantalla. El hero conserva su corte. */
+@media (max-width: 720px) {
   .hero { min-height: auto; padding: calc(110px + var(--header-h)) 20px 70px; }
 }
 
@@ -4395,4 +4412,42 @@ body.has-open-panel .header-back { display: inline-flex; }
 .custom-combo-undo-toast button:hover {
   border-color: var(--purple);
   background: rgba(176, 0, 255, 0.3);
+}
+
+/* =====================================================
+   HEADER EN CELULARES ANGOSTOS — va al final del archivo a propósito:
+   el bloque de max-width:400px de arriba quedaba antes que las reglas
+   base de .search-btn / .theme-toggle / .cart-btn y estas lo pisaban,
+   así que los botones nunca se achicaban y el header (sobre todo con
+   la flecha "Volver" visible) se salía por el borde derecho.
+===================================================== */
+.brand { min-width: 0; }
+.brand-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.header-actions { flex-shrink: 0; }
+
+@media (max-width: 400px) {
+  .header-inner { padding: 12px 12px; gap: 8px; }
+  .site-header.is-scrolled .header-inner { padding: 9px 12px; }
+  .header-actions { gap: 6px; }
+  .theme-toggle, .cart-btn, .search-btn { width: 34px; height: 34px; }
+  .nav-toggle { padding: 3px; }
+  .brand-logo { width: 30px; height: 30px; }
+  .brand { gap: 6px; }
+  .brand-name { font-size: 0.84rem; }
+  .header-back { width: 30px; height: 30px; margin-right: 0; }
+  /* con un panel abierto aparece la flecha "Volver": se libera espacio
+     ocultando la insignia de verificado */
+  body.has-open-panel .brand-verified { display: none; }
+}
+
+@media (max-width: 340px) {
+  .header-inner,
+  .site-header.is-scrolled .header-inner { padding: 10px 8px; gap: 6px; }
+  .header-actions { gap: 4px; }
+  .theme-toggle, .cart-btn, .search-btn { width: 32px; height: 32px; }
+  .brand-name { font-size: 0.8rem; }
+  .brand-verified { display: none; }
+  /* pantallas mínimas con la flecha "Volver": solo el logo, para que el
+     nombre no quede cortado a la mitad */
+  body.has-open-panel .brand-name { display: none; }
 }
