@@ -2251,6 +2251,51 @@ body.has-open-panel .header-back { display: inline-flex; }
 .pd-description p { margin: 0 0 14px; }
 .pd-description p:last-child { margin-bottom: 0; }
 
+/* Selector de talla (productos con `sizes` en data.js) */
+.pd-sizes-label {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+}
+
+.pd-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pd-size-btn {
+  min-width: 52px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-panel);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.pd-size-btn:hover { border-color: var(--cyan); }
+
+.pd-size-btn.is-selected {
+  border-color: var(--cyan);
+  background: var(--cyan);
+  color: #0A0A0F;
+}
+
+.pd-sizes-hint {
+  color: var(--cyan-text);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.pd-sizes-hint + .pd-qty-label { margin-top: 16px; }
+
 .pd-qty-label {
   display: block;
   font-weight: 700;

@@ -69,6 +69,13 @@ function zdBuildProductCard(product) {
   const addBtn = document.createElement('button');
   addBtn.type = 'button';
   addBtn.className = 'variant-add-btn product-card-add-btn';
+  // con tallas, la talla se elige en la ficha antes de agregar
+  if (product.sizes && product.sizes.length) {
+    addBtn.textContent = 'Elegir talla';
+    addBtn.addEventListener('click', () => zdOpenProductDetail(product.id));
+    card.appendChild(addBtn);
+    return card;
+  }
   addBtn.textContent = 'Agregar al carrito';
   addBtn.addEventListener('click', () => {
     zdAddToCart({
@@ -83,6 +90,12 @@ function zdBuildProductCard(product) {
   return card;
 }
 
+/* ---------- ¿El producto pertenece a la categoría? (principal o extra) ---------- */
+function zdProductInCategory(product, categorySlug) {
+  return product.category === categorySlug
+    || (product.extraCategories || []).includes(categorySlug);
+}
+
 /* ---------- Grilla de productos, con filtro opcional por categoría ---------- */
 function zdBuildProductsGrid(resetFilter) {
   if (resetFilter) zdProductsCurrentFilter = null;
@@ -91,13 +104,16 @@ function zdBuildProductsGrid(resetFilter) {
   grid.innerHTML = '';
 
   const items = zdProductsCurrentFilter
-    ? ZD_PRODUCTS.filter((p) => p.category === zdProductsCurrentFilter)
+    ? ZD_PRODUCTS.filter((p) => zdProductInCategory(p, zdProductsCurrentFilter))
     : ZD_PRODUCTS;
 
   const title = document.getElementById('productsTitle');
   const lead = document.getElementById('productsLead');
   if (zdProductsCurrentFilter) {
-    const label = items[0] ? items[0].categoryLabel : zdProductsCurrentFilter;
+    // el nombre visible sale de un producto cuya categoría PRINCIPAL es
+    // esta (el primero de la lista puede venir por extraCategories)
+    const owner = ZD_PRODUCTS.find((p) => p.category === zdProductsCurrentFilter);
+    const label = owner ? owner.categoryLabel : zdProductsCurrentFilter;
     if (title) title.textContent = `📦 ${label}`;
     if (lead) lead.textContent = `Productos de la categoría ${label}, con envío hasta tu domicilio.`;
   } else {
@@ -196,10 +212,21 @@ function zdRenderProductDetail(productId) {
 
   body.dataset.productId = product.id;
 
-  const descriptionHtml = product.description
+  const descriptionHtml = (product.description || '')
     .split('\n\n')
+    .filter((para) => para.trim() !== '')
     .map((para) => `<p>${para}</p>`)
     .join('');
+
+  // Tallas (opcional): el cliente debe elegir una antes de pedir
+  const sizes = product.sizes || [];
+  const sizesHtml = sizes.length
+    ? `<p class="pd-sizes-label" id="pdSizesLabel">Talla:</p>
+       <div class="pd-sizes" role="radiogroup" aria-labelledby="pdSizesLabel">
+         ${sizes.map((s) => `<button type="button" class="pd-size-btn" role="radio" aria-checked="false" data-size="${s}">${s}</button>`).join('')}
+       </div>
+       <p class="pd-sizes-hint" id="pdSizesHint" hidden>Elige una talla para continuar.</p>`
+    : '';
 
   const priceHtml = product.salePrice
     ? `<span class="pd-price-original">${zdFormatCOP(product.price)}</span>
@@ -238,6 +265,7 @@ function zdRenderProductDetail(productId) {
         <p class="pd-ref">Ref: ${product.ref}</p>
         <div class="pd-price-row">${priceHtml}</div>
         <div class="pd-description">${descriptionHtml}</div>
+        ${sizesHtml}
 
         <label class="pd-qty-label" for="pdQtyInput">Cantidad:</label>
         <input type="number" id="pdQtyInput" class="pd-qty-input" value="1" min="1" step="1" inputmode="numeric">
@@ -264,16 +292,50 @@ function zdRenderProductDetail(productId) {
     return Number.isFinite(n) && n > 0 ? n : 1;
   }
 
+  let selectedSize = null;
+  const sizesHint = document.getElementById('pdSizesHint');
+
+  // ítem del carrito: con talla, cada talla es una línea distinta
+  function cartItem() {
+    const item = { id: product.id, name: product.name, price: product.salePrice || product.price };
+    if (selectedSize) {
+      item.id = `${product.id}--${selectedSize}`;
+      item.detail = `Talla: ${selectedSize}`;
+    }
+    return item;
+  }
+
+  function needsSize() {
+    if (!sizes.length || selectedSize) return false;
+    if (sizesHint) sizesHint.hidden = false;
+    return true;
+  }
+
   function updateWhatsappHref() {
-    const qty = currentQty();
-    const unitPrice = product.salePrice || product.price;
     // usa el mismo formato que el carrito (zdBuildWhatsAppMessage), con
     // un "carrito" temporal de un solo producto — así el pedido directo
     // desde la ficha del producto queda igual de consistente
-    const tempCart = [{ id: product.id, name: product.name, price: unitPrice, qty }];
+    const tempCart = [{ ...cartItem(), qty: currentQty() }];
     const message = zdBuildWhatsAppMessage(tempCart);
     whatsappBtn.href = `https://wa.me/${ZD_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   }
+
+  body.querySelectorAll('.pd-size-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      selectedSize = btn.dataset.size;
+      body.querySelectorAll('.pd-size-btn').forEach((b) => {
+        const on = b === btn;
+        b.classList.toggle('is-selected', on);
+        b.setAttribute('aria-checked', on ? 'true' : 'false');
+      });
+      if (sizesHint) sizesHint.hidden = true;
+      updateWhatsappHref();
+    });
+  });
+
+  whatsappBtn.addEventListener('click', (e) => {
+    if (needsSize()) e.preventDefault();
+  });
 
   qtyInput.addEventListener('input', () => {
     if (qtyInput.value !== '' && currentQty() < 1) qtyInput.value = 1;
@@ -281,11 +343,8 @@ function zdRenderProductDetail(productId) {
   });
 
   addToCartBtn.addEventListener('click', () => {
-    zdAddToCart({
-      id: product.id,
-      name: product.name,
-      price: product.salePrice || product.price
-    }, currentQty());
+    if (needsSize()) return;
+    zdAddToCart(cartItem(), currentQty());
     zdShowAddedToast(addToCartBtn);
   });
 

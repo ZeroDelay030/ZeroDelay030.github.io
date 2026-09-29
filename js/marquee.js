@@ -143,6 +143,26 @@ function zdMarqueeBuildOffersItems() {
   return zdShuffle(items).slice(0, ZD_MARQUEE_MAX_ITEMS);
 }
 
+/* ---------- Carruseles por categoría: "Para nuestros hermosos
+   peluditos" (mascotas) y "Hogar y Tecnología". Toman los productos
+   de esas categorías (principal o extraCategories) automáticamente. ---------- */
+function zdMarqueeBuildCategoryItems(categorySlugs) {
+  const items = (typeof ZD_PRODUCTS !== 'undefined' ? ZD_PRODUCTS : [])
+    .filter((p) => categorySlugs.some((slug) =>
+      p.category === slug || (p.extraCategories || []).includes(slug)))
+    .map((p) => ({
+      id: p.id,
+      panel: 'panelProductDetail',
+      name: p.name,
+      logo: p.image,
+      rect: true,
+      priceLabel: p.salePrice
+        ? `-${Math.round((1 - p.salePrice / p.price) * 100)}% ${zdFormatCOP(p.salePrice)}`
+        : zdFormatCOP(p.price)
+    }));
+  return zdShuffle(items).slice(0, ZD_MARQUEE_MAX_ITEMS);
+}
+
 function zdMarqueeCardHTML(item) {
   const hasLogo = Boolean(item.logo);
   const frameClasses = ['logo-frame'];
@@ -177,8 +197,13 @@ function zdInitMarqueeInstance(opts) {
   const BASE_SPEED = 60; // px por segundo
   const REDUCED_SPEED = 14; // más lento, pero nunca detenido del todo
 
-  const items = opts.buildItems();
+  let items = opts.buildItems();
   if (!items.length) return;
+  // con pocos productos (ej. Mascotas) un solo set no alcanza a cubrir
+  // pantallas anchas y se vería un hueco: se repite hasta tener suficientes
+  const MIN_ITEMS = 14;
+  const base = items;
+  while (items.length < MIN_ITEMS) items = items.concat(base);
 
   const setHTML = items.map(zdMarqueeCardHTML).join('');
   track.innerHTML = setHTML + setHTML; // 2 copias: suficiente para el loop infinito con menos peso en el DOM
@@ -348,6 +373,20 @@ function initMarquee() {
     viewportId: 'marqueeViewport3',
     trackId: 'marqueeTrack3',
     buildItems: zdMarqueeBuildOffersItems,
+    onActivate: zdMarqueeActivateProductCard
+  });
+
+  zdInitMarqueeInstance({
+    viewportId: 'marqueeViewport4',
+    trackId: 'marqueeTrack4',
+    buildItems: () => zdMarqueeBuildCategoryItems(['mascotas']),
+    onActivate: zdMarqueeActivateProductCard
+  });
+
+  zdInitMarqueeInstance({
+    viewportId: 'marqueeViewport5',
+    trackId: 'marqueeTrack5',
+    buildItems: () => zdMarqueeBuildCategoryItems(['hogar', 'tecnologia']),
     onActivate: zdMarqueeActivateProductCard
   });
 }

@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&family=Manrope:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=20260910i">
+<link rel="stylesheet" href="css/styles.css?v=20260929b">
 </head>
 <body>
 
@@ -71,29 +71,23 @@
           <button type="button" class="categories-menu-item" data-open-panel="panelCatalogo">
             <span class="categories-menu-item-name">Streaming</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="belleza">
             <span class="categories-menu-item-name">Belleza</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="camisas-futbol">
             <span class="categories-menu-item-name">Camisas 1.1 Fútbol</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="deporte">
             <span class="categories-menu-item-name">Deporte</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="hogar">
             <span class="categories-menu-item-name">Hogar</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="joyeria">
             <span class="categories-menu-item-name">Joyería</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="mascotas">
             <span class="categories-menu-item-name">Mascotas</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
           <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="perfumeria">
             <span class="categories-menu-item-name">Perfumería</span>
@@ -104,9 +98,8 @@
           <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="relojeria-replica">
             <span class="categories-menu-item-name">Relojería Réplica</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="tecnologia">
             <span class="categories-menu-item-name">Tecnología</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
           <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="vape">
             <span class="categories-menu-item-name">Vape</span>
@@ -313,6 +306,17 @@
   </div>
 </section>
 
+<!-- ============ CARRUSEL INFINITO DE MASCOTAS (categoría mascotas) ============ -->
+<section class="marquee-section" aria-label="Productos para mascotas">
+  <p class="marquee-heading">🐾 Para nuestros hermosos peluditos</p>
+
+  <div class="marquee-row">
+    <div class="marquee-viewport" id="marqueeViewport4">
+      <div class="marquee-track" id="marqueeTrack4"></div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ CARRUSEL INFINITO DE OFERTAS (productos con descuento, sin plataformas) ============ -->
 <section class="marquee-section" aria-label="Ofertas destacadas">
   <p class="marquee-heading">No te pierdas estas increíbles ofertas</p>
@@ -320,6 +324,17 @@
   <div class="marquee-row">
     <div class="marquee-viewport" id="marqueeViewport3">
       <div class="marquee-track" id="marqueeTrack3"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CARRUSEL INFINITO DE HOGAR + TECNOLOGÍA ============ -->
+<section class="marquee-section" aria-label="Hogar y tecnología">
+  <p class="marquee-heading">🏠⚡ Tu casa, más smart: lo mejor en Hogar y Tecnología</p>
+
+  <div class="marquee-row">
+    <div class="marquee-viewport" id="marqueeViewport5">
+      <div class="marquee-track" id="marqueeTrack5"></div>
     </div>
   </div>
 </section>
@@ -651,29 +666,23 @@
           <button type="button" class="categories-menu-item" data-switch-panel="panelCatalogo">
             <span class="categories-menu-item-name">Streaming</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-filter-category="belleza">
             <span class="categories-menu-item-name">Belleza</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-filter-category="camisas-futbol">
             <span class="categories-menu-item-name">Camisas 1.1 Fútbol</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-filter-category="deporte">
             <span class="categories-menu-item-name">Deporte</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-filter-category="hogar">
             <span class="categories-menu-item-name">Hogar</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-filter-category="joyeria">
             <span class="categories-menu-item-name">Joyería</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-filter-category="mascotas">
             <span class="categories-menu-item-name">Mascotas</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
           <button type="button" class="categories-menu-item" data-filter-category="perfumeria">
             <span class="categories-menu-item-name">Perfumería</span>
@@ -684,9 +693,8 @@
           <button type="button" class="categories-menu-item" data-filter-category="relojeria-replica">
             <span class="categories-menu-item-name">Relojería Réplica</span>
           </button>
-          <button type="button" class="categories-menu-item categories-menu-item--soon" disabled>
+          <button type="button" class="categories-menu-item" data-filter-category="tecnologia">
             <span class="categories-menu-item-name">Tecnología</span>
-            <span class="categories-menu-soon">Próximamente</span>
           </button>
           <button type="button" class="categories-menu-item" data-filter-category="vape">
             <span class="categories-menu-item-name">Vape</span>
@@ -998,16 +1006,16 @@
   <div class="cart-drawer-footer" id="cartDrawerFooter"></div>
 </aside>
 
-<script src="js/hero-fx.js?v=20260910i" defer></script>
-<script src="js/aurora.js?v=20260910i" defer></script>
-<script src="js/data.js?v=20260910i" defer></script>
-<script src="js/catalog.js?v=20260910i" defer></script>
-<script src="js/cart.js?v=20260910i" defer></script>
-<script src="js/custom-combo.js?v=20260910i" defer></script>
-<script src="js/marquee.js?v=20260910i" defer></script>
-<script src="js/effects.js?v=20260910i" defer></script>
-<script src="js/main.js?v=20260910i" defer></script>
-<script src="js/products.js?v=20260910i" defer></script>
-<script src="js/search.js?v=20260910i" defer></script>
+<script src="js/hero-fx.js?v=20260929b" defer></script>
+<script src="js/aurora.js?v=20260929b" defer></script>
+<script src="js/data.js?v=20260929b" defer></script>
+<script src="js/catalog.js?v=20260929b" defer></script>
+<script src="js/cart.js?v=20260929b" defer></script>
+<script src="js/custom-combo.js?v=20260929b" defer></script>
+<script src="js/marquee.js?v=20260929b" defer></script>
+<script src="js/effects.js?v=20260929b" defer></script>
+<script src="js/main.js?v=20260929b" defer></script>
+<script src="js/products.js?v=20260929b" defer></script>
+<script src="js/search.js?v=20260929b" defer></script>
 </body>
 </html>
