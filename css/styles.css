@@ -4953,64 +4953,16 @@ body.has-open-panel .header-back { display: inline-flex; }
 .zd-more-btn[hidden] { display: none; }
 
 /* =====================================================
-   REDISEÑO 2026-10 — D2) STREAMING: precio "desde" y planes a la vista
+   REDISEÑO 2026-10 — D2) STREAMING: tarjeta con orbe y "Desde $", los
+   planes se despliegan al tocarla
 ===================================================== */
-.catalog-grid--plans { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
-
-.catalog-card--plans {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 14px;
-}
-
-.catalog-card--plans:hover { transform: none; }
-
-.plan-card-head { display: flex; align-items: center; gap: 12px; }
-
-.plan-card-logo {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 52px;
-  height: 52px;
-  overflow: hidden;
-  border-radius: 12px;
-  background: var(--bg-panel-alt);
-  font-family: var(--font-display);
-}
-
-.plan-card-logo img { width: 100%; height: 100%; object-fit: cover; }
-
-.plan-card-titles { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.plan-card-titles .catalog-card-name { margin: 0; font-size: 1rem; }
-
-.plan-card-from {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--cyan-text);
-}
-
-.catalog-card--plans .catalog-new-badge { position: static; align-self: flex-start; margin-left: auto; }
-.catalog-card--plans .plan-card-list { padding: 0; gap: 6px; }
-.catalog-card--plans .variant-row { opacity: 1; transform: none; padding: 8px 10px 8px 12px; }
-.catalog-card--plans .variant-add-btn { min-height: 36px; padding: 8px 14px; }
-.catalog-card--plans .catalog-cross-badge { width: 100%; margin: 0; }
-
-/* en grillas mezcladas (Ofertas, Todo) la tarjeta de planes ocupa más ancho */
-.catalog-grid:not(.catalog-grid--plans) .catalog-card--plans { grid-column: 1 / -1; }
-
-@media (min-width: 760px) {
-  .catalog-grid:not(.catalog-grid--plans) .catalog-card--plans { grid-column: span 2; }
-}
+.catalog-card-face .catalog-card-price { margin-top: -6px; font-weight: 700; }
 
 /* =====================================================
    REDISEÑO 2026-10 — D3) COMBOS: lo que incluye, precio suelto tachado y ahorro
 ===================================================== */
 @media (max-width: 640px) {
-  .catalog-grid:not(.catalog-grid--plans) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .catalog-grid:not(#catalogGrid) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 }
 
 .catalog-card--combo-v2 { display: flex; flex-direction: column; }

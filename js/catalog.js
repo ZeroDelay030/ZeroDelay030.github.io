@@ -54,6 +54,7 @@ function zdRenderProgressive(grid, items, buildFn, pageSize) {
     moreBtn.hidden = left <= 0;
     moreBtn.textContent = `Ver más (${left})`;
     zdUpdateCartBadges();
+    zdObserveCardAnimations(grid);
   }
 
   renderNext();
@@ -209,72 +210,77 @@ function zdBuildLogoFrame(logoPath, name) {
 /* ---------- Tarjetas de plataforma (catálogo) ---------- */
 const ZD_NEW_ITEM_IDS = new Set(['youtube', 'combo-vieja-escuela']);
 
-/* Tarjeta con el precio "desde" y todos los planes a la vista (sin
-   tener que abrirla), cada uno con su botón para agregar. */
-function zdBuildPlatformCard(platform) {
+function zdBuildPlatformCard(platform, gridSelector) {
+  gridSelector = gridSelector || '#catalogGrid';
   const card = document.createElement('div');
-  card.className = 'catalog-card catalog-card--plans';
+  card.className = 'catalog-card';
   card.dataset.id = platform.id;
   card.dataset.searchName = zdNormalize(platform.name);
 
-  const head = document.createElement('div');
-  head.className = 'plan-card-head';
-
-  const logo = document.createElement('div');
-  logo.className = 'plan-card-logo';
-  if (platform.logo) {
-    const img = document.createElement('img');
-    img.src = platform.logo;
-    img.alt = '';
-    img.loading = 'lazy';
-    img.decoding = 'async';
-    logo.appendChild(img);
-  } else {
-    logo.textContent = platform.name.charAt(0);
-  }
-  head.appendChild(logo);
-
-  const titles = document.createElement('div');
-  titles.className = 'plan-card-titles';
-  const nameEl = document.createElement('h3');
-  nameEl.className = 'catalog-card-name';
-  nameEl.textContent = platform.name;
-  titles.appendChild(nameEl);
-
-  const cheapestPrice = Math.min(...platform.variants.map((v) => v.price));
-  const fromEl = document.createElement('span');
-  fromEl.className = 'plan-card-from';
-  fromEl.textContent = platform.variants.length > 1 ? `Desde ${zdFormatCOP(cheapestPrice)}` : zdFormatCOP(cheapestPrice);
-  titles.appendChild(fromEl);
-  head.appendChild(titles);
+  const face = document.createElement('button');
+  face.className = 'catalog-card-face';
+  face.appendChild(zdBuildLogoFrame(platform.logo, platform.name));
 
   if (ZD_NEW_ITEM_IDS.has(platform.id)) {
     const newBadge = document.createElement('span');
     newBadge.className = 'catalog-new-badge';
-    newBadge.textContent = 'Nuevo';
-    head.appendChild(newBadge);
+    newBadge.textContent = '🆕 Nuevo';
+    face.appendChild(newBadge);
   }
-  card.appendChild(head);
+
+  const nameEl = document.createElement('span');
+  nameEl.className = 'catalog-card-name';
+  nameEl.textContent = platform.name;
+  face.appendChild(nameEl);
+
+  // precio de referencia a la vista; los planes se despliegan al tocar la tarjeta
+  const cheapest = Math.min(...platform.variants.map((v) => v.price));
+  const fromEl = document.createElement('span');
+  fromEl.className = 'catalog-card-price';
+  fromEl.textContent = platform.variants.length > 1 ? `Desde ${zdFormatCOP(cheapest)}` : zdFormatCOP(cheapest);
+  face.appendChild(fromEl);
+
+  const chevron = document.createElement('span');
+  chevron.className = 'catalog-card-chevron';
+  chevron.textContent = '+';
+  face.appendChild(chevron);
+
+  card.appendChild(face);
+
+  const crossBadge = document.createElement('button');
+  crossBadge.className = 'catalog-cross-badge';
+  crossBadge.type = 'button';
+  crossBadge.textContent = '💡 Combínala y ahorra';
+  crossBadge.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (typeof window.zdOpenPanel === 'function') window.zdOpenPanel('panelCustomCombo');
+  });
+  card.appendChild(crossBadge);
+
+  const variantsWrap = document.createElement('div');
+  variantsWrap.className = 'catalog-card-variants';
 
   const variantsList = document.createElement('div');
-  variantsList.className = 'variant-list plan-card-list';
+  variantsList.className = 'variant-list';
+
+  const cheapestPrice = platform.variants.length > 1
+    ? Math.min(...platform.variants.map((v) => v.price))
+    : null;
 
   platform.variants.forEach((variant) => {
     const row = document.createElement('div');
     row.className = 'variant-row';
 
-    const isBestPrice = platform.variants.length > 1 && variant.price === cheapestPrice;
+    const isBestPrice = cheapestPrice !== null && variant.price === cheapestPrice;
 
     const info = document.createElement('div');
     info.className = 'variant-info';
     info.innerHTML = `<span class="variant-label">${variant.label}${isBestPrice ? ' <span class="best-price-badge">Mejor precio</span>' : ''}</span><span class="variant-price">${zdFormatCOP(variant.price)}</span>`;
 
     const addBtn = document.createElement('button');
-    addBtn.type = 'button';
     addBtn.className = 'variant-add-btn';
-    addBtn.textContent = 'Agregar';
-    addBtn.setAttribute('aria-label', `Agregar ${platform.name} ${variant.label} al carrito`);
-    addBtn.addEventListener('click', () => {
+    addBtn.textContent = 'Agregar al carrito';
+    addBtn.addEventListener('click', (e) => {
       zdAddToCart({ id: variant.id, name: `${platform.name} — ${variant.label}`, price: variant.price });
       zdShowAddedToast(addBtn);
     });
@@ -283,17 +289,11 @@ function zdBuildPlatformCard(platform) {
     row.appendChild(addBtn);
     variantsList.appendChild(row);
   });
-  card.appendChild(variantsList);
 
-  const crossBadge = document.createElement('button');
-  crossBadge.className = 'catalog-cross-badge';
-  crossBadge.type = 'button';
-  crossBadge.textContent = '💡 Combínala con otra y ahorra hasta 15%';
-  crossBadge.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (typeof window.zdOpenPanel === 'function') window.zdOpenPanel('panelCustomCombo');
-  });
-  card.appendChild(crossBadge);
+  variantsWrap.appendChild(variantsList);
+  card.appendChild(variantsWrap);
+
+  face.addEventListener('click', () => zdToggleCard(card, gridSelector));
 
   return card;
 }
@@ -487,9 +487,9 @@ function zdExpandCardById(gridSelector, id) {
   const card = grid.querySelector(`.catalog-card[data-id="${id}"]`);
   if (!card) return;
 
-  // las tarjetas de plataformas y combos ya muestran todo: solo se
-  // resalta un momento y se lleva a la vista
-  if (card.classList.contains('catalog-card--plans') || card.classList.contains('catalog-card--combo-v2')) {
+  // las tarjetas de combos ya muestran todo: solo se resalta un momento
+  // y se lleva a la vista
+  if (card.classList.contains('catalog-card--combo-v2')) {
     grid.querySelectorAll('.catalog-card.is-highlighted').forEach((other) => other.classList.remove('is-highlighted'));
     card.classList.add('is-highlighted');
     setTimeout(() => card.classList.remove('is-highlighted'), 2200);
@@ -531,12 +531,15 @@ function zdPlayGridEntrance(gridSelector) {
 /* ---------- Render inicial ---------- */
 function zdObserveCardAnimations(grid) {
   if (!('IntersectionObserver' in window)) return;
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      entry.target.classList.toggle('is-anim-paused', !entry.isIntersecting);
-    });
-  }, { rootMargin: '150px', threshold: 0 });
-  grid.querySelectorAll('.logo-orbit').forEach((el) => observer.observe(el));
+  // un solo observador por grilla (las grillas por tandas lo llaman en cada tanda)
+  if (!grid.zdOrbitObserver) {
+    grid.zdOrbitObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        entry.target.classList.toggle('is-anim-paused', !entry.isIntersecting);
+      });
+    }, { rootMargin: '150px', threshold: 0 });
+  }
+  grid.querySelectorAll('.logo-orbit').forEach((el) => grid.zdOrbitObserver.observe(el));
 }
 
 function zdBuildPlatformsGrid() {
@@ -546,6 +549,7 @@ function zdBuildPlatformsGrid() {
   ZD_CATALOG.forEach((platform) => catalogGrid.appendChild(zdBuildPlatformCard(platform)));
   catalogGrid.dataset.built = 'true';
   zdUpdateCartBadges();
+  zdObserveCardAnimations(catalogGrid);
 }
 
 function zdBuildCombosGrid() {
@@ -584,7 +588,7 @@ function zdBuildCatalogoTodoGrid() {
 
   zdRenderProgressive(grid, mixed, (entry) => (entry.kind === 'combo'
     ? zdBuildComboCard(entry.data)
-    : zdBuildPlatformCard(entry.data)));
+    : zdBuildPlatformCard(entry.data, '#catalogTodoGrid')));
 }
 
 /* ---------- Ofertas (botón "🔥 Ofertas" del hero): por ahora son los
@@ -618,7 +622,7 @@ function zdBuildOfertasGrid() {
   const mixed = zdShuffleArray([...comboItems, ...discountedPlatforms, ...discountedProducts]);
   zdRenderProgressive(grid, mixed, (entry) => {
     if (entry.kind === 'combo') return zdBuildComboCard(entry.data);
-    if (entry.kind === 'platform') return zdBuildPlatformCard(entry.data);
+    if (entry.kind === 'platform') return zdBuildPlatformCard(entry.data, '#ofertasGrid');
     return typeof window.zdBuildProductCard === 'function' ? window.zdBuildProductCard(entry.data) : null;
   });
 }
