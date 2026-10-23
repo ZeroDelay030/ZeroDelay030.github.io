@@ -34,22 +34,39 @@ function zdAnimateNumber(el, from, to, formatFn) {
   requestAnimationFrame(tick);
 }
 
-/* ---------- C) Barra de carrito flotante en móvil ---------- */
+/* ---------- C) Barra fija inferior del celular: [WhatsApp] [carrito o catálogo] ---------- */
 function zdUpdateMobileCartBar() {
-  const bar = document.getElementById('mobileCartBar');
-  const countEl = document.getElementById('mobileCartCount');
-  const totalEl = document.getElementById('mobileCartTotal');
-  if (!bar || !countEl || !totalEl) return;
+  const btn = document.getElementById('zdBottomBarCart');
+  if (!btn) return;
+  const label = btn.querySelector('.zd-bottom-bar-label');
+  const totalEl = btn.querySelector('.zd-bottom-bar-total');
 
   const cart = zdGetCart();
   const qty = cart.reduce((sum, item) => sum + item.qty, 0);
   const total = zdCartTotal(cart);
 
-  countEl.textContent = qty;
-  totalEl.textContent = zdFormatCOP(total);
-  bar.classList.toggle('has-items', qty > 0);
+  btn.classList.toggle('has-items', qty > 0);
+  if (label) label.textContent = qty > 0 ? `Ver carrito (${qty})` : 'Ver catálogo';
+  if (totalEl) totalEl.textContent = qty > 0 ? zdFormatCOP(total) : '';
 }
 window.zdUpdateMobileCartBar = zdUpdateMobileCartBar;
+
+/* ---------- Producto físico del carrito (las tallas se guardan como "<id>--<talla>") ---------- */
+function zdCartProduct(item) {
+  if (typeof ZD_PRODUCTS === 'undefined') return null;
+  const baseId = String(item.id).split('--')[0];
+  return ZD_PRODUCTS.find((p) => p.id === baseId) || null;
+}
+
+/* ---------- Imagen pequeña de cada línea del carrito ---------- */
+function zdCartItemThumb(item) {
+  const product = zdCartProduct(item);
+  if (product) return zdThumb(product.image);
+  const combo = ZD_COMBOS.find((c) => c.id === item.id);
+  if (combo && combo.image) return zdThumb(combo.image);
+  const platform = ZD_CATALOG.find((p) => p.variants.some((v) => v.id === item.id));
+  return platform ? platform.logo : null;
+}
 
 
 function zdChangeQty(id, delta) {
@@ -99,7 +116,10 @@ function zdBuildWhatsAppMessage(cart) {
       ].join('\n');
     }
 
-    let line = `• ${item.name}${qtyText} — ${zdFormatCOP(item.price)}`;
+    // los productos físicos llevan su referencia, para ubicarlos rápido
+    const product = zdCartProduct(item);
+    const refText = product && product.ref ? ` (Ref ${product.ref})` : '';
+    let line = `• ${item.name}${refText}${qtyText} — ${zdFormatCOP(item.price)}`;
     if (item.detail) {
       line += `\n   (${item.detail})`;
     }
@@ -138,8 +158,11 @@ function zdRenderCartDrawer() {
 
   footer.classList.add('is-active');
 
-  body.innerHTML = `<div class="cart-items">${cart.map((item) => `
+  body.innerHTML = `<div class="cart-items">${cart.map((item) => {
+      const thumb = zdCartItemThumb(item);
+      return `
       <div class="cart-item">
+        ${thumb ? `<img class="cart-item-thumb" src="${thumb}" alt="" width="48" height="48" loading="lazy">` : '<span class="cart-item-thumb cart-item-thumb--icon" aria-hidden="true">✨</span>'}
         <div class="cart-item-info">
           <span class="cart-item-name">${item.name}</span>
           ${item.detail ? `<span class="cart-item-detail">${item.detail}</span>` : ''}
@@ -152,7 +175,8 @@ function zdRenderCartDrawer() {
           <button class="cart-item-remove" data-action="remove" data-id="${item.id}" aria-label="Quitar producto">&times;</button>
         </div>
       </div>
-    `).join('')}</div>`;
+    `;
+    }).join('')}</div>`;
 
   const total = zdCartTotal(cart);
   // el aviso solo aplica a planes de streaming sueltos: los combos y el
@@ -173,6 +197,7 @@ function zdRenderCartDrawer() {
       <span class="cart-total-value" id="cartTotalValue">${zdFormatCOP(zdPrevTotal)}</span>
     </div>
     <button class="btn btn--primary cart-whatsapp-btn" id="cartWhatsappBtn">Finalizar por WhatsApp</button>
+    <p class="cart-info">Pagas con Nequi, Llaves o Bre-B. Streaming: entrega en minutos. Productos: envíos a todo el país.</p>
     <button class="cart-clear-btn" id="cartClearBtn">Vaciar carrito</button>
   `;
 
