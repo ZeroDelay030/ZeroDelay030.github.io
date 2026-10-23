@@ -258,7 +258,7 @@ const ZD_COMBOS = [
   { id: 'combo-universitario-clasico', name: 'Universitario Clásico', price: 39900, image: 'assets/combos/universitario-clasico.jpg', includes: ['ChatGPT Plus', 'CapCut', 'Canva 45 días'] },
   { id: 'combo-zero-delay', name: 'ZERO DELAY', price: 53000, image: 'assets/combos/zero-delay.jpg', includes: ['Netflix 30 días', 'Disney+ Premium Original', 'Crunchyroll Original', 'Prime Video Original', 'Spotify Premium', 'ChatGPT Plus'] },
   { id: 'combo-universitario-premium', name: 'Universitario Premium', price: 58000, image: 'assets/combos/universitario-premium.jpg', includes: ['ChatGPT Plus', 'CapCut', 'Canva 365 días', 'Gemini PRO'] },
-  { id: 'combo-premium-familiar', name: 'Premium Familiar', price: 73800, image: 'assets/combos/premium-familiar.jpg', includes: ['Disney+ Completa Original Premium', 'HBO Max Completa Original Platino', 'Prime Video Completa', 'Netflix 33 días'] },
+  { id: 'combo-premium-familiar', name: 'Premium Familiar', price: 73800, image: 'assets/combos/premium-familiar.jpg', includes: ['Disney+ Cuenta Completa Premium', 'HBO Max Completa Original Platino', 'Prime Video Cuenta Completa Original', 'Netflix 33 días'] },
   { id: 'combo-vieja-escuela', name: 'Vieja Escuela', price: 28800, image: 'assets/combos/vieja-escuela.jpg', includes: ['YouTube Premium', 'Netflix 30 días', 'Disney+ Pantalla Estándar Original'] }
 ];
 
