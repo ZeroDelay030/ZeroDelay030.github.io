@@ -6,29 +6,36 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  /* ---------- Modo claro/oscuro (claro es el modo por defecto) ---------- */
+  /* ---------- Modo claro/oscuro (claro es el modo por defecto) ----------
+     Hay dos botones: el del header (escritorio) y el del menú (celular). */
   const themeToggle = document.getElementById('themeToggle');
-  if (themeToggle) {
-    const applyThemeLabel = () => {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      const label = isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
+  const menuThemeBtns = document.querySelectorAll('[data-theme-toggle]');
+  const applyThemeLabel = () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const label = isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
+    if (themeToggle) {
       themeToggle.setAttribute('aria-label', label);
       themeToggle.setAttribute('title', label);
-    };
-    applyThemeLabel();
-
-    themeToggle.addEventListener('click', () => {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        document.documentElement.removeAttribute('data-theme');
-        try { localStorage.setItem('zd_theme', 'light'); } catch (e) {}
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        try { localStorage.setItem('zd_theme', 'dark'); } catch (e) {}
-      }
-      applyThemeLabel();
+    }
+    menuThemeBtns.forEach((btn) => {
+      const text = btn.querySelector('.nav-theme-btn-label');
+      if (text) text.textContent = isDark ? 'Modo claro' : 'Modo oscuro';
     });
-  }
+  };
+  const toggleTheme = () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      try { localStorage.setItem('zd_theme', 'light'); } catch (e) {}
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      try { localStorage.setItem('zd_theme', 'dark'); } catch (e) {}
+    }
+    applyThemeLabel();
+  };
+  applyThemeLabel();
+  if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+  menuThemeBtns.forEach((btn) => btn.addEventListener('click', toggleTheme));
 
   /* ---------- Alto real del header: ahora que es "fixed" (para poder
      quedar visible por encima de los paneles de pantalla completa),

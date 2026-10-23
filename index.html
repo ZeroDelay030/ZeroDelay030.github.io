@@ -53,7 +53,7 @@
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <a href="#top" class="brand">
-      <img src="assets/logo-zd.jpg" alt="ZERO DELAY" class="brand-logo">
+      <img src="assets/logo-zd.jpg" alt="ZERO DELAY" class="brand-logo" width="420" height="335">
       <span class="brand-name">ZERO<span class="brand-accent">DELAY</span></span>
       <span class="brand-verified" title="Negocio verificado">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/></svg>
@@ -61,15 +61,16 @@
     </a>
 
     <nav class="main-nav" id="mainNav">
-      <a href="#" data-open-panel="panelCatalogoTodo">Catálogo</a>
+      <a href="#" data-open-panel="panelCatalogo">Streaming</a>
+      <a href="#" data-open-panel="panelCombos">Combos</a>
 
       <div class="nav-categories" id="navCategories">
         <button type="button" class="nav-categories-trigger" id="categoriesTrigger" aria-haspopup="true" aria-expanded="false">
-          Categorías <span class="nav-caret" aria-hidden="true">▾</span>
+          Productos <span class="nav-caret" aria-hidden="true">▾</span>
         </button>
         <div class="categories-menu" id="categoriesMenu">
-          <button type="button" class="categories-menu-item" data-open-panel="panelCatalogo">
-            <span class="categories-menu-item-name">Streaming</span>
+          <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="">
+            <span class="categories-menu-item-name">Todos los productos</span>
           </button>
           <button type="button" class="categories-menu-item" data-open-panel="panelProductos" data-filter-category="belleza">
             <span class="categories-menu-item-name">Belleza</span>
@@ -107,8 +108,14 @@
         </div>
       </div>
 
+      <a href="#" data-open-panel="panelOfertas">Ofertas</a>
+      <a href="#" data-open-panel="panelCustomCombo" class="main-nav-mobile-only">Arma tu combo</a>
       <a href="#nosotros">Nosotros</a>
       <a href="#faq">Preguntas</a>
+      <!-- en celulares el cambio de tema vive aquí, para liberar espacio en el header -->
+      <button type="button" class="nav-theme-btn" data-theme-toggle>
+        <span class="nav-theme-btn-label">Modo oscuro</span>
+      </button>
     </nav>
 
     <div class="header-actions">
@@ -417,7 +424,7 @@
     </div>
 
     <div class="about-visual" data-reveal data-reveal-delay="120">
-      <img src="assets/acerca-de-zerodelay.jpg" alt="ZERO DELAY" class="about-mascot" loading="lazy">
+      <img src="assets/acerca-de-zerodelay.jpg" alt="ZERO DELAY" class="about-mascot" loading="lazy" width="700" height="1044">
       <div class="about-stat-card">
         <span class="about-stat-number">600+</span>
         <span class="about-stat-label">Clientes activos</span>
@@ -541,7 +548,7 @@
 
     <div class="faq-visual" data-reveal data-reveal-delay="120">
       <div class="faq-bubble">¿En qué te puedo ayudar hoy? 💜</div>
-      <img src="assets/tienes-dudas-zerodelay.jpg" alt="ZERO DELAY resolviendo dudas" class="faq-mascot" loading="lazy">
+      <img src="assets/tienes-dudas-zerodelay.jpg" alt="ZERO DELAY resolviendo dudas" class="faq-mascot" loading="lazy" width="700" height="700">
     </div>
   </div>
 </section>
@@ -572,7 +579,7 @@
 <footer class="site-footer">
   <div class="footer-inner" data-reveal>
     <div class="footer-brand">
-      <img src="assets/logo-zd.jpg" alt="ZERO DELAY" class="footer-logo" loading="lazy">
+      <img src="assets/logo-zd.jpg" alt="ZERO DELAY" class="footer-logo" loading="lazy" width="420" height="335">
       <p class="footer-tagline">Suscripciones digitales sin demoras.</p>
     </div>
 
@@ -729,8 +736,8 @@
 
     <div class="dox-panel-intro">
       <div class="dox-panel-media">
-        <img src="assets/dox/dox-logo.jpg" alt="Dox Designs Software Development" class="dox-panel-logo" loading="lazy">
-        <img src="assets/dox/dox-founder.jpg" alt="Fundador de Dox Designs" class="dox-panel-founder" loading="lazy">
+        <img src="assets/dox/dox-logo.jpg" alt="Dox Designs Software Development" class="dox-panel-logo" loading="lazy" width="1250" height="1350">
+        <img src="assets/dox/dox-founder.jpg" alt="Fundador de Dox Designs" class="dox-panel-founder" loading="lazy" width="447" height="502">
       </div>
 
       <div class="dox-panel-text">

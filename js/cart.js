@@ -155,14 +155,17 @@ function zdRenderCartDrawer() {
     `).join('')}</div>`;
 
   const total = zdCartTotal(cart);
-  const nonComboCount = cart.filter((item) => !item.name.startsWith('Combo ')).length;
-  const showNudge = nonComboCount >= 2;
+  // el aviso solo aplica a planes de streaming sueltos: los combos y el
+  // descuento de "Arma tu combo" no incluyen productos físicos
+  const streamingIds = new Set(ZD_CATALOG.flatMap((p) => p.variants.map((v) => v.id)));
+  const loosePlansCount = cart.filter((item) => streamingIds.has(item.id)).length;
+  const showNudge = loosePlansCount >= 2;
 
   footer.innerHTML = `
     ${showNudge ? `
       <div class="cart-nudge">
-        <span>💡 ¿Sabías que combinando productos puedes ahorrar?</span>
-        <button class="cart-nudge-btn" id="cartNudgeBtn">Ver combos</button>
+        <span>💡 Tienes ${loosePlansCount} plataformas sueltas: armándolas en un combo te ahorras ${loosePlansCount >= 4 ? '15' : '10'}%.</span>
+        <button class="cart-nudge-btn" id="cartNudgeBtn">Armar mi combo</button>
       </div>
     ` : ''}
     <div class="cart-total-row">
@@ -181,7 +184,7 @@ function zdRenderCartDrawer() {
   if (nudgeBtn) {
     nudgeBtn.addEventListener('click', () => {
       if (typeof window.zdCloseCart === 'function') window.zdCloseCart();
-      if (typeof window.zdOpenPanel === 'function') window.zdOpenPanel('panelCombos');
+      if (typeof window.zdOpenPanel === 'function') window.zdOpenPanel('panelCustomCombo');
     });
   }
 
