@@ -596,6 +596,16 @@ function zdBuildCatalogoTodoGrid() {
    variantes individuales en oferta (agregar `onSale: true` a esa
    variante dentro de ZD_CATALOG en data.js), aparecerán aquí también
    automáticamente, sin tocar este código. ---------- */
+let zdOffersMixed = [];
+const zdOffersFilter = new Set(); // categorías elegidas en el filtro (vacío = todas)
+
+/* ---------- Categoría de cada oferta, para el filtro ---------- */
+function zdOfferCategory(entry) {
+  if (entry.kind === 'combo') return 'combos';
+  if (entry.kind === 'platform') return 'streaming';
+  return entry.data.category.startsWith('relojeria-') ? 'relojeria' : entry.data.category;
+}
+
 function zdBuildOfertasGrid() {
   const grid = document.getElementById('ofertasGrid');
   if (!grid) return;
@@ -619,8 +629,56 @@ function zdBuildOfertasGrid() {
 
   // mezclados entre sí (no por bloques de combos/plataformas/productos),
   // y en un orden distinto cada vez que se abre el panel
-  const mixed = zdShuffleArray([...comboItems, ...discountedPlatforms, ...discountedProducts]);
-  zdRenderProgressive(grid, mixed, (entry) => {
+  zdOffersMixed = zdShuffleArray([...comboItems, ...discountedPlatforms, ...discountedProducts]);
+  zdOffersFilter.clear();
+  zdRenderOffersFilter();
+  zdRenderOffersGrid();
+}
+
+/* ---------- Filtro de Ofertas: una o varias categorías a la vez ---------- */
+function zdRenderOffersFilter() {
+  const wrap = document.getElementById('ofertasFilter');
+  if (!wrap) return;
+  const counts = {};
+  zdOffersMixed.forEach((e) => { const k = zdOfferCategory(e); counts[k] = (counts[k] || 0) + 1; });
+  const labels = { combos: 'Combos', streaming: 'Streaming', relojeria: 'Relojería' };
+  const keys = Object.keys(counts).sort((a, b) => (a === 'combos' ? -1 : b === 'combos' ? 1 : counts[b] - counts[a]));
+
+  wrap.innerHTML = '<span class="offers-filter-label">Filtrar:</span>';
+  const chip = (key, label, count) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'panel-chip';
+    btn.dataset.offer = key;
+    btn.innerHTML = `${label} <span class="panel-chip-count">${count}</span>`;
+    btn.addEventListener('click', () => {
+      if (key === '') zdOffersFilter.clear();
+      else if (zdOffersFilter.has(key)) zdOffersFilter.delete(key);
+      else zdOffersFilter.add(key);
+      zdRenderOffersGrid();
+    });
+    wrap.appendChild(btn);
+  };
+  chip('', 'Todas', zdOffersMixed.length);
+  keys.forEach((k) => chip(k, labels[k] || (window.zdCategoryLabel ? window.zdCategoryLabel(k) : k), counts[k]));
+}
+
+function zdRenderOffersGrid() {
+  const grid = document.getElementById('ofertasGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  document.querySelectorAll('#ofertasFilter .panel-chip').forEach((btn) => {
+    const key = btn.dataset.offer;
+    const on = key === '' ? zdOffersFilter.size === 0 : zdOffersFilter.has(key);
+    btn.classList.toggle('is-active', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+
+  const items = zdOffersFilter.size
+    ? zdOffersMixed.filter((e) => zdOffersFilter.has(zdOfferCategory(e)))
+    : zdOffersMixed;
+  zdRenderProgressive(grid, items, (entry) => {
     if (entry.kind === 'combo') return zdBuildComboCard(entry.data);
     if (entry.kind === 'platform') return zdBuildPlatformCard(entry.data, '#ofertasGrid');
     return typeof window.zdBuildProductCard === 'function' ? window.zdBuildProductCard(entry.data) : null;

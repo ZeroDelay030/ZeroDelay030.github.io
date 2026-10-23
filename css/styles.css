@@ -5384,3 +5384,28 @@ body.has-open-panel .header-back { display: inline-flex; }
   .pd-related .home-row-wrap.is-auto { margin: 0; }
 }
 
+/* Ofertas: filtro por categoría (se pueden marcar varias) */
+.offers-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 calc(-1 * var(--gutter, 16px)) 16px;
+  padding: 0 var(--gutter, 16px) 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.offers-filter::-webkit-scrollbar { display: none; }
+.offers-filter:empty { display: none; }
+
+.offers-filter-label {
+  flex: 0 0 auto;
+  margin-right: 2px;
+  font: 700 0.78rem var(--font-body);
+  color: var(--text-muted);
+}
+
+@media (min-width: 760px) {
+  .offers-filter { flex-wrap: wrap; margin: 0 0 20px; padding: 0; }
+}
+
