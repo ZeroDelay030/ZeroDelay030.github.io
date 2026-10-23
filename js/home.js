@@ -1,9 +1,9 @@
 // ============================================================
 // ZERO DELAY — home.js
 // Inicio (rediseño 2026-10): tarjetas del hero (plataformas con su
-// precio y productos con foto), cuadrícula de categorías, filas que el
-// cliente desliza con el dedo (reemplazan los carruseles automáticos),
-// barra fija inferior del celular y enlaces directos a cada sección o
+// precio y productos con foto), cuadrícula de categorías con imágenes que
+// van rotando, filas que avanzan solas (se frenan al tocarlas y se pueden
+// arrastrar), barra fija inferior del celular y enlaces directos a cada sección o
 // producto (#producto/<id>, #combos, #categoria/<slug>, ...).
 // Todo sale de data.js: al cambiar precios o productos, el inicio se
 // actualiza solo.
@@ -127,44 +127,135 @@ function zdHomeRenderHero() {
   if (combosLink && maxSavings > 0) combosLink.textContent = `Combos: ahorra hasta ${zdFormatCOP(maxSavings)}`;
 }
 
-/* ---------- Cuadrícula de categorías ---------- */
+/* ---------- Cuadrícula de categorías: cada recuadro va mostrando, uno
+   tras otro, fotos o logos de lo que hay adentro ---------- */
+const ZD_HOME_DUOS = [['netflix', 'spotify'], ['disney', 'hbomax'], ['primevideo', 'crunchyroll'], ['chatgpt', 'canva'], ['youtube', 'paramount']];
+
+function zdHomeLogo(id) {
+  const platform = ZD_CATALOG.find((p) => p.id === id);
+  return platform ? platform.logo : null;
+}
+
+function zdHomeCategorySlides(slug) {
+  // solo productos cuya categoría principal es esta (los que llegan por
+  // extraCategories, p. ej. un cepillo secador en Hogar, confunden en la foto)
+  const all = zdHomeProductsOf(slug);
+  const own = all.filter((p) => p.category === slug);
+  const list = own.length >= 3 ? own : all;
+  const featured = ZD_PRODUCTS.find((p) => p.id === ZD_HOME_CATEGORY_PHOTOS[slug]);
+  const rest = [...list.filter((p) => p.salePrice), ...list.filter((p) => !p.salePrice)].filter((p) => p !== featured);
+  return [featured, ...rest].filter(Boolean).slice(0, 6).map((p) => ({ src: zdThumb(p.image) }));
+}
+
+function zdHomeTileSlides(kind) {
+  if (kind === 'streaming') {
+    return ['netflix', 'disney', 'hbomax', 'spotify', 'primevideo', 'chatgpt', 'crunchyroll', 'youtube']
+      .map(zdHomeLogo).filter(Boolean).map((src) => ({ src, cover: true }));
+  }
+  if (kind === 'combos') {
+    return [...ZD_COMBOS].map((c) => ({ c, s: zdComboPricing(c).savings })).sort((a, b) => b.s - a.s)
+      .slice(0, 6).filter((x) => x.c.image).map((x) => ({ src: zdThumb(x.c.image), cover: true }));
+  }
+  if (kind === 'ofertas') {
+    return ZD_PRODUCTS.filter((p) => p.salePrice)
+      .map((p) => ({ p, pct: Math.round((1 - p.salePrice / p.price) * 100) }))
+      .sort((a, b) => b.pct - a.pct).slice(0, 8)
+      .map((x) => ({ src: zdThumb(x.p.image), badge: `-${x.pct}%` }));
+  }
+  if (kind === 'arma') {
+    return ZD_HOME_DUOS.map((pair) => ({ duo: pair.map(zdHomeLogo).filter(Boolean) })).filter((x) => x.duo.length === 2);
+  }
+  return [];
+}
+
+function zdHomeBuildSlide(slide, index) {
+  const el = zdHomeEl('span', `home-cat-slide${slide.cover ? ' home-cat-slide--cover' : ''}${index === 0 ? ' is-active' : ''}`);
+  const addImg = (src, parent) => {
+    const img = zdHomeEl('img');
+    img.alt = '';
+    img.width = 120;
+    img.height = 120;
+    img.decoding = 'async';
+    // solo la primera imagen se descarga de entrada; las demás, justo antes de mostrarse
+    if (index === 0) { img.src = src; img.loading = 'lazy'; } else img.dataset.src = src;
+    parent.appendChild(img);
+  };
+  if (slide.duo) {
+    el.classList.add('home-cat-slide--duo');
+    addImg(slide.duo[0], el);
+    el.appendChild(zdHomeEl('span', 'home-cat-duo-plus', '+'));
+    addImg(slide.duo[1], el);
+  } else {
+    addImg(slide.src, el);
+  }
+  if (slide.badge) el.appendChild(zdHomeEl('span', 'home-cat-badge', slide.badge));
+  return el;
+}
+
+function zdHomeLoadSlide(slide) {
+  if (!slide) return;
+  slide.querySelectorAll('img[data-src]').forEach((img) => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
+}
+
 function zdHomeRenderCategories() {
   const grid = document.getElementById('homeCategoryGrid');
   if (!grid) return;
 
+  const open = (panelId) => () => { window.zdCloseAllPanels(); window.zdOpenPanel(panelId); };
   const digital = [
-    { label: 'Streaming', note: `${ZD_CATALOG.length} plataformas`, img: ZD_CATALOG.find((p) => p.id === 'netflix')?.logo, action: () => { window.zdCloseAllPanels(); window.zdOpenPanel('panelCatalogo'); } },
-    { label: 'Combos', note: `${ZD_COMBOS.length} combos`, img: zdThumb(ZD_COMBOS.find((c) => c.id === 'combo-zero-delay')?.image), action: () => { window.zdCloseAllPanels(); window.zdOpenPanel('panelCombos'); } },
-    { label: 'Ofertas', note: 'combos y productos', icon: '🔥', hot: true, action: () => { window.zdCloseAllPanels(); window.zdOpenPanel('panelOfertas'); } },
-    { label: 'Arma tu combo', note: 'hasta 15% menos', icon: '✨', action: () => { window.zdCloseAllPanels(); window.zdOpenPanel('panelCustomCombo'); } }
+    { label: 'Streaming', note: `${ZD_CATALOG.length} plataformas`, slides: zdHomeTileSlides('streaming'), action: open('panelCatalogo') },
+    { label: 'Combos', note: `${ZD_COMBOS.length} combos`, slides: zdHomeTileSlides('combos'), action: open('panelCombos') },
+    { label: 'Ofertas', note: 'combos y productos', slides: zdHomeTileSlides('ofertas'), hot: true, action: open('panelOfertas') },
+    { label: 'Arma tu combo', note: 'hasta 15% menos', slides: zdHomeTileSlides('arma'), build: true, action: open('panelCustomCombo') }
   ];
   const physical = ZD_HOME_CATEGORY_ORDER
     .map((slug) => ({ slug, count: zdHomeProductsOf(slug).length }))
     .filter((c) => c.count > 0)
-    .map(({ slug, count }) => ({ label: zdCategoryLabel(slug), note: `${count} productos`, img: zdHomeCategoryPhoto(slug), action: () => zdHomeOpenCategory(slug) }));
+    .map(({ slug, count }) => ({ label: zdCategoryLabel(slug), note: `${count} productos`, slides: zdHomeCategorySlides(slug), action: () => zdHomeOpenCategory(slug) }));
 
+  const tiles = [];
   [...digital, ...physical].forEach((cat) => {
-    const tile = zdHomeEl('button', `home-cat${cat.hot ? ' home-cat--hot' : ''}`);
+    const tile = zdHomeEl('button', `home-cat${cat.hot ? ' home-cat--hot' : ''}${cat.build ? ' home-cat--build' : ''}`);
     tile.type = 'button';
     const media = zdHomeEl('span', 'home-cat-media');
-    if (cat.img) {
-      const img = zdHomeEl('img');
-      img.src = cat.img;
-      img.alt = '';
-      img.loading = 'lazy';
-      img.width = 120;
-      img.height = 120;
-      media.appendChild(img);
-    } else {
-      media.textContent = cat.icon || '';
-      media.classList.add('home-cat-media--icon');
-    }
+    cat.slides.forEach((slide, i) => media.appendChild(zdHomeBuildSlide(slide, i)));
     tile.appendChild(media);
     tile.appendChild(zdHomeEl('span', 'home-cat-name', cat.label));
     tile.appendChild(zdHomeEl('span', 'home-cat-note', cat.note));
     tile.addEventListener('click', cat.action);
     grid.appendChild(tile);
+    if (cat.slides.length > 1) tiles.push(media);
   });
+
+  zdHomeStartRotation(grid, tiles);
+}
+
+/* cada recuadro cambia de imagen cada ~3 s, en momentos distintos para que
+   no cambien todos a la vez; solo mientras la cuadrícula está a la vista */
+function zdHomeStartRotation(grid, tiles) {
+  if (!tiles.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  tiles.forEach((media) => zdHomeLoadSlide(media.children[1])); // la siguiente de cada uno, ya lista
+  let inView = false;
+  let tick = 0;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => { inView = entries[0].isIntersecting; }, { threshold: 0.1 }).observe(grid);
+  } else {
+    inView = true;
+  }
+  setInterval(() => {
+    if (!inView || document.body.dataset.topPanel || document.visibilityState !== 'visible') return;
+    tick += 1;
+    tiles.forEach((media, i) => {
+      if ((tick + i) % 4 !== 0) return;
+      const slides = media.children;
+      const current = [...slides].findIndex((s) => s.classList.contains('is-active'));
+      const next = (current + 1) % slides.length;
+      zdHomeLoadSlide(slides[next]);
+      zdHomeLoadSlide(slides[(next + 1) % slides.length]);
+      slides[current].classList.remove('is-active');
+      slides[next].classList.add('is-active');
+    });
+  }, 750);
 }
 
 /* ---------- Filas del inicio: avanzan solas (zdAutoRow, en effects.js);

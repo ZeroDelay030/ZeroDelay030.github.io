@@ -4573,8 +4573,8 @@ body.has-open-panel .header-back { display: inline-flex; }
 .home-cat:hover { border-color: var(--purple); transform: translateY(-2px); }
 
 .home-cat-media {
-  display: grid;
-  place-items: center;
+  position: relative;
+  display: block;
   width: 100%;
   aspect-ratio: 1;
   margin-bottom: 4px;
@@ -4585,12 +4585,58 @@ body.has-open-panel .header-back { display: inline-flex; }
 
 .home-cat-media img { width: 100%; height: 100%; padding: 4px; object-fit: contain; }
 
-.home-cat-media--icon {
-  font-size: 1.7rem;
-  background: linear-gradient(140deg, rgba(176, 0, 255, 0.14), rgba(0, 217, 255, 0.12));
+/* cada recuadro tiene varias imágenes encimadas; home.js va pasando
+   la clase is-active de una a otra y se funden entre sí */
+.home-cat-slide {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 0.7s ease, transform 0.9s ease;
 }
 
-.home-cat--hot .home-cat-media--icon { background: linear-gradient(140deg, rgba(255, 46, 159, 0.22), rgba(176, 0, 255, 0.14)); }
+.home-cat-slide.is-active { opacity: 1; transform: none; }
+.home-cat-slide--cover img { padding: 0; object-fit: cover; }
+
+/* Arma tu combo: dos logos que se suman */
+.home-cat-slide--duo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 6px;
+  background: linear-gradient(140deg, rgba(176, 0, 255, 0.16), rgba(0, 217, 255, 0.14));
+}
+
+.home-cat-slide--duo img {
+  width: 38%;
+  height: auto;
+  aspect-ratio: 1;
+  padding: 0;
+  object-fit: cover;
+  border-radius: 9px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+
+.home-cat-duo-plus { font: 800 0.95rem var(--font-display); color: var(--purple); }
+
+/* Ofertas: el descuento encima de la foto */
+.home-cat-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  background: #c8006b; /* magenta más oscuro: contraste AA con letra blanca pequeña */
+  color: #fff;
+  font: 700 0.6rem var(--font-mono);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-cat-slide { transition: none; transform: none; }
+}
 
 .home-cat-name {
   font-weight: 700;
