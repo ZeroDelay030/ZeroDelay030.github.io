@@ -9,10 +9,28 @@
 let zdProductsCurrentFilter = null; // null = todas las categorías
 let zdProductsQuery = ''; // texto del buscador del panel, ya normalizado
 
-// "relojeria" agrupa Relojería Original y Relojería Réplica (fila y
-// accesos del inicio); el resto de filtros son las categorías de data.js
+/* ---------- ¿Para quién es un perfume? 'dama', 'hombre' o 'unisex'.
+   Usa el campo `gender` de data.js si lo tiene; si no, lo deduce del
+   nombre (así los perfumes nuevos nombrados "1.1 DAMA…", "1.1 HOMBRE…"
+   o "UNISEX…" se clasifican solos). ---------- */
+function zdPerfumeGender(product) {
+  if (product.gender) return product.gender;
+  const name = zdNormalize(product.name);
+  if (/\bunisex\b/.test(name)) return 'unisex';
+  if (/\b(dama|mujer)\b/.test(name)) return 'dama';
+  if (/\b(hombre|caballero)\b/.test(name)) return 'hombre';
+  return null;
+}
+window.zdPerfumeGender = zdPerfumeGender;
+
+// grupos de filtro además de las categorías de data.js:
+// "relojeria" agrupa Relojería Original y Réplica (fila y accesos del inicio),
+// y Perfumería se subdivide en Dama, Hombre y Unisex
 const ZD_PRODUCT_GROUPS = {
-  relojeria: { label: 'Relojería', match: (p) => p.category.startsWith('relojeria-') }
+  relojeria: { label: 'Relojería', match: (p) => p.category.startsWith('relojeria-') },
+  'perfumeria-dama': { label: 'Perfumería Dama', match: (p) => p.category === 'perfumeria' && zdPerfumeGender(p) === 'dama' },
+  'perfumeria-hombre': { label: 'Perfumería Hombre', match: (p) => p.category === 'perfumeria' && zdPerfumeGender(p) === 'hombre' },
+  'perfumeria-unisex': { label: 'Perfumería Unisex', match: (p) => p.category === 'perfumeria' && zdPerfumeGender(p) === 'unisex' }
 };
 
 // textos de confianza de la ficha (aprobados por Manuel el 2026-10-23)
@@ -154,12 +172,30 @@ function zdBuildProductsGrid(resetFilter) {
     if (lead) lead.textContent = 'Perfumes, relojes, tecnología, hogar y más, con envíos a todo el país.';
   }
 
-  // chip activo de la categoría elegida
-  document.querySelectorAll('#panelProductos .panel-chip[data-filter-category]').forEach((chip) => {
-    const on = (chip.dataset.filterCategory || null) === zdProductsCurrentFilter;
+  // chip activo de la categoría elegida (las subcategorías de perfumería
+  // dejan activo también el chip "Perfumería")
+  const isPerfume = !!zdProductsCurrentFilter && zdProductsCurrentFilter.startsWith('perfumeria');
+  document.querySelectorAll('#panelProductos .panel-chips:not(#perfumeGenderChips) > .panel-chip[data-filter-category]').forEach((chip) => {
+    const slug = chip.dataset.filterCategory || null;
+    const on = slug === zdProductsCurrentFilter || (isPerfume && slug === 'perfumeria');
     chip.classList.toggle('is-active', on);
     if (on) chip.setAttribute('aria-current', 'true'); else chip.removeAttribute('aria-current');
   });
+
+  // segunda fila de chips: Dama / Hombre / Unisex (solo en perfumería)
+  const genderRow = document.getElementById('perfumeGenderChips');
+  if (genderRow) {
+    genderRow.hidden = !isPerfume;
+    if (isPerfume) {
+      genderRow.querySelectorAll('.panel-chip').forEach((chip) => {
+        const slug = chip.dataset.filterCategory;
+        const count = ZD_PRODUCTS.filter((p) => zdProductInCategory(p, slug)).length;
+        const countEl = chip.querySelector('.panel-chip-count');
+        if (countEl) countEl.textContent = count;
+        chip.classList.toggle('is-active', slug === zdProductsCurrentFilter);
+      });
+    }
+  }
 
   const emptyEl = zdEnsureEmptyState(grid, 'No encontramos productos que coincidan con tu búsqueda.');
   emptyEl.hidden = items.length !== 0;

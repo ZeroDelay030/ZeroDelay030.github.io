@@ -5288,3 +5288,22 @@ body.has-open-panel .header-back { display: inline-flex; }
      nombre no quede cortado a la mitad */
   body.has-open-panel .brand-name { display: none; }
 }
+
+/* =====================================================
+   REDISEÑO 2026-10 — G) MOVIMIENTO Y FILTROS: Perfumería por público,
+   filas que avanzan solas con reflejo, filtro de Ofertas y respuestas
+   sutiles al tocar
+===================================================== */
+/* Perfumería: Dama / Hombre / Unisex debajo de las categorías */
+.panel-chips--sub { margin-top: 8px; }
+.panel-chips--sub[hidden] { display: none; }
+.panel-chips--sub .panel-chip { padding: 6px 12px; font-size: 0.78rem; }
+
+.panel-chip-count {
+  margin-left: 3px;
+  font: 600 0.7em var(--font-mono);
+  opacity: 0.7;
+}
+
+.panel-chip-count:empty { display: none; }
+

@@ -273,6 +273,9 @@ const ZD_COMBOS = [
      producto (mismo precio/ref): sale una sola vez en buscador y ofertas.
    - sizes: (opcional) tallas, ej. ['S', 'M', 'L']. La ficha muestra un
      selector obligatorio y la talla viaja al carrito y a WhatsApp.
+   - gender: (opcional, solo perfumería) 'dama', 'hombre' o 'unisex'. Si no
+     se pone, se deduce del nombre (DAMA / HOMBRE / UNISEX); úsalo cuando el
+     nombre no lo diga, para que salga en el filtro correcto.
    - price: precio normal; salePrice: precio en oferta (opcional).
      Si hay salePrice, price se muestra tachado.
    - ref: código de referencia de 5 dígitos, único por producto —
@@ -341,6 +344,7 @@ const ZD_PRODUCTS = [
     name: 'HUGO BOSS 1.1 BOTTLE NIGHT',
     category: 'perfumeria',
     categoryLabel: 'Perfumería',
+    gender: 'hombre',
     ref: '52445',
     price: 110000,
     salePrice: 80000,
@@ -353,6 +357,7 @@ const ZD_PRODUCTS = [
     name: 'HUGO BOSS 1.1 BOTTLED',
     category: 'perfumeria',
     categoryLabel: 'Perfumería',
+    gender: 'hombre',
     ref: '29772',
     price: 59000,
     stock: 10,
@@ -619,6 +624,7 @@ const ZD_PRODUCTS = [
     name: '1.1 BOSS INMOTION',
     category: 'perfumeria',
     categoryLabel: 'Perfumería',
+    gender: 'hombre',
     ref: '80599',
     price: 100000,
     salePrice: 86000,
@@ -793,6 +799,7 @@ const ZD_PRODUCTS = [
     name: '1.1 KIT DE LUJO VALENTINO 50ML',
     category: 'perfumeria',
     categoryLabel: 'Perfumería',
+    gender: 'hombre',
     ref: '42134',
     price: 115000,
     stock: 10,
@@ -1020,6 +1027,7 @@ const ZD_PRODUCTS = [
     name: 'ACQUA DI GO PROFONDO GIORGIO ARMANI',
     category: 'perfumeria',
     categoryLabel: 'Perfumería',
+    gender: 'hombre',
     ref: '68417',
     price: 65000,
     stock: 10,
@@ -1720,6 +1728,7 @@ const ZD_PRODUCTS = [
     name: '1.1 ROYAL ONE MILLION ROYAL',
     category: 'perfumeria',
     categoryLabel: 'Perfumería',
+    gender: 'hombre',
     ref: '70009',
     price: 70000,
     stock: 10,
@@ -1859,6 +1868,7 @@ const ZD_PRODUCTS = [
     name: 'SET LACOSTE X3',
     category: 'perfumeria',
     categoryLabel: 'Perfumería',
+    gender: 'hombre',
     ref: '70021',
     price: 110000,
     stock: 10,
@@ -1870,6 +1880,7 @@ const ZD_PRODUCTS = [
     name: 'SET ARMAF YUM YUM 3X 50ML',
     category: 'perfumeria',
     categoryLabel: 'Perfumería',
+    gender: 'dama',
     ref: '70022',
     price: 110000,
     stock: 10,
@@ -1892,6 +1903,7 @@ const ZD_PRODUCTS = [
     name: 'SET CHRISTIAN DIOR SAUVAGE COLLECTION MINIATURES X3',
     category: 'perfumeria',
     categoryLabel: 'Perfumería',
+    gender: 'hombre',
     ref: '70024',
     price: 110000,
     stock: 10,
@@ -1974,6 +1986,7 @@ const ZD_PRODUCTS = [
     name: '1.1 MEN INVICTUS ONIX PACO RABANNE',
     category: 'perfumeria',
     categoryLabel: 'Perfumería',
+    gender: 'hombre',
     ref: '70031',
     price: 75000,
     stock: 10,
@@ -2184,6 +2197,7 @@ const ZD_PRODUCTS = [
     name: 'SET X3 LATTAFA GIVE ME GOURMAND 30ML',
     category: 'perfumeria',
     categoryLabel: 'Perfumería',
+    gender: 'unisex',
     ref: '70049',
     price: 199000,
     salePrice: 129000,
@@ -2196,6 +2210,7 @@ const ZD_PRODUCTS = [
     name: 'SET KHAMRAH X3',
     category: 'perfumeria',
     categoryLabel: 'Perfumería',
+    gender: 'unisex',
     ref: '70050',
     price: 170000,
     salePrice: 129000,
