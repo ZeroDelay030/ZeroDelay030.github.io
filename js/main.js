@@ -64,8 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
       loader.classList.add('is-hidden');
       setTimeout(() => loader.remove(), 650); // se quita del DOM del todo tras la transición
     };
-    window.addEventListener('load', () => setTimeout(hideLoader, 450));
-    setTimeout(hideLoader, 2000); // respaldo: nunca dejarlo pegado más de 2s
+    // se quita apenas la página está lista (antes esperaba a que bajaran
+    // TODAS las imágenes, y en celular eso retrasaba ver el inicio varios segundos)
+    setTimeout(hideLoader, 350);
   }
 
   /* ---------- Menú de categorías: hover en escritorio, toque en móvil
@@ -210,12 +211,15 @@ document.addEventListener('DOMContentLoaded', () => {
     cartDrawer.classList.add('is-open');
     cartOverlay.classList.add('is-active');
     cartDrawer.setAttribute('aria-hidden', 'false');
+    cartDrawer.inert = false;
   }
 
   function closeCart() {
     cartDrawer.classList.remove('is-open');
     cartOverlay.classList.remove('is-active');
     cartDrawer.setAttribute('aria-hidden', 'true');
+    // cerrado no se puede enfocar con el teclado (antes sí, aunque estaba oculto)
+    cartDrawer.inert = true;
   }
 
   window.zdCloseCart = closeCart;
@@ -291,9 +295,13 @@ document.addEventListener('DOMContentLoaded', () => {
      no tiene sentido gastar CPU/GPU dibujando algo que no se ve.
      aurora.js y hero-fx.js escuchan este evento. ---------- */
   function zdSyncPanelObstruction() {
-    const isOpen = document.querySelector('.fullscreen-panel.is-open') !== null;
+    const openPanels = document.querySelectorAll('.fullscreen-panel.is-open');
+    const isOpen = openPanels.length > 0;
+    const topPanel = isOpen ? openPanels[openPanels.length - 1].id : '';
     document.body.classList.toggle('has-open-panel', isOpen);
-    window.dispatchEvent(new CustomEvent('zd:panel-visibility', { detail: { open: isOpen } }));
+    // el panel de encima, para estilos (ej. ocultar la barra inferior en la ficha)
+    document.body.dataset.topPanel = topPanel;
+    window.dispatchEvent(new CustomEvent('zd:panel-visibility', { detail: { open: isOpen, topPanel } }));
   }
 
   function closePanel(id) {
@@ -380,7 +388,9 @@ document.addEventListener('DOMContentLoaded', () => {
      de dejar que el navegador haga el scroll a la sección, para que el
      header siga siendo usable como navegación global incluso dentro de
      un panel de catálogo. ---------- */
-  document.querySelectorAll('#siteHeader a[href^="#"]').forEach((link) => {
+  // (los enlaces que abren un panel no cuentan: si no, cerrarían el panel
+  // que acaban de abrir)
+  document.querySelectorAll('#siteHeader a[href^="#"]:not([data-open-panel])').forEach((link) => {
     link.addEventListener('click', () => {
       if (document.body.classList.contains('has-open-panel')) closeAllPanels();
     });

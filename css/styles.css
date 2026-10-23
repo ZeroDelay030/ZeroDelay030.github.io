@@ -4,6 +4,77 @@
    Tipografía: Orbitron (display) + Manrope (cuerpo) + Space Mono (utilidad)
 ===================================================== */
 /* =====================================================
+   FUENTES PROPIAS (antes se cargaban desde Google y retrasaban el primer
+   dibujo en celular). Licencia SIL OFL 1.1: ver assets/fonts/OFL-*.txt.
+   Solo el subconjunto latino, que cubre todo el español.
+===================================================== */
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('../assets/fonts/orbitron-latin-var.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('../assets/fonts/manrope-latin-var.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/spacemono-latin-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/spacemono-latin-700.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* respaldos del sistema ajustados a las medidas de cada fuente (medidas
+   con herramientas/medir_fuentes.mjs): mientras llega la fuente, el texto
+   ocupa casi el mismo espacio y la página no salta al cambiar de letra */
+@font-face {
+  font-family: 'Orbitron Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Arial');
+  size-adjust: 103.9%;
+  ascent-override: 97.2%;
+  descent-override: 23.1%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Manrope Fallback';
+  src: local('Arial'), local('ArialMT');
+  size-adjust: 99.9%;
+  ascent-override: 107.1%;
+  descent-override: 30%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Space Mono Fallback';
+  src: local('Courier New'), local('CourierNewPSMT');
+  size-adjust: 102%;
+  ascent-override: 109.8%;
+  descent-override: 35.3%;
+  line-gap-override: 0%;
+}
+
+/* =====================================================
    ZERO DELAY — Design Tokens
    Paleta: negro profundo, púrpura neón, cyan neón, plata
    Tipografía: Orbitron (display) + Manrope (cuerpo) + Space Mono (utilidad)
@@ -25,7 +96,7 @@
   --purple: #B000FF;
   --purple-soft: #7A2BD8;
   --cyan: #00D9FF;
-  --cyan-text: #0089A8;
+  --cyan-text: #00738D; /* antes #0089A8 (contraste 3,7:1); ahora 5:1 sobre los fondos claros */
   --magenta: #FF2E9F;
   --silver: #8B8D99;
   --text-primary: #16151D;
@@ -36,9 +107,9 @@
   --success-text: #128A45;
 
   /* Type */
-  --font-display: 'Orbitron', sans-serif;
-  --font-body: 'Manrope', sans-serif;
-  --font-mono: 'Space Mono', monospace;
+  --font-display: 'Orbitron', 'Orbitron Fallback', sans-serif;
+  --font-body: 'Manrope', 'Manrope Fallback', sans-serif;
+  --font-mono: 'Space Mono', 'Space Mono Fallback', monospace;
 
   /* Layout */
   --container-width: 1180px;
@@ -1105,7 +1176,7 @@ body.has-open-panel .header-back { display: inline-flex; }
 
 .testimonial-dots {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
   gap: 0;
   margin-top: 16px;
@@ -1115,7 +1186,8 @@ body.has-open-panel .header-back { display: inline-flex; }
    (mínimo de WCAG 2.2 para objetivos táctiles) */
 .testimonial-dot {
   position: relative;
-  width: 24px;
+  /* 15 puntos deben caber en una fila de un celular de 375 px */
+  width: min(24px, calc((100vw - 32px) / 15));
   height: 24px;
   background: none;
   border: none;
@@ -1281,264 +1353,6 @@ body.has-open-panel .header-back { display: inline-flex; }
   0% { opacity: 1; transform: translate(-50%, 0); }
   60% { opacity: 0; transform: translate(-50%, 14px); }
   100% { opacity: 0; transform: translate(-50%, 14px); }
-}
-
-/* =====================================================
-   CARRUSEL INFINITO (marquee) — plataformas + combos
-   Dos filas en direcciones opuestas, flujo constante ("efecto fuente")
-===================================================== */
-.marquee-section {
-  position: relative;
-  padding: 64px 0 70px;
-  background: linear-gradient(180deg, var(--bg-panel), var(--bg-panel-alt) 60%, var(--bg-panel));
-  border-top: 1px solid var(--border-soft);
-  border-bottom: 1px solid var(--border-soft);
-  overflow: hidden;
-}
-
-.marquee-heading {
-  text-align: center;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.1rem, 2.4vw, 1.5rem);
-  color: var(--text-primary);
-  margin: 0 0 36px;
-  letter-spacing: 0.02em;
-}
-
-.marquee-heading::after {
-  content: '';
-  display: block;
-  width: 70px;
-  height: 3px;
-  margin: 14px auto 0;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--purple), var(--cyan));
-}
-
-.marquee-row {
-  position: relative;
-}
-
-.marquee-section::before,
-.marquee-section::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 140px;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.marquee-section::before {
-  left: 0;
-  background: linear-gradient(90deg, var(--bg-panel-alt), transparent);
-}
-
-.marquee-section::after {
-  right: 0;
-  background: linear-gradient(270deg, var(--bg-panel-alt), transparent);
-}
-
-.marquee-viewport {
-  overflow: hidden;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.marquee-viewport:active { cursor: grabbing; }
-
-.marquee-track {
-  display: flex;
-  gap: 26px;
-  width: max-content;
-  will-change: transform;
-}
-
-.marquee-track.is-dragging .marquee-card {
-  transition: none;
-}
-
-.marquee-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  padding: 26px 22px 22px;
-  background: linear-gradient(150deg, var(--bg-panel-alt), var(--bg-panel));
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-lg);
-  flex-shrink: 0;
-  width: 240px;
-  cursor: pointer;
-  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.marquee-card:hover {
-  border-color: var(--purple);
-  box-shadow: 0 16px 40px rgba(176, 0, 255, 0.28), 0 0 0 1px rgba(0, 217, 255, 0.15) inset;
-  transform: translateY(-5px) scale(1.02);
-}
-
-/* Logos mucho más grandes y dominantes en el carrusel */
-.marquee-card .logo-orbit {
-  width: 176px;
-  height: 176px;
-}
-
-.marquee-card .logo-frame {
-  width: 164px;
-  height: 164px;
-  border-radius: 22px;
-}
-
-.marquee-card .logo-orbit--combo-img {
-  width: 220px;
-  height: 122px;
-}
-
-.marquee-card .logo-orbit--combo-img::before {
-  border-radius: 20px;
-}
-
-.marquee-card .logo-frame--combo-img {
-  width: 208px;
-  height: 112px;
-  border-radius: 16px;
-}
-
-.marquee-card .logo-frame--text span {
-  font-size: 0.85rem;
-}
-
-/* Efecto exclusivo del carrusel: un destello de luz que recorre
-   el logo periódicamente (distinto al resplandor del catálogo) */
-.marquee-card .logo-frame {
-  position: relative;
-  overflow: hidden;
-}
-
-.marquee-card .logo-frame::after {
-  content: '';
-  position: absolute;
-  top: -60%;
-  left: -60%;
-  width: 60%;
-  height: 220%;
-  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.75) 50%, rgba(0, 217, 255, 0.4) 58%, transparent 75%);
-  transform: translateX(-160%) rotate(0deg);
-  animation: marqueeShine 3.4s ease-in-out infinite;
-  pointer-events: none;
-}
-
-.marquee-card:nth-child(3n+2) .logo-frame::after { animation-delay: 0.6s; }
-.marquee-card:nth-child(3n) .logo-frame::after { animation-delay: 1.2s; }
-
-@keyframes marqueeShine {
-  0% { transform: translateX(-160%); }
-  35% { transform: translateX(260%); }
-  100% { transform: translateX(260%); }
-}
-
-.marquee-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  text-align: center;
-}
-
-.marquee-name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: var(--text-primary);
-  line-height: 1.25;
-  width: 100%;
-  white-space: normal;
-  overflow-wrap: break-word;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.marquee-price {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  color: var(--cyan-text);
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-@media (max-width: 640px) {
-  .marquee-section { padding: 46px 0 50px; }
-  .marquee-section::before,
-  .marquee-section::after { width: 50px; }
-  .marquee-track { gap: 16px; }
-  .marquee-card { width: 190px; padding: 20px 16px 18px; gap: 14px; }
-  .marquee-card .logo-orbit { width: 132px; height: 132px; }
-  .marquee-card .logo-frame { width: 122px; height: 122px; border-radius: 18px; }
-  .marquee-card .logo-orbit--combo-img { width: 160px; height: 90px; }
-  .marquee-card .logo-frame--combo-img { width: 150px; height: 82px; border-radius: 14px; }
-  .marquee-name { font-size: 0.88rem; }
-  .marquee-price { font-size: 0.78rem; }
-}
-
-@media (max-width: 640px) {
-  .marquee-section::before,
-  .marquee-section::after { width: 40px; }
-  .marquee-card { padding: 10px 18px 10px 10px; gap: 10px; }
-  .marquee-logo { width: 42px; height: 42px; }
-  .marquee-logo--rect { width: 64px; height: 36px; }
-  .marquee-name { font-size: 0.82rem; }
-}
-.speed-divider {
-  position: relative;
-  height: 64px;
-  overflow: hidden;
-}
-
-.speed-line {
-  position: absolute;
-  height: 2px;
-  border-radius: 2px;
-  opacity: 0.7;
-  transform: scaleX(0);
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.speed-line--1 {
-  width: 40%;
-  top: 20px;
-  left: -10%;
-  background: linear-gradient(90deg, transparent, var(--purple), transparent);
-  transform-origin: left center;
-}
-
-.speed-line--2 {
-  width: 25%;
-  top: 34px;
-  left: -30%;
-  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-  transform-origin: left center;
-  transition-delay: 0.1s;
-}
-
-.speed-line--3 {
-  width: 18%;
-  top: 46px;
-  left: -50%;
-  background: linear-gradient(90deg, transparent, var(--silver), transparent);
-  transform-origin: left center;
-  transition-delay: 0.2s;
-}
-
-.speed-divider.is-drawn .speed-line {
-  transform: scaleX(1);
 }
 
 /* =====================================================
@@ -2358,7 +2172,7 @@ body.has-open-panel .header-back { display: inline-flex; }
 .btn-pd:hover { transform: translateY(-2px); }
 
 .btn-pd--whatsapp {
-  background: #25D366;
+  background: #0F8040; /* verde WhatsApp oscurecido: texto blanco con contraste 5:1 (con #25D366 era 1,9:1) */
   color: #fff;
   box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
 }
@@ -3583,7 +3397,8 @@ body.has-open-panel .header-back { display: inline-flex; }
 .cart-whatsapp-btn {
   width: 100%;
   text-align: center;
-  background: linear-gradient(100deg, #1fbd5a, #17c964);
+  /* mismo verde con contraste AA que los demás botones de WhatsApp */
+  background: linear-gradient(100deg, #0F8040, #13914A);
   box-shadow: 0 0 20px rgba(23, 201, 100, 0.3);
   border: none;
 }
@@ -3694,6 +3509,13 @@ body.has-open-panel .header-back { display: inline-flex; }
   justify-content: center;
   overflow: hidden;
   transition: opacity 0.6s ease, visibility 0.6s ease;
+  /* destello breve que se va solo, sin esperar al JavaScript ni a las
+     imágenes (antes tapaba el inicio varios segundos en celular) */
+  animation: zdLoaderOut 0.35s ease 0.45s forwards;
+}
+
+@keyframes zdLoaderOut {
+  to { opacity: 0; visibility: hidden; }
 }
 
 .zd-loader-grid {
@@ -4466,6 +4288,967 @@ body.has-open-panel .header-back { display: inline-flex; }
     border: 2px solid var(--text-primary);
     flex-shrink: 0;
   }
+}
+
+/* texto que solo leen los lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =====================================================
+   REDISEÑO 2026-10 — márgenes laterales (16px en celular)
+===================================================== */
+.section-inner { --gutter: 24px; padding-left: var(--gutter); padding-right: var(--gutter); }
+
+@media (max-width: 640px) {
+  .section-inner { --gutter: 16px; }
+  .section { padding: 56px 0; }
+}
+
+/* =====================================================
+   REDISEÑO 2026-10 — B) HERO: plataformas con precio y productos con foto
+===================================================== */
+.hero.hero--v2 {
+  min-height: auto;
+  align-items: stretch;
+  padding: calc(var(--header-h) + 22px) 16px 26px;
+}
+
+.hero--v2 .hero-content-scrim {
+  background: linear-gradient(180deg, rgba(7, 7, 12, 0.3) 0%, rgba(7, 7, 12, 0.62) 55%, rgba(7, 7, 12, 0.78) 100%);
+}
+
+.hero-content.hero-content--v2 {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  text-align: left;
+  display: grid;
+  gap: 16px;
+}
+
+.hero-title-v2 {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.4rem, 6.2vw, 2.8rem);
+  line-height: 1.16;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+}
+
+.hero-sub-v2 {
+  margin: 0 0 16px;
+  color: #C9C6DA;
+  font-size: 1rem;
+}
+
+.hero-actions-v2 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.hero-actions-v2 .btn--hero-main {
+  justify-content: center;
+  padding: 15px 28px;
+}
+
+.hero-combos-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 46, 159, 0.55);
+  background: rgba(255, 46, 159, 0.1);
+  color: #FFD3EA;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-align: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.hero-combos-link:hover { background: rgba(255, 46, 159, 0.2); border-color: var(--magenta); }
+
+.hero-trust-v2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  color: #D9D6EA;
+  font-size: 0.8rem;
+}
+
+.hero-trust-v2 b { color: #fff; }
+
+.hero-trust-v2 li::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  vertical-align: 1px;
+}
+
+.hero-showcase { display: grid; gap: 8px; min-width: 0; }
+
+/* recuadro plateado de la marca, en versión compacta */
+.hero-brandmark.hero-brandmark--compact {
+  justify-self: start;
+  gap: 12px;
+  margin: 0 0 14px;
+  padding: 10px 18px;
+  border-width: 2px;
+  border-radius: 16px;
+}
+
+.hero-brandmark--compact .hero-brandmark-logo { width: 36px; height: 36px; border-radius: 10px; }
+.hero-brandmark--compact .hero-brandmark-name { font-size: clamp(1.25rem, 6.4vw, 1.7rem); }
+
+@media (min-width: 1024px) {
+  .hero-brandmark.hero-brandmark--compact { gap: 16px; margin-bottom: 22px; padding: 14px 26px; }
+  .hero-brandmark--compact .hero-brandmark-logo { width: 52px; height: 52px; border-radius: 13px; }
+  .hero-brandmark--compact .hero-brandmark-name { font-size: 2.1rem; }
+}
+
+/* celular y tablet: título → plataformas y productos con precio → botones.
+   Así el precio se ve en la primera pantalla (en escritorio van lado a lado). */
+@media (max-width: 1023px) {
+  .hero-copy { display: contents; }
+  .hero-brandmark.hero-brandmark--compact { order: 0; margin-bottom: -4px; }
+  .hero-title-v2 { order: 1; margin-bottom: 0; }
+  .hero-sub-v2 { order: 2; margin: -8px 0 0; }
+  .hero-showcase { order: 3; }
+  .hero-actions-v2 { order: 4; }
+  .hero-trust-v2 { order: 5; margin-top: 0; }
+}
+
+.hero-group-label {
+  margin: 4px 0 0;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #BDB9D3;
+}
+
+.hero-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+/* espacio reservado mientras home.js llena las tarjetas (sin esto la
+   página saltaba al cargar, sobre todo en escritorio) */
+.hero-showcase { container-type: inline-size; }
+.hero-tiles--platforms { min-height: 232px; }
+.hero-tiles--products { min-height: calc((100cqw - 16px) / 3 * 0.75 + 44px); }
+
+.hero-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  padding: 9px 6px 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  color: #fff;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+
+.hero-tile:hover { border-color: var(--cyan); background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); }
+
+.hero-tile img {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 3px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.hero-tile-name {
+  font-weight: 700;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.hero-tile-note { font-size: 0.66rem; color: #A9A6BD; }
+
+.hero-tile-price {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--cyan);
+}
+
+.hero-tile--product { padding: 0 0 8px; overflow: hidden; }
+
+.hero-tile--product img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 5px;
+  padding: 6px;
+  border-radius: 13px 13px 0 0;
+  object-fit: contain;
+  background: #fff;
+}
+
+@media (min-width: 760px) {
+  .hero-tiles--platforms { grid-template-columns: repeat(6, minmax(0, 1fr)); min-height: 112px; }
+  .hero-actions-v2 { flex-direction: row; align-items: center; }
+}
+
+@media (min-width: 1024px) {
+  .hero.hero--v2 { padding: calc(var(--header-h) + 56px) 24px 60px; }
+  .hero-content.hero-content--v2 { grid-template-columns: 1fr 1.05fr; align-items: center; gap: 48px; }
+  .hero-tiles--platforms { grid-template-columns: repeat(3, minmax(0, 1fr)); min-height: 257px; }
+  .hero-tile:not(.hero-tile--product) img { width: 44px; height: 44px; }
+  .hero-tile-name { font-size: 0.9rem; }
+  .hero-tile-price { font-size: 0.92rem; }
+  .hero-sub-v2 { font-size: 1.1rem; }
+}
+
+/* =====================================================
+   REDISEÑO 2026-10 — C) INICIO: categorías, filas deslizables, cómo comprar
+===================================================== */
+.home-section-title {
+  margin: 0 0 14px;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 4.6vw, 1.55rem);
+}
+
+.section.home-categories { padding: 28px 0 6px; }
+
+.home-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+/* mientras home.js arma categorías y filas, se reserva su espacio: así
+   lo que va debajo no aparece arriba un instante y luego salta */
+.home-cat-grid:empty { min-height: 360px; }
+.home-rows:empty { min-height: 100vh; }
+
+@media (min-width: 640px) {
+  .home-cat-grid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px; }
+}
+
+.home-cat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  padding: 7px 4px 9px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+
+.home-cat:hover { border-color: var(--purple); transform: translateY(-2px); }
+
+.home-cat-media {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1;
+  margin-bottom: 4px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.home-cat-media img { width: 100%; height: 100%; padding: 4px; object-fit: contain; }
+
+.home-cat-media--icon {
+  font-size: 1.7rem;
+  background: linear-gradient(140deg, rgba(176, 0, 255, 0.14), rgba(0, 217, 255, 0.12));
+}
+
+.home-cat--hot .home-cat-media--icon { background: linear-gradient(140deg, rgba(255, 46, 159, 0.22), rgba(176, 0, 255, 0.14)); }
+
+.home-cat-name {
+  font-weight: 700;
+  font-size: 0.72rem;
+  line-height: 1.15;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.home-cat-note { font-size: 0.62rem; color: var(--text-muted); text-align: center; }
+
+/* filas: el cliente las desliza con el dedo; nada se mueve solo */
+.home-rows { padding: 4px 0 10px; }
+.home-row { padding: 18px 0 4px; }
+
+.home-row-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.home-row-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.02rem, 4.2vw, 1.4rem);
+}
+
+.home-row-more {
+  padding: 6px 0;
+  background: none;
+  border: none;
+  color: var(--purple);
+  font: 700 0.86rem var(--font-body);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.home-row-wrap { position: relative; }
+
+.home-row-track {
+  display: flex;
+  gap: 10px;
+  margin: 0 calc(-1 * var(--gutter, 16px));
+  padding: 2px var(--gutter, 16px) 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: var(--gutter, 16px);
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.home-row-track::-webkit-scrollbar { display: none; }
+
+.home-row-track > * { flex: 0 0 44%; scroll-snap-align: start; }
+.home-row-track > .catalog-card--combo-v2 { flex-basis: 72%; }
+
+@media (min-width: 640px) {
+  .home-row-track > * { flex-basis: 210px; }
+  .home-row-track > .catalog-card--combo-v2 { flex-basis: 290px; }
+}
+
+.home-row-arrow { display: none; }
+
+@media (hover: hover) and (min-width: 760px) {
+  .home-row-arrow {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    top: 36%;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border-soft);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  }
+  .home-row-arrow--prev { left: -12px; }
+  .home-row-arrow--next { right: -12px; }
+}
+
+.home-build-combo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 16px;
+  text-align: left;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(176, 0, 255, 0.3);
+  background: linear-gradient(110deg, rgba(176, 0, 255, 0.1), rgba(0, 217, 255, 0.1));
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.home-build-combo b { display: block; font-family: var(--font-display); font-size: 0.95rem; }
+.home-build-combo span span { font-size: 0.82rem; color: var(--text-muted); }
+.home-build-combo-icon { font-size: 1.6rem; }
+
+.section.how-to-buy { padding: 26px 0 30px; }
+
+.how-to-buy-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.how-to-buy-steps li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px 6px;
+  text-align: center;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+}
+
+.how-to-buy-num {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-bottom: 4px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple), var(--purple-soft));
+  color: #fff;
+  font: 700 0.8rem var(--font-mono);
+}
+
+.how-to-buy-steps b { font-size: 0.88rem; }
+.how-to-buy-steps li > span:not(.how-to-buy-num) { font-size: 0.72rem; line-height: 1.3; color: var(--text-muted); }
+
+.how-to-buy-pay {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.how-to-buy-pay b {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-panel);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+}
+
+.about-more { margin-top: 14px; }
+.about-more summary { padding: 8px 0; color: var(--purple); font-weight: 700; cursor: pointer; }
+.about-more p { margin-top: 10px; }
+
+.section.dox-mini { padding: 8px 0 40px; }
+
+.dox-mini-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px;
+  text-align: left;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-soft);
+  background: var(--bg-panel);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.dox-mini-card:hover { border-color: var(--purple); }
+
+.dox-mini-logo {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: contain;
+  background: #fff;
+}
+
+.dox-mini-text b { display: block; font-size: 0.95rem; }
+.dox-mini-text span { font-size: 0.82rem; color: var(--text-muted); }
+
+/* =====================================================
+   REDISEÑO 2026-10 — C4) BARRA FIJA INFERIOR DEL CELULAR
+===================================================== */
+.zd-bottom-bar { display: none; }
+
+@media (min-width: 861px) {
+  /* escritorio: WhatsApp a la derecha, sin tapar el texto; "subir" encima */
+  .whatsapp-float { left: auto; right: 24px; }
+  .back-to-top { bottom: 90px; }
+}
+
+@media (max-width: 860px) {
+  .zd-bottom-bar {
+    display: flex;
+    gap: 8px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 330;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+    background: rgba(var(--void-rgb), 0.94);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .zd-bottom-bar-wa {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    height: 46px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #0F8040;
+    color: #fff;
+    font: 800 0.92rem var(--font-body);
+  }
+
+  .zd-bottom-bar-wa svg { width: 20px; height: 20px; }
+
+  .zd-bottom-bar-cart {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 46px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(100deg, var(--purple), var(--purple-soft));
+    color: #fff;
+    font: 800 0.92rem var(--font-body);
+    cursor: pointer;
+  }
+
+  .zd-bottom-bar-cart.has-items { justify-content: space-between; }
+  .zd-bottom-bar-total { font-family: var(--font-mono); }
+
+  body { padding-bottom: 66px; }
+  .whatsapp-float,
+  .back-to-top { display: none !important; }
+
+  /* en la ficha manda su propia barra de compra */
+  body[data-top-panel="panelProductDetail"] .zd-bottom-bar { display: none; }
+
+  .custom-combo-float-bar { bottom: calc(74px + env(safe-area-inset-bottom)); }
+  .panel-body { padding-bottom: 110px; }
+}
+
+/* =====================================================
+   REDISEÑO 2026-10 — D1) PANELES: encabezado compacto y accesos fijos arriba
+===================================================== */
+.panel-body { padding-top: 22px; }
+.panel-head { margin-bottom: 12px; }
+.panel-title { margin: 0 0 4px; font-size: clamp(1.25rem, 5.4vw, 2.2rem); }
+.panel-lead { margin: 0; font-size: 0.92rem; }
+
+/* "top: 0" ya queda justo debajo del header: el panel reserva ese alto
+   con su padding-top y el sticky se mide desde ahí */
+.panel-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 calc(-1 * var(--gutter, 16px)) 14px;
+  padding: 10px var(--gutter, 16px) 9px;
+  background: rgba(var(--void-rgb), 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.panel-toolbar .panel-search-wrap { margin: 0; max-width: none; }
+.panel-toolbar .panel-search-input { padding-top: 10px; padding-bottom: 10px; }
+
+.panel-chips {
+  display: flex;
+  gap: 6px;
+  margin: 0 calc(-1 * var(--gutter, 16px));
+  padding: 0 var(--gutter, 16px) 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.panel-chips::-webkit-scrollbar { display: none; }
+
+.panel-chip {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-panel);
+  color: var(--text-primary);
+  font: 600 0.82rem var(--font-body);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.panel-chip:hover { border-color: var(--purple); }
+
+.panel-chip.is-active {
+  border-color: transparent;
+  background: linear-gradient(100deg, var(--purple), var(--purple-soft));
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .panel-body { padding-top: 14px; }
+  .fullscreen-panel .section-eyebrow { display: none; }
+  .panel-lead { font-size: 0.85rem; }
+
+  .custom-combo-cta { gap: 10px; padding: 10px 14px; margin-bottom: 14px; }
+  .custom-combo-cta-title { font-size: 0.92rem; }
+  .custom-combo-cta-desc { font-size: 0.78rem; }
+  .custom-combo-cta-icon { font-size: 1.3rem; }
+}
+
+@media (min-width: 760px) {
+  .panel-toolbar { flex-direction: row; align-items: center; gap: 14px; margin: 0 0 22px; padding: 12px 0; }
+  .panel-toolbar .panel-search-wrap { flex: 0 0 320px; }
+  .panel-chips { flex-wrap: wrap; margin: 0; padding: 0; }
+}
+
+.zd-more-btn {
+  display: block;
+  margin: 20px auto 0;
+  padding: 12px 26px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-panel);
+  color: var(--text-primary);
+  font: 700 0.9rem var(--font-body);
+  cursor: pointer;
+}
+
+.zd-more-btn[hidden] { display: none; }
+
+/* =====================================================
+   REDISEÑO 2026-10 — D2) STREAMING: precio "desde" y planes a la vista
+===================================================== */
+.catalog-grid--plans { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+
+.catalog-card--plans {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+}
+
+.catalog-card--plans:hover { transform: none; }
+
+.plan-card-head { display: flex; align-items: center; gap: 12px; }
+
+.plan-card-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--bg-panel-alt);
+  font-family: var(--font-display);
+}
+
+.plan-card-logo img { width: 100%; height: 100%; object-fit: cover; }
+
+.plan-card-titles { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.plan-card-titles .catalog-card-name { margin: 0; font-size: 1rem; }
+
+.plan-card-from {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--cyan-text);
+}
+
+.catalog-card--plans .catalog-new-badge { position: static; align-self: flex-start; margin-left: auto; }
+.catalog-card--plans .plan-card-list { padding: 0; gap: 6px; }
+.catalog-card--plans .variant-row { opacity: 1; transform: none; padding: 8px 10px 8px 12px; }
+.catalog-card--plans .variant-add-btn { min-height: 36px; padding: 8px 14px; }
+.catalog-card--plans .catalog-cross-badge { width: 100%; margin: 0; }
+
+/* en grillas mezcladas (Ofertas, Todo) la tarjeta de planes ocupa más ancho */
+.catalog-grid:not(.catalog-grid--plans) .catalog-card--plans { grid-column: 1 / -1; }
+
+@media (min-width: 760px) {
+  .catalog-grid:not(.catalog-grid--plans) .catalog-card--plans { grid-column: span 2; }
+}
+
+/* =====================================================
+   REDISEÑO 2026-10 — D3) COMBOS: lo que incluye, precio suelto tachado y ahorro
+===================================================== */
+@media (max-width: 640px) {
+  .catalog-grid:not(.catalog-grid--plans) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+}
+
+.catalog-card--combo-v2 { display: flex; flex-direction: column; }
+
+.combo-card-media {
+  position: relative;
+  aspect-ratio: 480 / 262;
+  background: var(--bg-panel-alt);
+}
+
+.combo-card-media img { width: 100%; height: 100%; object-fit: cover; }
+.combo-card-media .catalog-new-badge { top: 8px; left: 8px; }
+
+.combo-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px 12px;
+}
+
+.combo-card-body .catalog-card-name { margin: 0; font-size: 0.95rem; line-height: 1.2; }
+.catalog-card--combo-v2 .combo-mini-logos { justify-content: flex-start; margin-top: 0; }
+.catalog-card--combo-v2 .combo-includes { padding: 0; gap: 2px; }
+.catalog-card--combo-v2 .combo-includes li { padding-left: 12px; font-size: 0.74rem; line-height: 1.3; }
+.catalog-card--combo-v2 .combo-includes li::before { top: 6px; width: 5px; height: 5px; }
+
+.combo-card-prices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.combo-card-was {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.catalog-card--combo-v2 .catalog-card-price { font-weight: 700; font-size: 1.05rem; }
+.catalog-card--combo-v2 .combo-savings-badge { align-self: flex-start; margin: 0; }
+.catalog-card--combo-v2 .variant-add-btn--combo { width: 100%; margin: 6px 0 0; }
+
+.catalog-card.is-highlighted {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(176, 0, 255, 0.28);
+}
+
+/* =====================================================
+   REDISEÑO 2026-10 — D4) FICHA DE PRODUCTO
+===================================================== */
+.pd-price-off {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.pd-qty { margin: 4px 0 16px; }
+
+.pd-qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  background: var(--bg-panel);
+}
+
+.pd-qty-btn {
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.pd-qty-stepper .pd-qty-input {
+  width: 56px;
+  height: 44px;
+  margin: 0;
+  border: none;
+  border-left: 1px solid var(--border-soft);
+  border-right: 1px solid var(--border-soft);
+  border-radius: 0;
+  background: transparent;
+  text-align: center;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.pd-qty-stepper .pd-qty-input::-webkit-inner-spin-button,
+.pd-qty-stepper .pd-qty-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+.pd-benefits {
+  display: grid;
+  gap: 6px;
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  list-style: none;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-panel);
+  font-size: 0.86rem;
+  color: var(--text-primary);
+}
+
+.pd-share-btn {
+  max-width: 100%;
+  margin-top: 12px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px dashed var(--border-soft);
+  background: none;
+  color: var(--text-primary);
+  font: 600 0.85rem var(--font-body);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.pd-description { margin-top: 18px; }
+
+.pd-description.is-collapsed {
+  max-height: 220px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
+  mask-image: linear-gradient(180deg, #000 70%, transparent);
+}
+
+.pd-desc-toggle {
+  margin-top: 6px;
+  padding: 6px 0;
+  background: none;
+  border: none;
+  color: var(--purple);
+  font: 700 0.9rem var(--font-body);
+  cursor: pointer;
+}
+
+.pd-related { margin-top: 32px; }
+.pd-related[hidden] { display: none; }
+
+/* barra de compra fija (celular): va dentro del panel con "sticky", porque
+   el panel tiene transform y un "fixed" adentro se desplazaría con él */
+.pd-sticky-bar { display: none; }
+
+@media (max-width: 860px) {
+  .pd-sticky-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: sticky;
+    bottom: 0;
+    z-index: 6;
+    margin: 18px calc(-1 * var(--gutter, 16px)) 0;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(var(--void-rgb), 0.96);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--border-soft);
+    transform: translateY(110%);
+    transition: transform 0.25s ease;
+  }
+
+  .pd-sticky-bar.is-visible { transform: translateY(0); }
+
+  /* sin espacio vacío debajo: así la barra termina pegada al borde al final de la ficha */
+  #productDetailBody.panel-body { padding-bottom: 0; }
+
+  .pd-sticky-price {
+    margin-right: auto;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--cyan-text);
+  }
+
+  .pd-sticky-cart {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--border-soft);
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .pd-sticky-cart svg { width: 20px; height: 20px; }
+  .pd-sticky-cart.is-added { border-color: transparent; background: #17c964; color: #fff; }
+
+  .pd-sticky-wa {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 46px;
+    padding: 0 20px;
+    border-radius: 999px;
+    background: #0F8040;
+    color: #fff;
+    font-weight: 800;
+  }
+
+  .pd-sticky-wa svg { width: 18px; height: 18px; }
+}
+
+/* =====================================================
+   REDISEÑO 2026-10 — D5) CARRITO: fotos y datos de pago y envío
+===================================================== */
+.cart-item { justify-content: flex-start; }
+.cart-item .cart-item-info { flex: 1; min-width: 0; }
+
+.cart-item-thumb {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: contain;
+  background: #fff;
+}
+
+.cart-item-thumb--icon { display: grid; place-items: center; font-size: 1.4rem; background: var(--bg-panel); }
+
+.cart-info {
+  margin: 10px 0 0;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--text-muted);
 }
 
 /* =====================================================
