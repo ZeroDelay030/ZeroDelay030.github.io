@@ -36,6 +36,42 @@ function zdSaveCart(cart) {
   }
 }
 
+/* ---------- Limpiar carritos guardados: planes retirados y precios viejos de combos ---------- */
+// Planes que ya no se venden. El nombre es el que se guardó en el carrito o en un combo personalizado.
+const ZD_REMOVED_VARIANTS = [
+  { id: 'netflix-13', name: 'Netflix — 13 días' }
+];
+
+function zdSanitizeSavedCart() {
+  const cart = zdGetCart();
+  if (!cart.length) return;
+
+  const removedIds = ZD_REMOVED_VARIANTS.map((v) => v.id);
+  const removedNames = ZD_REMOVED_VARIANTS.map((v) => v.name);
+  let changed = false;
+
+  const clean = cart.filter((item) => {
+    const isRemovedPlan = removedIds.includes(item.id);
+    // un combo personalizado con un plan retirado se quita completo (su descuento ya no aplica)
+    const hasRemovedPlan = Array.isArray(item.breakdown) && item.breakdown.some((b) => removedNames.includes(b.name));
+    if (isRemovedPlan || hasRemovedPlan) changed = true;
+    return !isRemovedPlan && !hasRemovedPlan;
+  });
+
+  // los combos fijos toman siempre su precio actual
+  clean.forEach((item) => {
+    const combo = ZD_COMBOS.find((c) => c.id === item.id);
+    if (combo && item.price !== combo.price) {
+      item.price = combo.price;
+      changed = true;
+    }
+  });
+
+  if (changed) zdSaveCart(clean);
+}
+
+zdSanitizeSavedCart();
+
 let zdPrevBadgeQty = 0;
 
 function zdUpdateCartBadges() {

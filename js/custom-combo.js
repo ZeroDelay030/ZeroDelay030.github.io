@@ -57,7 +57,8 @@ function zdSaveCustomComboSelection() {
 function zdLoadCustomComboSelection() {
   try {
     const raw = localStorage.getItem(ZD_CUSTOM_COMBO_STORAGE_KEY);
-    zdCustomComboSelection = raw ? JSON.parse(raw) : [];
+    // descartar planes que ya no existen en el catálogo (ej. un plan retirado)
+    zdCustomComboSelection = (raw ? JSON.parse(raw) : []).filter((item) => zdFindPlatformVariant(item.variantId));
   } catch (e) {
     zdCustomComboSelection = [];
   }
