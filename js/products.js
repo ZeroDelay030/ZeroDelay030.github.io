@@ -377,7 +377,7 @@ function zdRenderProductDetail(productId) {
 
     <section class="pd-related" id="pdRelatedSection" aria-label="Productos relacionados">
       <div class="home-row-head"><h2 class="home-row-title">También te puede gustar</h2></div>
-      <div class="home-row-track" id="pdRelated"></div>
+      <div class="home-row-wrap" id="pdRelatedWrap"><div class="home-row-track" id="pdRelated"></div></div>
     </section>
 
     <div class="pd-sticky-bar" id="pdStickyBar">
@@ -519,8 +519,9 @@ function zdRenderProductDetail(productId) {
     .sort((a, b) => (b.salePrice ? 1 : 0) - (a.salePrice ? 1 : 0))
     .slice(0, 10);
   const relatedTrack = document.getElementById('pdRelated');
-  if (related.length) related.forEach((p) => relatedTrack.appendChild(zdBuildProductCard(p)));
-  else document.getElementById('pdRelatedSection').hidden = true;
+  if (!related.length) document.getElementById('pdRelatedSection').hidden = true;
+  else if (typeof window.zdAutoRow === 'function') window.zdAutoRow(document.getElementById('pdRelatedWrap'), relatedTrack, related, zdBuildProductCard, { panelId: 'panelProductDetail' });
+  else related.forEach((p) => relatedTrack.appendChild(zdBuildProductCard(p)));
 
   // barra fija inferior (celular): aparece cuando los botones de compra salen de la vista
   const stickyBar = document.getElementById('pdStickyBar');

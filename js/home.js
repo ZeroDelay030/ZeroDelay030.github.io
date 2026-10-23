@@ -167,7 +167,8 @@ function zdHomeRenderCategories() {
   });
 }
 
-/* ---------- Filas deslizables (el cliente las mueve; nada se mueve solo) ---------- */
+/* ---------- Filas del inicio: avanzan solas (zdAutoRow, en effects.js);
+   se frenan con el mouse y se pueden arrastrar con el dedo ---------- */
 function zdHomePickProducts(list) {
   // primero los que están en oferta, en un orden distinto en cada visita
   const onSale = zdShuffleArray(list.filter((p) => p.salePrice));
@@ -190,16 +191,20 @@ function zdHomeBuildRow({ title, items, build, moreLabel, onMore, extra }) {
 
   const wrap = zdHomeEl('div', 'home-row-wrap');
   const track = zdHomeEl('div', 'home-row-track');
-  items.forEach((item) => { const card = build(item); if (card) track.appendChild(card); });
   wrap.appendChild(track);
+  let ctrl = null;
+  if (typeof window.zdAutoRow === 'function') ctrl = window.zdAutoRow(wrap, track, items, build);
+  else items.forEach((item) => { const card = build(item); if (card) track.appendChild(card); });
 
-  // flechas para quien navega con mouse (en celular se desliza con el dedo)
+  // flechas para quien navega con mouse (en celular se arrastra con el dedo)
   ['prev', 'next'].forEach((dir) => {
     const arrow = zdHomeEl('button', `home-row-arrow home-row-arrow--${dir}`, dir === 'prev' ? '‹' : '›');
     arrow.type = 'button';
     arrow.setAttribute('aria-label', dir === 'prev' ? `Anteriores en ${title}` : `Siguientes en ${title}`);
     arrow.addEventListener('click', () => {
-      track.scrollBy({ left: (dir === 'prev' ? -1 : 1) * track.clientWidth * 0.85, behavior: 'smooth' });
+      const dist = wrap.clientWidth * 0.8;
+      if (ctrl) ctrl.nudge(dir === 'prev' ? dist : -dist);
+      else track.scrollBy({ left: dir === 'prev' ? -dist : dist, behavior: 'smooth' });
     });
     wrap.appendChild(arrow);
   });

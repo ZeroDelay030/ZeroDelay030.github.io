@@ -239,6 +239,140 @@
   }
   window.zdBumpCartIcon = bumpCartIcon;
 
+  /* ---------- Filas que avanzan solas (inicio y "También te puede gustar") ----------
+     Avanzan en bucle; con el mouse encima van más lento; mientras el
+     cliente las arrastra (dedo o mouse) se quedan quietas y retoman al
+     soltar; se pausan fuera de la pantalla o si otro panel las tapa.
+     Devuelve { nudge(px) } para las flechas de escritorio. */
+  function zdAutoRow(wrap, track, items, build, opts) {
+    opts = opts || {};
+    const BASE_SPEED = opts.speed || 34; // px por segundo
+    const REDUCED_SPEED = 12; // más lento, pero nunca detenido del todo (igual que el carrusel de antes)
+
+    let list = items.slice();
+    if (!list.length) return null;
+    while (list.length < (opts.min || 8)) list = list.concat(items);
+    track.innerHTML = '';
+    // 2 copias para el bucle infinito; cada tarjeta se construye de nuevo
+    // (no se clona) para que sus botones "Agregar" funcionen en ambas
+    [0, 1].forEach(() => list.forEach((it) => { const card = build(it); if (card) track.appendChild(card); }));
+    wrap.classList.add('is-auto');
+
+    let offset = 0;
+    let setWidth = 0;
+    let dragging = false;
+    let hovering = false;
+    let startX = 0;
+    let startOffset = 0;
+    let moved = 0;
+    let lastTime = null;
+    let nudge = 0;
+    let resumeAt = 0;
+    let inView = false;
+    let paused = true;
+    let wasConnected = false;
+    // la ficha de producto se vuelve a armar en cada apertura: cuando la
+    // fila vieja sale de la página, se sueltan sus listeners
+    const life = new AbortController();
+    const listen = { signal: life.signal };
+    const alive = () => {
+      if (wrap.isConnected) { wasConnected = true; return true; }
+      if (wasConnected) { life.abort(); paused = true; return false; }
+      return true;
+    };
+
+    const measure = () => { setWidth = track.scrollWidth / 2; };
+    const wrapOffset = () => {
+      if (setWidth <= 0) return;
+      while (offset <= -setWidth) offset += setWidth;
+      while (offset > 0) offset -= setWidth;
+    };
+    // la fila corre solo si su panel es el que está a la vista ('' = el inicio)
+    const onTop = () => (document.body.dataset.topPanel || '') === (opts.panelId || '');
+
+    function frame(time) {
+      if (lastTime === null) lastTime = time;
+      const dt = Math.min((time - lastTime) / 1000, 0.1);
+      lastTime = time;
+      if (!dragging) {
+        if (nudge) {
+          const step = nudge * Math.min(1, dt * 7);
+          offset += step;
+          nudge -= step;
+          if (Math.abs(nudge) < 0.5) nudge = 0;
+        } else if (time >= resumeAt) {
+          const base = prefersReducedMotion ? REDUCED_SPEED : BASE_SPEED;
+          offset -= (hovering ? base * 0.35 : base) * dt;
+        }
+      }
+      wrapOffset();
+      track.style.transform = `translate3d(${offset}px, 0, 0)`;
+      if (!paused && alive()) requestAnimationFrame(frame);
+    }
+
+    function sync() {
+      if (!alive()) return;
+      const run = inView && onTop() && document.visibilityState === 'visible';
+      wrap.classList.toggle('is-running', run); // el reflejo de las fotos solo corre si la fila está a la vista
+      if (run && paused) { paused = false; lastTime = null; requestAnimationFrame(frame); }
+      else if (!run) paused = true;
+    }
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => { inView = entries[0].isIntersecting; sync(); }, { threshold: 0 });
+      io.observe(wrap);
+      life.signal.addEventListener('abort', () => io.disconnect());
+    } else {
+      inView = true;
+    }
+    window.addEventListener('zd:panel-visibility', sync, listen);
+    document.addEventListener('visibilitychange', sync, listen);
+
+    // con el mouse encima avanza más despacio (en celular el toque no cuenta como "encima")
+    wrap.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hovering = true; });
+    wrap.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') hovering = false; });
+    wrap.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      dragging = true;
+      moved = 0;
+      nudge = 0;
+      startX = e.clientX;
+      startOffset = offset;
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const delta = e.clientX - startX;
+      moved = Math.max(moved, Math.abs(delta));
+      offset = startOffset + delta;
+      if (moved > 6) wrap.classList.add('is-dragging');
+      if (paused) { wrapOffset(); track.style.transform = `translate3d(${offset}px, 0, 0)`; }
+    }, listen);
+    const endDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      wrap.classList.remove('is-dragging');
+      resumeAt = performance.now() + 1500; // una pausa corta antes de seguir solo
+    };
+    window.addEventListener('pointerup', endDrag, listen);
+    window.addEventListener('pointercancel', endDrag, listen);
+    // si fue un arrastre, el "clic" del final no debe abrir ni agregar nada
+    wrap.addEventListener('click', (e) => {
+      if (moved > 6) { e.preventDefault(); e.stopPropagation(); }
+      moved = 0;
+    }, true);
+    // no arrastrar las imágenes como archivos
+    wrap.addEventListener('dragstart', (e) => e.preventDefault());
+
+    window.addEventListener('resize', () => {
+      clearTimeout(wrap.zdResizeTimer);
+      wrap.zdResizeTimer = setTimeout(measure, 200);
+    }, listen);
+    requestAnimationFrame(() => { measure(); offset = -setWidth / 2; sync(); });
+
+    return { nudge: (px) => { nudge += px; resumeAt = performance.now() + 2500; } };
+  }
+  window.zdAutoRow = zdAutoRow;
+
   function initCartBump() {
     document.addEventListener('click', (e) => {
       if (e.target.closest('.variant-add-btn')) {
