@@ -112,6 +112,13 @@ function zdBuildCustomComboPicker() {
     nameEl.textContent = platform.name;
     face.appendChild(nameEl);
 
+    // precio de referencia a la vista, igual que en el catálogo de streaming
+    const cheapest = Math.min(...platform.variants.map((v) => v.price));
+    const fromEl = document.createElement('span');
+    fromEl.className = 'catalog-card-price';
+    fromEl.textContent = platform.variants.length > 1 ? `Desde ${zdFormatCOP(cheapest)}` : zdFormatCOP(cheapest);
+    face.appendChild(fromEl);
+
     const chevron = document.createElement('span');
     chevron.className = 'catalog-card-chevron';
     chevron.textContent = '+';
