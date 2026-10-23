@@ -166,6 +166,8 @@ function zdAddToCart(item, qty) {
   }
   zdSaveCart(cart);
   zdUpdateCartBadges();
+  // aviso para las animaciones (la foto que vuela al carrito, en effects.js)
+  window.dispatchEvent(new CustomEvent('zd:cart-add', { detail: { item } }));
 }
 
 /* ---------- Confirmación visual al agregar ---------- */

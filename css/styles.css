@@ -5409,3 +5409,70 @@ body.has-open-panel .header-back { display: inline-flex; }
   .offers-filter { flex-wrap: wrap; margin: 0 0 20px; padding: 0; }
 }
 
+/* al agregar al carrito, la foto viaja hasta el carrito (effects.js) */
+.zd-fly {
+  position: fixed;
+  z-index: 1200;
+  margin: 0;
+  border-radius: 12px;
+  object-fit: contain;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(176, 0, 255, 0.35);
+  pointer-events: none;
+}
+
+.zd-bottom-bar-cart.is-bumped { animation: zdBarBump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+@keyframes zdBarBump {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.06); box-shadow: 0 0 0 4px rgba(176, 0, 255, 0.3); }
+  100% { transform: scale(1); }
+}
+
+/* botón "Agregar" ya agregado: un anillo que se expande una vez */
+.variant-add-btn.is-added,
+.btn-pd--cart.is-added { position: relative; }
+
+.variant-add-btn.is-added::after,
+.btn-pd--cart.is-added::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 rgba(23, 201, 100, 0.55);
+  animation: zdAddedRing 0.7s ease-out;
+  pointer-events: none;
+}
+
+@keyframes zdAddedRing {
+  to { box-shadow: 0 0 0 10px rgba(23, 201, 100, 0); }
+}
+
+/* filtro marcado: un pequeño rebote */
+@keyframes zdChipPop {
+  0% { transform: scale(0.92); }
+  60% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+.panel-chip[data-offer].is-active,
+.panel-chips--sub .panel-chip.is-active { animation: zdChipPop 0.28s ease-out; }
+
+/* al presionar: tarjetas, categorías y filtros se hunden un poco */
+.home-cat:active,
+.panel-chip:active { transform: scale(0.95); transition-duration: 0.08s; }
+
+.product-card:active,
+.catalog-card--combo-v2:active { transform: scale(0.98); transition-duration: 0.08s; }
+
+/* con mouse: la foto se acerca un poco al pasar por encima */
+@media (hover: hover) {
+  .product-card-media img,
+  .combo-card-media img { transition: transform 0.45s ease; }
+  .product-card:hover .product-card-media img,
+  .catalog-card--combo-v2:hover .combo-card-media img { transform: scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zd-bottom-bar-cart.is-bumped { animation-duration: 0.6s !important; }
+}

@@ -230,8 +230,9 @@
   window.zdConfettiBurst = zdConfettiBurst;
 
   // Rebote del ícono del carrito cada vez que se agrega un producto
+  // (también el botón del carrito de la barra inferior del celular)
   function bumpCartIcon() {
-    document.querySelectorAll('.cart-btn').forEach((btn) => {
+    document.querySelectorAll('.cart-btn, #zdBottomBarCart').forEach((btn) => {
       btn.classList.remove('is-bumped');
       void btn.offsetWidth; // reflow para reiniciar la animación
       btn.classList.add('is-bumped');
@@ -373,13 +374,72 @@
   }
   window.zdAutoRow = zdAutoRow;
 
-  function initCartBump() {
-    document.addEventListener('click', (e) => {
-      if (e.target.closest('.variant-add-btn')) {
-        bumpCartIcon();
-      }
+  /* ---------- Al agregar al carrito: la foto del producto "vuela" hasta
+     el carrito (el del header, o el de la barra inferior en celular) ---------- */
+  let zdLastPressed = null;
+  let zdLastPressedAt = 0;
+  document.addEventListener('pointerdown', (e) => { zdLastPressed = e.target; zdLastPressedAt = performance.now(); }, true);
+
+  // de dónde sale la foto: la del producto si se ve en pantalla; si no
+  // (p. ej. la barra fija de la ficha), sale del botón que se tocó
+  function zdFlySource(el) {
+    if (!el || !el.closest) return null;
+    const card = el.closest('.product-card, .catalog-card, #productDetailBody');
+    if (!card) return null;
+    const imgs = [...(card.matches('#productDetailBody')
+      ? card.querySelectorAll('.pd-media img')
+      : card.querySelectorAll('.product-card-media img, .combo-card-media img, .logo-frame img'))];
+    if (!imgs.length) return null;
+    // en la ficha con carrusel, la foto que se está viendo
+    const seen = imgs.find((img) => {
+      const r = img.getBoundingClientRect();
+      return r.width > 0 && r.right > 0 && r.left < window.innerWidth && r.bottom > 0 && r.top < window.innerHeight;
     });
+    const img = seen || imgs[0];
+    const button = el.closest('button, a') || el;
+    return { src: img.currentSrc || img.src, rect: (seen || button).getBoundingClientRect() };
   }
+
+  function zdFlyTarget() {
+    const bar = document.getElementById('zdBottomBarCart');
+    if (bar && bar.offsetParent !== null && getComputedStyle(document.getElementById('zdBottomBar')).display !== 'none') return bar;
+    return document.getElementById('cartBtn');
+  }
+
+  function zdFlyToCart(source) {
+    const target = zdFlyTarget();
+    if (!target) { bumpCartIcon(); return; }
+    const from = source.rect;
+    const to = target.getBoundingClientRect();
+    const size = Math.min(72, Math.max(40, from.width * 0.5));
+    const clone = document.createElement('img');
+    clone.src = source.src;
+    clone.alt = '';
+    clone.className = 'zd-fly';
+    clone.style.width = clone.style.height = `${size}px`;
+    clone.style.left = `${from.left + from.width / 2 - size / 2}px`;
+    clone.style.top = `${from.top + from.height / 2 - size / 2}px`;
+    document.body.appendChild(clone);
+    const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+    const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+    const anim = clone.animate([
+      { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+      { transform: `translate(${dx * 0.55}px, ${dy * 0.55 - 70}px) scale(0.75)`, opacity: 0.95, offset: 0.55 },
+      { transform: `translate(${dx}px, ${dy}px) scale(0.2)`, opacity: 0.3 }
+    ], { duration: 700, easing: 'cubic-bezier(0.45, 0, 0.7, 1)' });
+    anim.onfinish = () => { clone.remove(); bumpCartIcon(); };
+  }
+
+  window.addEventListener('zd:cart-add', () => {
+    const recent = performance.now() - zdLastPressedAt < 1500; // con teclado no hay toque reciente: solo rebota
+    const source = prefersReducedMotion || !recent ? null : zdFlySource(zdLastPressed);
+    if (source && source.src) zdFlyToCart(source); // el carrito rebota cuando llega la foto
+    else bumpCartIcon();
+  });
+
+  // el rebote ahora lo dispara cada agregado real al carrito (evento
+  // zd:cart-add), no cualquier clic en un botón "Agregar"
+  function initCartBump() {}
 
   // Efecto ripple al hacer click en botones principales
   function createRipple(e, el) {
